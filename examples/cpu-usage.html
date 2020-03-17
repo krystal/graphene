@@ -1,0 +1,21 @@
+<html>
+  <head>
+    <script src="properties/cpu-usage.js"></script>
+    <script src="data/cpu-usage.js"></script>
+    <script src="scripts/data-converter.js"></script>
+  </head>
+  <body>
+    <div id="cpu-usage" data-type="linegraph" data-properties="" data-data="" style="position: relative;">
+      <canvas id="cpu-usage-background" width="1280" height="384"></canvas>
+      <canvas id="cpu-usage-foreground" width="1280" height="384" style="position: absolute; left: 0; top: 0; z-index: 0;"></canvas>
+    </div>
+  </body>
+  <script>
+    var data = convert(CPU_USAGE_DATA);
+    document.getElementById("cpu-usage").setAttribute("data-properties", CPU_USAGE_PROPERTIES);
+    document.getElementById("cpu-usage").setAttribute("data-data", data);
+  </script>
+  <script src="../src/graph.js"></script>
+  <script src="../src/linegraph.js"></script>
+  <script src="../src/engine.js"></script>
+</html>
