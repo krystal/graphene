@@ -1,4 +1,4 @@
-var NETWORK_INTERFACES_PROPERTIES = {
+var DISKS_THUMB_PROPERTIES = {
   "colours": {
       "background": "#FFFFFF",
       "horizontal_lines": "#F7F7FC",
@@ -6,7 +6,7 @@ var NETWORK_INTERFACES_PROPERTIES = {
           "#038FFB",
           "#04E395"
       ],
-      "axes_labels": "#555555",
+      "axes_labels": "#888888",
       "highlight_indicator": "#E0DEFF"
   },
   "alphas": {
@@ -14,10 +14,10 @@ var NETWORK_INTERFACES_PROPERTIES = {
   },
   "axes_labels": {
       "font_family": "Arial",
-      "font_size": 13
+      "font_size": 11
   },
   "graph_settings": {
-      "line_width": 1
+      "line_width": 0.5
   },
   "highlight": {
       "enabled": false,
@@ -28,8 +28,8 @@ var NETWORK_INTERFACES_PROPERTIES = {
   },
   "y_axis": {
       "min": 0,
-      "max": 150000,
-      "label_interval": 25000,
+      "max": 250000,
+      "label_interval": 50000,
       "label_suffix": " b/s"
   }
 };
