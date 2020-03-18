@@ -1,10 +1,9 @@
 class Helper {
-  // TODO: rename this and add suffixes
-  static applyPrefix(value, prefix) {
+  static applyAffix(value, prefix = "", suffix = "") {
     var negative = value < 0;
     var absoluteValue = Math.abs(value);
 
-    return (negative ? "-" : "") + prefix + absoluteValue.toLocaleString();
+    return (negative ? "-" : "") + prefix + absoluteValue.toLocaleString() + suffix;
   }
 
   // TODO: add a function for calculating max width

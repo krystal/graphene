@@ -33,7 +33,7 @@ class Linegraph extends Graph {
 
       var maxLabelWidth = 0;
       for (var i = this.properties.y_axis.min + this.properties.y_axis.label_interval; i < this.properties.y_axis.max; i += this.properties.y_axis.label_interval) {
-          var labelWidth = this.backgroundContext.measureText(Helper.applyPrefix(i, this.properties.y_axis.label_prefix)).width;
+          var labelWidth = this.backgroundContext.measureText(Helper.applyAffix(i, this.properties.y_axis.label_prefix, this.properties.y_axis.label_suffix)).width;
           if (labelWidth > maxLabelWidth) {
               maxLabelWidth = labelWidth;
           }
@@ -143,7 +143,7 @@ class Linegraph extends Graph {
 
       // skip drawing the first and last y-axis labels
       for (var i = this.properties.y_axis.min + this.properties.y_axis.label_interval; i < this.properties.y_axis.max; i += this.properties.y_axis.label_interval) {
-          this.backgroundContext.fillText(Helper.applyPrefix(i, this.properties.y_axis.label_prefix), (this.graphMarginX / 2), this.graphEndY - ((i - this.properties.y_axis.min) * this.graphScaleY));
+          this.backgroundContext.fillText(Helper.applyAffix(i, this.properties.y_axis.label_prefix, this.properties.y_axis.label_suffix), (this.graphMarginX / 2), this.graphEndY - ((i - this.properties.y_axis.min) * this.graphScaleY));
       }
   }
 
