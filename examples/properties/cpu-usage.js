@@ -26,7 +26,7 @@ var CPU_USAGE_PROPERTIES = {
       "transistion_duration": 1000
   },
   "x_axis": {
-      "range": 287
+      "range": 288
   },
   "y_axis": {
       "min": 0,
