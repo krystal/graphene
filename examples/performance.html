@@ -1,5 +1,6 @@
 <html>
   <head>
+    <script src="properties/cpu-usage-thumb.js"></script>
     <script src="properties/cpu-usage.js"></script>
     <script src="data/cpu-usage.js"></script>
     <script src="properties/network-interfaces.js"></script>
@@ -9,6 +10,10 @@
     <script src="scripts/data-converter.js"></script>
   </head>
   <body>
+    <div id="cpu-usage-thumb" data-type="linegraph" data-properties="" data-data="" style="position: relative;">
+      <canvas id="cpu-usage-thumb-background" width="400" height="150"></canvas>
+      <canvas id="cpu-usage-thumb-foreground" width="400" height="150" style="position: absolute; left: 0; top: 0; z-index: 0;"></canvas>
+    </div>
     <div id="cpu-usage" data-type="linegraph" data-properties="" data-data="" style="position: relative;">
       <canvas id="cpu-usage-background" width="1280" height="384"></canvas>
       <canvas id="cpu-usage-foreground" width="1280" height="384" style="position: absolute; left: 0; top: 0; z-index: 0;"></canvas>
@@ -23,6 +28,8 @@
     </div>
   </body>
   <script>
+    document.getElementById("cpu-usage-thumb").dataset.properties = JSON.stringify(CPU_USAGE_THUMB_PROPERTIES);
+    document.getElementById("cpu-usage-thumb").dataset.data = JSON.stringify(convertArray(CPU_USAGE_DATA));
     document.getElementById("cpu-usage").dataset.properties = JSON.stringify(CPU_USAGE_PROPERTIES);
     document.getElementById("cpu-usage").dataset.data = JSON.stringify(convertArray(CPU_USAGE_DATA));
     document.getElementById("network-interfaces").dataset.properties = JSON.stringify(NETWORK_INTERFACES_PROPERTIES);
