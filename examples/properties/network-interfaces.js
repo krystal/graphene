@@ -1,12 +1,10 @@
-var CPU_USAGE_PROPERTIES = {
+var NETWORK_INTERFACES_PROPERTIES = {
   "colours": {
       "background": "#FFFFFF",
       "horizontal_lines": "#F7F7FC",
       "graph": [
           "#038FFB",
-          "#04E395",
-          "#FEB01A",
-          "#FF4560"
+          "#04E395"
       ],
       "axes_labels": "#555555",
       "highlight_indicator": "#E0DEFF"
@@ -30,8 +28,8 @@ var CPU_USAGE_PROPERTIES = {
   },
   "y_axis": {
       "min": 0,
-      "max": 10,
-      "label_interval": 2,
-      "label_suffix": "%"
+      "max": 150000,
+      "label_interval": 20000,
+      "label_suffix": " b/s"
   }
 };
