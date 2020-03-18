@@ -18,9 +18,9 @@
   </body>
   <script>
     document.getElementById("cpu-usage").dataset.properties = JSON.stringify(CPU_USAGE_PROPERTIES);
-    document.getElementById("cpu-usage").dataset.data = JSON.stringify(convertCpuUsage(CPU_USAGE_DATA));
+    document.getElementById("cpu-usage").dataset.data = JSON.stringify(convertArray(CPU_USAGE_DATA));
     document.getElementById("network-interfaces").dataset.properties = JSON.stringify(NETWORK_INTERFACES_PROPERTIES);
-    document.getElementById("network-interfaces").dataset.data = JSON.stringify(convertNetworkInterfaces(NETWORK_INTERFACES_DATA));
+    document.getElementById("network-interfaces").dataset.data = JSON.stringify(convertObject(NETWORK_INTERFACES_DATA));
   </script>
   <script src="../src/graph.js"></script>
   <script src="../src/helper.js"></script>

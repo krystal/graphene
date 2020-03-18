@@ -1,4 +1,4 @@
-function convertCpuUsage(data) {
+function convertArray(data) {
   var convertedData = {"x": [], "y": []};
 
   for (var i = 0; i < data.length; i++) {
@@ -17,7 +17,7 @@ function convertCpuUsage(data) {
   return convertedData;
 }
 
-function convertNetworkInterfaces(data) {
+function convertObject(data) {
   var convertedData = {"x": [], "y": []};
 
   var firstIteration = true;
