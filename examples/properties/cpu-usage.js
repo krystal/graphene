@@ -3,10 +3,10 @@ var CPU_USAGE_PROPERTIES = {
       "background": "#FFFFFF",
       "horizontal_lines": "#F7F7FC",
       "graph": [
-          "#0000FF",
-          "#00FF00",
-          "#00FFFF",
-          "#FF0000"
+          "#038FFB",
+          "#04E395",
+          "#FEB01A",
+          "#FF4560"
       ],
       "axes_labels": "#555555",
       "highlight_indicator": "#E0DEFF"
@@ -19,7 +19,7 @@ var CPU_USAGE_PROPERTIES = {
       "font_size": 13
   },
   "graph_settings": {
-      "line_width": 5
+      "line_width": 2
   },
   "highlight": {
       "enabled": false,
