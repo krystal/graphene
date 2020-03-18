@@ -11,11 +11,13 @@
     </div>
   </body>
   <script>
-    var data = convert(CPU_USAGE_DATA);
-    document.getElementById("cpu-usage").setAttribute("data-properties", CPU_USAGE_PROPERTIES);
-    document.getElementById("cpu-usage").setAttribute("data-data", data);
+    var properties = JSON.stringify(CPU_USAGE_PROPERTIES);
+    var data = JSON.stringify(convert(CPU_USAGE_DATA));
+    document.getElementById("cpu-usage").dataset.properties = properties;
+    document.getElementById("cpu-usage").dataset.data = data;
   </script>
   <script src="../src/graph.js"></script>
+  <script src="../src/helper.js"></script>
   <script src="../src/linegraph.js"></script>
   <script src="../src/engine.js"></script>
 </html>

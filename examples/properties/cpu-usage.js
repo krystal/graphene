@@ -3,8 +3,10 @@ var CPU_USAGE_PROPERTIES = {
       "background": "#FFFFFF",
       "horizontal_lines": "#F7F7FC",
       "graph": [
-          "#4D5CFF",
-          "#00FF00"
+          "#0000FF",
+          "#00FF00",
+          "#00FFFF",
+          "#FF0000"
       ],
       "axes_labels": "#555555",
       "highlight_indicator": "#E0DEFF"
@@ -23,12 +25,12 @@ var CPU_USAGE_PROPERTIES = {
       "highlight_transistion_duration": 1000
   },
   "x_axis": {
-      "range": 30
+      "range": 287
   },
   "y_axis": {
-      "min": 114000,
-      "max": 119000,
-      "label_interval": 1000,
-      "label_prefix": "$"
+      "min": 0,
+      "max": 10,
+      "label_interval": 2,
+      "label_prefix": "%"
   }
 };

@@ -21,9 +21,9 @@ class Linegraph extends Graph {
       this.backgroundContext.fillRect(0, 0, this.canvasWidth, this.canvasHeight);
 
       this.drawHorizontalLines();
-      for (var i = 0; i < this.data.datasets.y.length; i++) {
-          this.drawAreaUnderGraph(this.data.datasets.y[i], this.properties.colours.graph[i]);
-          this.drawGraph(this.data.datasets.y[i], this.properties.colours.graph[i]);
+      for (var i = 0; i < this.data.y.length; i++) {
+          this.drawAreaUnderGraph(this.data.y[i], this.properties.colours.graph[i]);
+          this.drawGraph(this.data.y[i], this.properties.colours.graph[i]);
       }
       this.drawAxisLabels();
   }
@@ -118,18 +118,18 @@ class Linegraph extends Graph {
 
   drawAxisLabels() {
       var maxLabelWidth = 0;
-      for (var i = 0; i < this.data.datasets.x.length; i++) {
-          var labelWidth = this.backgroundContext.measureText(this.data.datasets.x[i]).width;
+      for (var i = 0; i < this.data.x.length; i++) {
+          var labelWidth = this.backgroundContext.measureText(this.data.x[i]).width;
           if (labelWidth > maxLabelWidth) {
               maxLabelWidth = labelWidth;
           }
       }
 
       var xAxisLabelInterval = 1;
-      var availableWidthPerLabel = this.graphWidth / (this.data.datasets.x.length / xAxisLabelInterval);
+      var availableWidthPerLabel = this.graphWidth / (this.data.x.length / xAxisLabelInterval);
       while ((availableWidthPerLabel / maxLabelWidth) < 1.5) {
           xAxisLabelInterval++;
-          availableWidthPerLabel = this.graphWidth / (this.data.datasets.x.length / xAxisLabelInterval);
+          availableWidthPerLabel = this.graphWidth / (this.data.x.length / xAxisLabelInterval);
       }
 
       this.backgroundContext.font = this.properties.axes_labels.font_size + "px " + this.properties.axes_labels.font_family;
@@ -137,8 +137,8 @@ class Linegraph extends Graph {
       this.backgroundContext.textAlign = "center";
       this.backgroundContext.textBaseline = "middle";
 
-      for (var i = 0; i < this.data.datasets.x.length; i += xAxisLabelInterval) {
-          this.backgroundContext.fillText(this.data.datasets.x[i], this.graphStartX + (i * this.graphScaleX), this.graphEndY + (this.graphMarginY / 2));
+      for (var i = 0; i < this.data.x.length; i += xAxisLabelInterval) {
+          this.backgroundContext.fillText(this.data.x[i], this.graphStartX + (i * this.graphScaleX), this.graphEndY + (this.graphMarginY / 2));
       }
 
       // skip drawing the first and last y-axis labels
@@ -155,9 +155,9 @@ class Linegraph extends Graph {
       var dataHighlights = new Array();
 
       var yValueMax = Infinity;
-      for (var i = 0; i < this.data.datasets.y.length; i++) {
-          var y0 = this.data.datasets.y[i][Math.floor(index)];
-          var y1 = this.data.datasets.y[i][Math.ceil(index)];
+      for (var i = 0; i < this.data.y.length; i++) {
+          var y0 = this.data.y[i][Math.floor(index)];
+          var y1 = this.data.y[i][Math.ceil(index)];
           var interpolatedY = Helper.lerp(y0, y1, index - Math.floor(index));
 
           var yValue = this.graphStartY + (-(interpolatedY - this.properties.y_axis.max) * this.graphScaleY);
