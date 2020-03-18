@@ -7,8 +7,10 @@ class Linegraph extends Graph {
       this.targetHighlight = -1;
       // TODO: give this a more descriptive name, we may have other requests in the future
       this.requestId = undefined;
-      // TODO: move this to a point after the JSON has been loaded (and possibly calculateParameters has been called at least once)
-      this.foreground.addEventListener('mousemove', this.handleMouseMove.bind(this), false);
+      if (this.properties.highlight.enabled) {
+          // TODO: move this to a point after the JSON has been loaded (and possibly calculateParameters has been called at least once)
+          this.foreground.addEventListener('mousemove', this.handleMouseMove.bind(this), false);
+      }
   }
 
   // TODO: add the concept of a viewport to facilitate scrolling of data in the x-axis
@@ -244,7 +246,7 @@ class Linegraph extends Graph {
       } else if (newHighlight != this.lastHighlight) {
           if (this.lastHighlight == this.targetHighlight) {
               this.targetHighlight = newHighlight;
-              this.animateHighlight(this.lastHighlight, this.targetHighlight, this.properties.animation.highlight_transistion_duration);
+              this.animateHighlight(this.lastHighlight, this.targetHighlight, this.properties.highlight.transistion_duration);
           } else {
               if (this.targetHighlight > this.lastHighlight) {
                   if (newHighlight > this.targetHighlight) {
@@ -253,7 +255,7 @@ class Linegraph extends Graph {
                       window.cancelAnimationFrame(this.requestId);
                       this.lastHighlight = this.currentHighlight;
                       this.targetHighlight = newHighlight;
-                      this.animateHighlight(this.lastHighlight, this.targetHighlight, this.properties.animation.highlight_transistion_duration);
+                      this.animateHighlight(this.lastHighlight, this.targetHighlight, this.properties.highlight.transistion_duration);
                   } else {
                       // closer
                   }
@@ -264,7 +266,7 @@ class Linegraph extends Graph {
                       window.cancelAnimationFrame(this.requestId);
                       this.lastHighlight = this.currentHighlight;
                       this.targetHighlight = newHighlight;
-                      this.animateHighlight(this.lastHighlight, this.targetHighlight, this.properties.animation.highlight_transistion_duration);
+                      this.animateHighlight(this.lastHighlight, this.targetHighlight, this.properties.highlight.transistion_duration);
                   } else {
                       // closer
                   }

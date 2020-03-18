@@ -21,8 +21,9 @@ var CPU_USAGE_PROPERTIES = {
   "graph_settings": {
       "line_width": 5
   },
-  "animation": {
-      "highlight_transistion_duration": 1000
+  "highlight": {
+      "enabled": false,
+      "transistion_duration": 1000
   },
   "x_axis": {
       "range": 287
