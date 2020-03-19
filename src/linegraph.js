@@ -2,11 +2,7 @@ class Linegraph extends Graph {
   constructor(backgroundId, foregroundId, tooltipId, properties, data) {
       super(backgroundId, foregroundId, tooltipId, properties, data);
 
-      this.lastHighlight = -1;
       this.currentHighlight = -1;
-      this.targetHighlight = -1;
-      // TODO: give this a more descriptive name, we may have other requests in the future
-      this.requestId = undefined;
       if (this.properties.highlight.enabled) {
           // TODO: move this to a point after the JSON has been loaded (and possibly calculateParameters has been called at least once)
           this.foreground.addEventListener('mousemove', this.handleMouseMove.bind(this), false);
@@ -204,33 +200,6 @@ class Linegraph extends Graph {
       this.currentHighlight = index;
   }
 
-  animateHighlight(startIndex, endIndex, duration) {
-      var start = null;
-
-      var step = function animateHighlightStep(timestamp) {
-          if (start === null) {
-              start = timestamp;
-          }
-
-          var delta = timestamp - start;
-          var progress = Math.min(delta / duration, 1);
-
-          if (endIndex > startIndex) {
-              this.highlight(startIndex + ((endIndex - startIndex) * progress));
-          } else {
-              this.highlight(startIndex - ((startIndex - endIndex) * progress));
-          }
-
-          if (progress < 1) {
-              this.requestId = window.requestAnimationFrame(step);
-          } else {
-              this.lastHighlight = endIndex;
-          }
-      }.bind(this);
-
-      this.requestId = window.requestAnimationFrame(step);
-  }
-
   clearHighlight() {
       this.foregroundContext.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
   }
@@ -239,39 +208,9 @@ class Linegraph extends Graph {
   handleMouseMove(event) {
       var graphX = (event.offsetX - this.graphStartX) / this.graphScaleX;
       var newHighlight = Math.min(Math.max(Math.round(graphX), 0), this.properties.x_axis.range);
-      if (this.lastHighlight == -1) {
-          this.targetHighlight = newHighlight;
-          this.highlight(this.targetHighlight);
-          this.lastHighlight = this.targetHighlight;
-      } else if (newHighlight != this.lastHighlight) {
-          if (this.lastHighlight == this.targetHighlight) {
-              this.targetHighlight = newHighlight;
-              this.animateHighlight(this.lastHighlight, this.targetHighlight, this.properties.highlight.transistion_duration);
-          } else {
-              if (this.targetHighlight > this.lastHighlight) {
-                  if (newHighlight > this.targetHighlight) {
-                      console.log("animation restarted, left to right");
-                      // further
-                      window.cancelAnimationFrame(this.requestId);
-                      this.lastHighlight = this.currentHighlight;
-                      this.targetHighlight = newHighlight;
-                      this.animateHighlight(this.lastHighlight, this.targetHighlight, this.properties.highlight.transistion_duration);
-                  } else {
-                      // closer
-                  }
-              } else {
-                  if (newHighlight < this.targetHighlight) {
-                      console.log("animation restarted, right to left");
-                      // further
-                      window.cancelAnimationFrame(this.requestId);
-                      this.lastHighlight = this.currentHighlight;
-                      this.targetHighlight = newHighlight;
-                      this.animateHighlight(this.lastHighlight, this.targetHighlight, this.properties.highlight.transistion_duration);
-                  } else {
-                      // closer
-                  }
-              }
-          }
+
+      if (newHighlight != this.currentHighlight) {
+          this.highlight(newHighlight);
       }
   }
 }

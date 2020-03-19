@@ -22,7 +22,7 @@ var CPU_USAGE_PROPERTIES = {
       "line_width": 1
   },
   "highlight": {
-      "enabled": false,
+      "enabled": true,
       "transistion_duration": 1000
   },
   "x_axis": {
