@@ -31,9 +31,5 @@ var NETWORK_INTERFACES_PROPERTIES = {
       "max": 150000,
       "label_interval": 25000,
       "label_suffix": " b/s"
-  },
-  "margin": {
-      "x": 0,
-      "y": 0
   }
 };

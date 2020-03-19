@@ -10,7 +10,7 @@ var NETWORK_INTERFACES_THUMB_PROPERTIES = {
       "highlight_indicator": "#E0DEFF"
   },
   "alphas": {
-      "under_graph": 0.1
+      "under_graph": 0
   },
   "axes_labels": {
       "font_family": "Arial",
@@ -31,9 +31,5 @@ var NETWORK_INTERFACES_THUMB_PROPERTIES = {
       "max": 150000,
       "label_interval": 50000,
       "label_suffix": " b/s"
-  },
-  "margin": {
-      "x": 0,
-      "y": 0
   }
 };
