@@ -27,7 +27,9 @@ var CPU_USAGE_THUMB_PROPERTIES = {
         "highlight_enabled": false
     },
     "x_axis": {
-        "range": 288
+        "range": 288,
+        "label_start": 9,
+        "label_interval": 48
     },
     "y_axis": {
         "min": 0,

@@ -25,12 +25,14 @@ var DISKS_PROPERTIES = {
         "highlight_enabled": true
     },
     "x_axis": {
-        "range": 288
+        "range": 288,
+        "label_start": 9,
+        "label_interval": 24
     },
     "y_axis": {
         "min": 0,
         "max": 250000,
-        "label_interval": 25000,
+        "label_interval": 50000,
         "label_suffix": [[1000, " B/s"], [1000000, " kB/s"]]
     }
 };
