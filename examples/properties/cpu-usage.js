@@ -33,5 +33,9 @@ var CPU_USAGE_PROPERTIES = {
       "max": 10,
       "label_interval": 2,
       "label_suffix": "%"
+  },
+  "margin": {
+      "x": 0,
+      "y": 0
   }
 };

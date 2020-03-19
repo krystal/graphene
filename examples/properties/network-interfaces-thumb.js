@@ -31,5 +31,9 @@ var NETWORK_INTERFACES_THUMB_PROPERTIES = {
       "max": 150000,
       "label_interval": 50000,
       "label_suffix": " b/s"
+  },
+  "margin": {
+      "x": 0,
+      "y": 0
   }
 };
