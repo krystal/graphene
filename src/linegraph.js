@@ -1,6 +1,6 @@
 class Linegraph extends Graph {
-  constructor(backgroundId, foregroundId, tooltipId, properties, data) {
-      super(backgroundId, foregroundId, tooltipId, properties, data);
+  constructor(backgroundId, foregroundId, properties, data) {
+      super(backgroundId, foregroundId, properties, data);
 
       this.currentHighlight = -1;
       if (this.properties.highlight.enabled) {
@@ -211,7 +211,7 @@ class Linegraph extends Graph {
       this.foregroundContext.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
   }
 
-  // TODO: cancel overlay and tooltip on mouse leave
+  // TODO: cancel highlight on mouse leave
   handleMouseMove(event) {
       var graphX = (event.offsetX - this.graphStartX) / this.graphScaleX;
       var newHighlight = Math.min(Math.max(Math.round(graphX), 0), this.properties.x_axis.range);

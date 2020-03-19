@@ -1,8 +1,7 @@
 class Graph {
-  constructor(backgroundId, foregroundId, tooltipId, properties, data) {
+  constructor(backgroundId, foregroundId, properties, data) {
       var background = document.getElementById(backgroundId);
       this.foreground = document.getElementById(foregroundId);
-      var tooltip = document.getElementById(tooltipId);
       this.canvasWidth = background.width;
       this.canvasHeight = background.height;
       this.backgroundContext = this.getContext(background);

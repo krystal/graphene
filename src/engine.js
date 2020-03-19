@@ -10,17 +10,16 @@ function loadGraphs() {
             var data = JSON.parse(divs[i].dataset.data);
             var backgroundId = id + "-background";
             var foregroundId = id + "-foreground";
-            var tooltipId = id + "-tooltip";
 
             switch (type) {
                 case "linegraph":
-                    graphs.push(new Linegraph(backgroundId, foregroundId, tooltipId, properties, data));
+                    graphs.push(new Linegraph(backgroundId, foregroundId, properties, data));
                     break;
                 case "bargraph":
-                    graphs.push(new Bargraph(backgroundId, foregroundId, tooltipId, properties, data));
+                    graphs.push(new Bargraph(backgroundId, foregroundId, properties, data));
                     break;
                 case "piegraph":
-                    graphs.push(new Piegraph(backgroundId, foregroundId, tooltipId, properties, data));
+                    graphs.push(new Piegraph(backgroundId, foregroundId, properties, data));
                     break;
                 default:
                 // do nothing
