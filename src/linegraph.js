@@ -29,21 +29,24 @@ class Linegraph extends Graph {
   calculateParameters() {
       this.backgroundContext.font = this.properties.axes_labels.font_size + "px " + this.properties.axes_labels.font_family;
 
-      var labelHeightApproximation = this.backgroundContext.measureText("M").width;
-      var maxLabelWidth = 0;
+      var maxLabelWidthX = this.caclulateMaxLabelWidthX();
+      var maxLabelWidthY = 0;
       for (var i = this.properties.y_axis.min + this.properties.y_axis.label_interval; i < this.properties.y_axis.max; i += this.properties.y_axis.label_interval) {
           var labelWidth = this.backgroundContext.measureText(Helper.applyAffix(i, this.properties.y_axis.label_prefix, this.properties.y_axis.label_suffix)).width;
-          if (labelWidth > maxLabelWidth) {
-              maxLabelWidth = labelWidth;
+          if (labelWidth > maxLabelWidthY) {
+              maxLabelWidthY = labelWidth;
           }
       }
+      var labelHeightApproximation = this.backgroundContext.measureText("M").width;
 
-      this.xAxisLabelAvailableHeight = labelHeightApproximation * 3;
-      this.yAxisLabelAvailableWidth = maxLabelWidth * 1.5;
-      this.graphStartX = this.properties.margin.x + this.yAxisLabelAvailableWidth;
-      this.graphStartY = this.properties.margin.y;
-      var graphEndX = this.canvasWidth - this.properties.margin.x;
-      this.graphEndY = this.canvasHeight - this.xAxisLabelAvailableHeight - this.properties.margin.y;
+      this.leftMargin = maxLabelWidthY * 1.5;
+      var rightMargin = maxLabelWidthX / 2;
+      var topMargin = labelHeightApproximation / 2;
+      this.bottomMargin = labelHeightApproximation * 3;
+      this.graphStartX = this.leftMargin;
+      this.graphStartY = topMargin;
+      var graphEndX = this.canvasWidth - rightMargin;
+      this.graphEndY = this.canvasHeight - this.bottomMargin;
       this.graphWidth = graphEndX - this.graphStartX;
       var graphHeight = this.graphEndY - this.graphStartY;
       this.graphScaleX = this.graphWidth / this.properties.x_axis.range;
@@ -114,18 +117,22 @@ class Linegraph extends Graph {
       this.backgroundContext.stroke();
   }
 
-  drawAxisLabels() {
-      var maxLabelWidth = 0;
-      for (var i = 0; i < this.data.x.length; i++) {
-          var labelWidth = this.backgroundContext.measureText(this.data.x[i]).width;
-          if (labelWidth > maxLabelWidth) {
-              maxLabelWidth = labelWidth;
-          }
-      }
+  caclulateMaxLabelWidthX() {
+    var maxLabelWidthX = 0;
+    for (var i = 0; i < this.data.x.length; i++) {
+        var labelWidth = this.backgroundContext.measureText(this.data.x[i]).width;
+        if (labelWidth > maxLabelWidthX) {
+            maxLabelWidthX = labelWidth;
+        }
+    }
+    return maxLabelWidthX;
+  }
 
+  drawAxisLabels() {
       var xAxisLabelInterval = 1;
       var availableWidthPerLabel = this.graphWidth / (this.data.x.length / xAxisLabelInterval);
-      while ((availableWidthPerLabel / maxLabelWidth) < 1.5) {
+      var maxLabelWidthX = this.caclulateMaxLabelWidthX();
+      while ((availableWidthPerLabel / maxLabelWidthX) < 1.5) {
           xAxisLabelInterval++;
           availableWidthPerLabel = this.graphWidth / (this.data.x.length / xAxisLabelInterval);
       }
@@ -136,12 +143,12 @@ class Linegraph extends Graph {
       this.backgroundContext.textBaseline = "middle";
 
       for (var i = 0; i < this.data.x.length; i += xAxisLabelInterval) {
-          this.backgroundContext.fillText(this.data.x[i], this.graphStartX + (i * this.graphScaleX), this.graphEndY + (this.xAxisLabelAvailableHeight / 2));
+          this.backgroundContext.fillText(this.data.x[i], this.graphStartX + (i * this.graphScaleX), this.graphEndY + (this.bottomMargin / 2));
       }
 
       // skip drawing the first and last y-axis labels
       for (var i = this.properties.y_axis.min + this.properties.y_axis.label_interval; i < this.properties.y_axis.max; i += this.properties.y_axis.label_interval) {
-          this.backgroundContext.fillText(Helper.applyAffix(i, this.properties.y_axis.label_prefix, this.properties.y_axis.label_suffix), (this.yAxisLabelAvailableWidth / 2), this.graphEndY - ((i - this.properties.y_axis.min) * this.graphScaleY));
+          this.backgroundContext.fillText(Helper.applyAffix(i, this.properties.y_axis.label_prefix, this.properties.y_axis.label_suffix), (this.leftMargin / 2), this.graphEndY - ((i - this.properties.y_axis.min) * this.graphScaleY));
       }
   }
 
