@@ -32,7 +32,7 @@ var CPU_USAGE_THUMB_PROPERTIES = {
     "y_axis": {
         "min": 0,
         "max": 10,
-        "label_interval": 4,
+        "label_interval": 5,
         "label_suffix": "%"
     }
 };

@@ -40,7 +40,7 @@ class Linegraph extends Graph {
         }
         var labelHeightApproximation = this.backgroundContext.measureText("M").width;
 
-        this.leftMargin = maxLabelWidthY * 1.5;
+        this.leftMargin = maxLabelWidthY * 2;
         var rightMargin = maxLabelWidthX / 2;
         var topMargin = labelHeightApproximation / 2;
         this.bottomMargin = labelHeightApproximation * 3;
@@ -155,8 +155,7 @@ class Linegraph extends Graph {
             this.backgroundContext.fillText(this.data.x[i], this.graphStartX + (i * this.graphScaleX), this.graphEndY + (this.bottomMargin / 2));
         }
 
-        // skip drawing the first and last y-axis labels
-        for (var i = this.properties.y_axis.min + this.properties.y_axis.label_interval; i < this.properties.y_axis.max; i += this.properties.y_axis.label_interval) {
+        for (var i = this.properties.y_axis.min; i <= this.properties.y_axis.max; i += this.properties.y_axis.label_interval) {
             this.backgroundContext.fillText(Helper.applyAffix(i, this.properties.y_axis.label_prefix, this.properties.y_axis.label_suffix), (this.leftMargin / 2), this.graphEndY - ((i - this.properties.y_axis.min) * this.graphScaleY));
         }
     }
