@@ -12,7 +12,7 @@ var CPU_USAGE_PROPERTIES = {
             "#FF4560"
         ],
         "highlight_indicator": "#E0DEFF",
-        "horizontal_lines": "#F7F7FC"
+        "horizontal_lines": "#EEEEEE"
     },
     "fonts": {
         "axes_labels": {

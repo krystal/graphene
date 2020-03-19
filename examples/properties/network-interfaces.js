@@ -10,7 +10,7 @@ var NETWORK_INTERFACES_PROPERTIES = {
             "#04E395"
         ],
         "highlight_indicator": "#E0DEFF",
-        "horizontal_lines": "#F7F7FC"
+        "horizontal_lines": "#EEEEEE"
     },
     "fonts": {
         "axes_labels": {

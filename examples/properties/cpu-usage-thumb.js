@@ -12,7 +12,7 @@ var CPU_USAGE_THUMB_PROPERTIES = {
             "#FF4560"
         ],
         "highlight_indicator": "#E0DEFF",
-        "horizontal_lines": "#F7F7FC"
+        "horizontal_lines": "#FFFFFF"
     },
     "fonts": {
         "axes_labels": {
