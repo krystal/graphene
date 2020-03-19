@@ -15,12 +15,6 @@ function loadGraphs() {
                 case "linegraph":
                     graphs.push(new Linegraph(backgroundId, foregroundId, properties, data));
                     break;
-                case "bargraph":
-                    graphs.push(new Bargraph(backgroundId, foregroundId, properties, data));
-                    break;
-                case "piegraph":
-                    graphs.push(new Piegraph(backgroundId, foregroundId, properties, data));
-                    break;
                 default:
                 // do nothing
             }
