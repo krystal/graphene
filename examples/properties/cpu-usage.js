@@ -35,6 +35,6 @@ var CPU_USAGE_PROPERTIES = {
         "min": 0,
         "max": 10,
         "label_interval": 2,
-        "label_suffix": "%"
+        "label_suffix": [[0, "%"]]
     }
 };

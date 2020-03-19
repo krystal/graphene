@@ -31,6 +31,6 @@ var DISKS_PROPERTIES = {
         "min": 0,
         "max": 250000,
         "label_interval": 25000,
-        "label_suffix": " b/s"
+        "label_suffix": [[1000, " B/s"], [1000000, " kB/s"]]
     }
 };

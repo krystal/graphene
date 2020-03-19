@@ -27,13 +27,33 @@ class Linegraph extends Graph {
         this.drawAxisLabels();
     }
 
+    // TODO: since this returns a pair via an array it warrants a better name
+    // it also needn't return a pair, it can return an object
+    selectSuffix(value) {
+        if (this.properties.y_axis.label_suffix.length == 1) {
+            return [value, this.properties.y_axis.label_suffix[0][1]];
+        }
+
+        var previousLimit = 1;
+        for (var i = 0; i < this.properties.y_axis.label_suffix.length; i++) {
+            var limit = this.properties.y_axis.label_suffix[i][0];
+            if (value < limit) {
+                return [value / (limit / previousLimit), this.properties.y_axis.label_suffix[i][1]];
+            }
+            previousLimit = limit;
+        }
+    }
+
     calculateParameters() {
         this.backgroundContext.font = this.properties.fonts.axes_labels.size + "px " + this.properties.fonts.axes_labels.family;
 
         var maxLabelWidthX = this.caclulateMaxLabelWidthX();
         var maxLabelWidthY = 0;
+        // TODO: check if this is skipping the first one and check for other such instances
         for (var i = this.properties.y_axis.min + this.properties.y_axis.label_interval; i < this.properties.y_axis.max; i += this.properties.y_axis.label_interval) {
-            var labelWidth = this.backgroundContext.measureText(Helper.applyAffix(i, this.properties.y_axis.label_prefix, this.properties.y_axis.label_suffix)).width;
+            // TODO: this also requires a better name
+            var suffixData = this.selectSuffix(i);
+            var labelWidth = this.backgroundContext.measureText(Helper.applyAffix(suffixData[0], this.properties.y_axis.label_prefix, suffixData[1])).width;
             if (labelWidth > maxLabelWidthY) {
                 maxLabelWidthY = labelWidth;
             }
@@ -156,7 +176,9 @@ class Linegraph extends Graph {
         }
 
         for (var i = this.properties.y_axis.min; i <= this.properties.y_axis.max; i += this.properties.y_axis.label_interval) {
-            this.backgroundContext.fillText(Helper.applyAffix(i, this.properties.y_axis.label_prefix, this.properties.y_axis.label_suffix), (this.leftMargin / 2), this.graphEndY - ((i - this.properties.y_axis.min) * this.graphScaleY));
+            // TODO: this also requires a better name
+            var suffixData = this.selectSuffix(i);
+            this.backgroundContext.fillText(Helper.applyAffix(suffixData[0], this.properties.y_axis.label_prefix, suffixData[1]), (this.leftMargin / 2), this.graphEndY - ((i - this.properties.y_axis.min) * this.graphScaleY));
         }
     }
 

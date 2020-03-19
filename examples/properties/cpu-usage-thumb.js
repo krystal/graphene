@@ -33,6 +33,6 @@ var CPU_USAGE_THUMB_PROPERTIES = {
         "min": 0,
         "max": 10,
         "label_interval": 5,
-        "label_suffix": "%"
+        "label_suffix": [[0, "%"]]
     }
 };
