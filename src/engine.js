@@ -24,7 +24,7 @@ function loadGraphs() {
 
 function drawGraphs() {
     for (var i = 0; i < graphs.length; i++) {
-        //graphs[i].draw();
+        graphs[i].draw();
     }
 }
 
