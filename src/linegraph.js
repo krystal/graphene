@@ -63,8 +63,8 @@ class Linegraph extends Graph {
 
         var yAxisRange = this.properties.y_axis.max - this.properties.y_axis.min;
         var yAxisTotalIntervals = (yAxisRange / this.properties.y_axis.label_interval) + 1;
-        // skip drawing the first and last lines
-        for (var i = 1; i < yAxisTotalIntervals - 1; i++) {
+        // skip drawing the last line (on the x-axis)
+        for (var i = 0; i < yAxisTotalIntervals - 1; i++) {
             this.backgroundContext.moveTo(0, i * this.properties.y_axis.label_interval);
             this.backgroundContext.lineTo(this.properties.x_axis.range, i * this.properties.y_axis.label_interval);
         }
