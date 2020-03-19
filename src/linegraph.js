@@ -3,12 +3,13 @@ class Linegraph extends Graph {
       super(backgroundId, foregroundId, properties, data);
 
       this.currentHighlight = -1;
-      if (this.properties.highlight.enabled) {
+      if (this.properties.flags.highlight_enabled) {
           // TODO: move this to a point after the JSON has been loaded (and possibly calculateParameters has been called at least once)
           this.foreground.addEventListener('mousemove', this.handleMouseMove.bind(this), false);
       }
   }
 
+  // TODO: add property parsing (log unsupported ones in the console and fill in missing ones with defaults)
   // TODO: add the concept of a viewport to facilitate scrolling of data in the x-axis
 
   draw() {
@@ -20,14 +21,14 @@ class Linegraph extends Graph {
 
       this.drawHorizontalLines();
       for (var i = 0; i < this.data.y.length; i++) {
-          this.drawAreaUnderGraph(this.data.y[i], this.properties.colours.graph[i]);
-          this.drawGraph(this.data.y[i], this.properties.colours.graph[i]);
+          this.drawAreaUnderGraph(this.data.y[i], this.properties.colours.data[i]);
+          this.drawGraph(this.data.y[i], this.properties.colours.data[i]);
       }
       this.drawAxisLabels();
   }
 
   calculateParameters() {
-      this.backgroundContext.font = this.properties.axes_labels.font_size + "px " + this.properties.axes_labels.font_family;
+      this.backgroundContext.font = this.properties.fonts.axes_labels.size + "px " + this.properties.fonts.axes_labels.family;
 
       var maxLabelWidthX = this.caclulateMaxLabelWidthX();
       var maxLabelWidthY = 0;
@@ -73,7 +74,7 @@ class Linegraph extends Graph {
   }
 
   drawAreaUnderGraph(dataset, colour) {
-      this.backgroundContext.fillStyle = Helper.hex2rgba(colour, this.properties.alphas.under_graph);
+      this.backgroundContext.fillStyle = Helper.hex2rgba(colour, this.properties.colours.alphas.under_graph);
       this.backgroundContext.save();
 
       this.backgroundContext.transform(this.graphScaleX, 0, 0, this.graphScaleY, this.graphStartX, this.graphStartY);
@@ -96,7 +97,7 @@ class Linegraph extends Graph {
 
   drawGraph(dataset, colour) {
       this.backgroundContext.strokeStyle = colour;
-      this.backgroundContext.lineWidth = this.properties.graph_settings.line_width;
+      this.backgroundContext.lineWidth = this.properties.widths.data;
       this.backgroundContext.save();
 
       this.backgroundContext.transform(this.graphScaleX, 0, 0, this.graphScaleY, this.graphStartX, this.graphStartY);
@@ -137,7 +138,7 @@ class Linegraph extends Graph {
           availableWidthPerLabel = this.graphWidth / (this.data.x.length / xAxisLabelInterval);
       }
 
-      this.backgroundContext.font = this.properties.axes_labels.font_size + "px " + this.properties.axes_labels.font_family;
+      this.backgroundContext.font = this.properties.fonts.axes_labels.size + "px " + this.properties.fonts.axes_labels.family;
       this.backgroundContext.fillStyle = this.properties.colours.axes_labels;
       this.backgroundContext.textAlign = "center";
       this.backgroundContext.textBaseline = "middle";
@@ -192,7 +193,7 @@ class Linegraph extends Graph {
       this.foregroundContext.fill();
 
       for (var i = 0; i < dataHighlights.length; i++) {
-          this.foregroundContext.strokeStyle = this.properties.colours.graph[i];
+          this.foregroundContext.strokeStyle = this.properties.colours.data[i];
           this.foregroundContext.lineWidth = 4;
           this.foregroundContext.fillStyle = this.properties.colours.background;
 
