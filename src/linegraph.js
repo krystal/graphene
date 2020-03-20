@@ -6,6 +6,7 @@ class Linegraph extends Graph {
         if (this.properties.flags.highlight_enabled) {
             // TODO: move this to a point after the JSON has been loaded (and possibly calculateParameters has been called at least once)
             this.foreground.addEventListener('mousemove', this.handleMouseMove.bind(this), false);
+            this.foreground.addEventListener('mouseleave', this.handleMouseLeave.bind(this), false);
         }
     }
 
@@ -249,7 +250,6 @@ class Linegraph extends Graph {
         this.foregroundContext.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
     }
 
-    // TODO: cancel highlight on mouse leave
     handleMouseMove(event) {
         var graphX = (event.offsetX - this.graphStartX) / this.graphScaleX;
         var newHighlight = Math.min(Math.max(Math.round(graphX), 0), this.properties.x_axis.range);
@@ -257,5 +257,10 @@ class Linegraph extends Graph {
         if (newHighlight != this.currentHighlight) {
             this.highlight(newHighlight);
         }
+    }
+
+    handleMouseLeave(event) {
+        this.currentHighlight = -1;
+        this.clearHighlight();
     }
 }
