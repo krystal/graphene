@@ -46,16 +46,10 @@ The `properties` JSON defines how a graph should be presented, here's an example
         }
     },
     "widths": {
-        "data": 1,
-        "highlight_indicator": 2,
-        "data_highlight_indicator": 4
-    },
-    "radii": {
-        "highlight_indicator": 4,
-        "data_highlight_indicator": 10
+        "data": 1
     },
     "flags": {
-        "highlight_enabled": true
+        "highlight_enabled": false
     },
     "x_axis": {
         "range": 3
@@ -74,31 +68,7 @@ The `data` JSON contains the raw data, here's an example:
 
 ```
 {
-    "x": [
-        "Q1",
-        "Q2",
-        "Q3",
-        "Q4"
-    ],
-    "y": [
-        [
-            33,
-            66,
-            80,
-            50
-        ],
-        [
-            66,
-            80,
-            50,
-            33
-        ],
-        [
-            80,
-            50,
-            33,
-            66
-        ]
-    ]
+    "x": ["Q1", "Q2", "Q3", "Q4"],
+    "y": [[33, 66, 80, 50], [66, 80, 50, 33], [80, 50, 33, 66]]
 }
 ```
