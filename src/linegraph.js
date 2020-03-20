@@ -228,12 +228,11 @@ class Linegraph extends Graph {
 
         for (var i = 0; i < dataHighlights.length; i++) {
             this.foregroundContext.strokeStyle = this.properties.colours.data[i];
-            this.foregroundContext.lineWidth = 4;
+            this.foregroundContext.lineWidth = this.properties.widths.data_highlight_indicator;
             this.foregroundContext.fillStyle = this.properties.colours.background;
 
             this.foregroundContext.beginPath();
-            // TODO: add something in the JSON for line width and circle radius
-            this.foregroundContext.arc(dataHighlights[i].x, dataHighlights[i].y, 10, 0, 2 * Math.PI);
+            this.foregroundContext.arc(dataHighlights[i].x, dataHighlights[i].y, this.properties.radii.data_highlight_indicator, 0, 2 * Math.PI);
             this.foregroundContext.closePath();
             this.foregroundContext.stroke();
             this.foregroundContext.fill();
