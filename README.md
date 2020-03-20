@@ -36,7 +36,6 @@ The `properties` JSON defines how a graph should be presented, here's an example
             "#00FF00",
             "#0000FF"
         ],
-        "highlight_indicator": "#CCCCCC",
         "horizontal_lines": "#EEEEEE"
     },
     "fonts": {
@@ -47,9 +46,6 @@ The `properties` JSON defines how a graph should be presented, here's an example
     },
     "widths": {
         "data": 1
-    },
-    "flags": {
-        "highlight_enabled": false
     },
     "x_axis": {
         "range": 3
@@ -72,3 +68,7 @@ The `data` JSON contains the raw data, here's an example:
     "y": [[33, 66, 80, 50], [66, 80, 50, 33], [80, 50, 33, 66]]
 }
 ```
+
+Which produces the following graph:
+
+![test.png](examples/images/test.png)
