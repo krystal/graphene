@@ -15,9 +15,11 @@ Graphene's engine searches for graphs by parsing all the `<div>` elements on a H
 
 The id of the canvases should be the `<div>` id suffixed with `-background` or `-foreground` respectively. The graphs are drawn on the background canvas and the user interacts with them via the foreground canvas.
 
-Available graph types:
+### Available graph types
 
 - linegraph
+
+### Properties
 
 The `properties` JSON defines how a graph should be presented, here's an example:
 
@@ -56,15 +58,47 @@ The `properties` JSON defines how a graph should be presented, here's an example
         "highlight_enabled": true
     },
     "x_axis": {
-        "range": 100
+        "range": 3
     },
     "y_axis": {
         "min": 0,
         "max": 100,
-        "label_interval": 10,
-        "label_suffix": [[0, "%"]]
+        "label_interval": 10
     }
 }
 ```
 
-The `data` JSON contains the raw data:
+### Data
+
+The `data` JSON contains the raw data, here's an example:
+
+```
+{
+    "x": [
+        "Q1",
+        "Q2",
+        "Q3",
+        "Q4"
+    ],
+    "y": [
+        [
+            33,
+            66,
+            80,
+            50
+        ],
+        [
+            66,
+            80,
+            50,
+            33
+        ],
+        [
+            80,
+            50,
+            33,
+            66
+        ]
+    ]
+}
+```
