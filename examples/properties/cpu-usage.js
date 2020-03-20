@@ -21,7 +21,11 @@ var CPU_USAGE_PROPERTIES = {
         }
     },
     "widths": {
-        "data": 1
+        "data": 1,
+        "highlight_indicator": 2
+    },
+    "radii": {
+        "highlight_indicator": 4
     },
     "flags": {
         "highlight_enabled": true

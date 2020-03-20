@@ -210,20 +210,18 @@ class Linegraph extends Graph {
         }
 
         this.foregroundContext.strokeStyle = this.properties.colours.background;
-        // TODO: add something in the JSON for line width
-        this.foregroundContext.lineWidth = 2;
+        this.foregroundContext.lineWidth = this.properties.widths.highlight_indicator;
         this.foregroundContext.beginPath();
         this.foregroundContext.moveTo(axisHighlight.x, axisHighlight.y);
         this.foregroundContext.lineTo(axisHighlight.x, yValueMax);
         this.foregroundContext.stroke();
 
         this.foregroundContext.strokeStyle = this.properties.colours.highlight_indicator;
-        this.foregroundContext.lineWidth = 2;
+        this.foregroundContext.lineWidth = this.properties.widths.highlight_indicator;
         this.foregroundContext.fillStyle = this.properties.colours.background;
 
         this.foregroundContext.beginPath();
-        // TODO: add something in the JSON for line width and circle radius
-        this.foregroundContext.arc(axisHighlight.x, axisHighlight.y, 4, 0, 2 * Math.PI);
+        this.foregroundContext.arc(axisHighlight.x, axisHighlight.y, this.properties.radii.highlight_indicator, 0, 2 * Math.PI);
         this.foregroundContext.closePath();
         this.foregroundContext.stroke();
         this.foregroundContext.fill();
