@@ -37,22 +37,21 @@ class Linegraph extends Graph {
             return {"value": value, "suffix": this.properties.y_axis.label_suffix[0][1]};
         }
 
-        var previousLimit = 1;
-        // TODO: find a better name for this as well
-        var previousPreviousLimit = 1;
-        var previousSuffix = "";
+        var lastLimit = 1;
+        var lastButOneLimit = 1;
+        var lastSuffix = "";
         for (var i = 0; i < this.properties.y_axis.label_suffix.length; i++) {
             var limit = this.properties.y_axis.label_suffix[i][0];
             var suffix = this.properties.y_axis.label_suffix[i][1];
             if (value < limit) {
-                return {"value": value / (previousLimit), "suffix": suffix};
+                return {"value": value / (lastLimit), "suffix": suffix};
             }
-            previousPreviousLimit = previousLimit;
-            previousLimit = limit;
-            previousSuffix = suffix;
+            lastButOneLimit = lastLimit;
+            lastLimit = limit;
+            lastSuffix = suffix;
         }
 
-        return {"value": value / (previousLimit / previousPreviousLimit), "suffix": previousSuffix};
+        return {"value": value / (lastLimit / lastButOneLimit), "suffix": lastSuffix};
     }
 
     calculateParameters() {
