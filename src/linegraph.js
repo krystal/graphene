@@ -3,7 +3,7 @@ class Linegraph extends Graph {
         super(backgroundId, foregroundId, properties, data);
 
         this.currentHighlight = -1;
-        if (this.properties.flags.highlight_enabled) {
+        if (this.properties.flags && this.properties.flags.highlight_enabled) {
             // TODO: move this to a point after the JSON has been loaded (and possibly calculateParameters has been called at least once)
             this.foreground.addEventListener('mousemove', this.handleMouseMove.bind(this), false);
             this.foreground.addEventListener('mouseleave', this.handleMouseLeave.bind(this), false);
