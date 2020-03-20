@@ -31,6 +31,10 @@ class Linegraph extends Graph {
     // TODO: since this returns a pair via an array it warrants a better name
     // it also needn't return a pair, it can return an object
     parseLabel(value) {
+        if (!this.properties.y_axis.label_suffix) {
+            return [value, ""];
+        }
+
         if (this.properties.y_axis.label_suffix.length == 1) {
             return [value, this.properties.y_axis.label_suffix[0][1]];
         }
