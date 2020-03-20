@@ -69,6 +69,6 @@ The `data` JSON contains the raw data, here's an example:
 }
 ```
 
-Which produces the following graph:
+Together, this produces the following graph:
 
 ![test.png](examples/images/test.png)
