@@ -21,7 +21,7 @@ The id of the canvases should be the `<div>` id suffixed with `-background` or `
 
 ### Properties
 
-The `properties` JSON defines how a graph should be presented, here's an example:
+The `properties` JSON defines how a graph is presented, here's an example:
 
 ```
 {
