@@ -28,15 +28,13 @@ class Linegraph extends Graph {
         this.drawAxisLabels();
     }
 
-    // TODO: since this returns a pair via an array it warrants a better name
-    // it also needn't return a pair, it can return an object
     parseLabel(value) {
         if (!this.properties.y_axis.label_suffix) {
-            return [value, ""];
+            return {"value": value, "suffix": ""};
         }
 
         if (this.properties.y_axis.label_suffix.length == 1) {
-            return [value, this.properties.y_axis.label_suffix[0][1]];
+            return {"value": value, "suffix": this.properties.y_axis.label_suffix[0][1]};
         }
 
         var previousLimit = 1;
@@ -47,14 +45,14 @@ class Linegraph extends Graph {
             var limit = this.properties.y_axis.label_suffix[i][0];
             var suffix = this.properties.y_axis.label_suffix[i][1];
             if (value < limit) {
-                return [value / (previousLimit), suffix];
+                return {"value": value / (previousLimit), "suffix": suffix};
             }
             previousPreviousLimit = previousLimit;
             previousLimit = limit;
             previousSuffix = suffix;
         }
 
-        return [value / (previousLimit / previousPreviousLimit), previousSuffix];
+        return {"value": value / (previousLimit / previousPreviousLimit), "suffix": previousSuffix};
     }
 
     calculateParameters() {
@@ -64,7 +62,7 @@ class Linegraph extends Graph {
         var maxLabelWidthY = 0;
         for (var i = this.properties.y_axis.min; i <= this.properties.y_axis.max; i += this.properties.y_axis.label_interval) {
             var labelData = this.parseLabel(i);
-            var labelWidth = this.backgroundContext.measureText(Helper.applyAffix(labelData[0], this.properties.y_axis.label_prefix, labelData[1])).width;
+            var labelWidth = this.backgroundContext.measureText(Helper.applyAffix(labelData.value, this.properties.y_axis.label_prefix, labelData.suffix)).width;
             if (labelWidth > maxLabelWidthY) {
                 maxLabelWidthY = labelWidth;
             }
@@ -188,7 +186,7 @@ class Linegraph extends Graph {
 
         for (var i = this.properties.y_axis.min; i <= this.properties.y_axis.max; i += this.properties.y_axis.label_interval) {
             var labelData = this.parseLabel(i);
-            this.backgroundContext.fillText(Helper.applyAffix(labelData[0], this.properties.y_axis.label_prefix, labelData[1]), (this.leftMargin / 2), this.graphEndY - ((i - this.properties.y_axis.min) * this.graphScaleY));
+            this.backgroundContext.fillText(Helper.applyAffix(labelData.value, this.properties.y_axis.label_prefix, labelData.suffix), (this.leftMargin / 2), this.graphEndY - ((i - this.properties.y_axis.min) * this.graphScaleY));
         }
     }
 
