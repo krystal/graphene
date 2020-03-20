@@ -1,0 +1,12 @@
+<html>
+  <body>
+    <div id="foo" data-type="linegraph" data-properties='{"colours":{"alphas":{"under_graph":0.25},"axes_labels":"#000000","background":"#FFFFFF","data":["#FF0000","#00FF00","#0000FF"],"horizontal_lines":"#EEEEEE"},"fonts":{"axes_labels":{"family":"Arial","size":13}},"widths":{"data":1},"flags":{"highlight_enabled":false},"x_axis":{"range":3},"y_axis":{"min":0,"max":100,"label_interval":10}}' data-data='{"x":["Q1","Q2","Q3","Q4"],"y":[[33,66,80,50],[66,80,50,33],[80,50,33,66]]}' style="position: relative;">
+      <canvas id="foo-background" width="960" height="320"></canvas>
+      <canvas id="foo-foreground" width="960" height="320" style="position: absolute; left: 0; top: 0; z-index: 0;"></canvas>
+    </div>
+  </body>
+  <script src="../src/graph.js"></script>
+  <script src="../src/helper.js"></script>
+  <script src="../src/linegraph.js"></script>
+  <script src="../src/engine.js"></script>
+</html>
