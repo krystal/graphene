@@ -35,13 +35,21 @@ class Linegraph extends Graph {
         }
 
         var previousLimit = 1;
+        // TODO: find a better name for this as well
+        var previousPreviousLimit = 1;
+        var previousSuffix = "";
         for (var i = 0; i < this.properties.y_axis.label_suffix.length; i++) {
             var limit = this.properties.y_axis.label_suffix[i][0];
+            var suffix = this.properties.y_axis.label_suffix[i][1];
             if (value < limit) {
-                return [value / (limit / previousLimit), this.properties.y_axis.label_suffix[i][1]];
+                return [value / (previousLimit), suffix];
             }
+            previousPreviousLimit = previousLimit;
             previousLimit = limit;
+            previousSuffix = suffix;
         }
+
+        return [value / (previousLimit / previousPreviousLimit), previousSuffix];
     }
 
     calculateParameters() {
