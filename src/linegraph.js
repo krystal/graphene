@@ -62,8 +62,7 @@ class Linegraph extends Graph {
 
         var maxLabelWidthX = this.caclulateMaxLabelWidthX();
         var maxLabelWidthY = 0;
-        // TODO: check if this is skipping the first one and check for other such instances
-        for (var i = this.properties.y_axis.min + this.properties.y_axis.label_interval; i < this.properties.y_axis.max; i += this.properties.y_axis.label_interval) {
+        for (var i = this.properties.y_axis.min; i <= this.properties.y_axis.max; i += this.properties.y_axis.label_interval) {
             var labelData = this.parseLabel(i);
             var labelWidth = this.backgroundContext.measureText(Helper.applyAffix(labelData[0], this.properties.y_axis.label_prefix, labelData[1])).width;
             if (labelWidth > maxLabelWidthY) {
