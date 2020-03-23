@@ -1,4 +1,4 @@
-var BILLY_PROPERTIES = {
+var SHARED_PROPERTIES = {
   "colours": {
       "alphas": {
           "under_graph": 0.25
