@@ -25,7 +25,9 @@ class Linegraph extends Graph {
             this.drawAreaUnderGraph(this.data.y[i], this.properties.colours.data[i]);
             this.drawGraph(this.data.y[i], this.properties.colours.data[i]);
         }
-        this.drawAxisLabels();
+        if (this.properties.fonts.axes_labels.size > 0) {
+            this.drawAxisLabels();
+        }
     }
 
     parseLabel(value) {
@@ -55,18 +57,22 @@ class Linegraph extends Graph {
     }
 
     calculateParameters() {
-        this.backgroundContext.font = this.properties.fonts.axes_labels.size + "px " + this.properties.fonts.axes_labels.family;
-
-        var maxLabelWidthX = this.caclulateMaxLabelWidthX();
+        var maxLabelWidthX = 0;
         var maxLabelWidthY = 0;
-        for (var i = this.properties.y_axis.min; i <= this.properties.y_axis.max; i += this.properties.y_axis.label_interval) {
-            var labelData = this.parseLabel(i);
-            var labelWidth = this.backgroundContext.measureText(Helper.applyAffix(labelData.value, this.properties.y_axis.label_prefix, labelData.suffix)).width;
-            if (labelWidth > maxLabelWidthY) {
-                maxLabelWidthY = labelWidth;
+        var labelHeightApproximation = 0;
+        if (this.properties.fonts.axes_labels.size > 0) {
+            this.backgroundContext.font = this.properties.fonts.axes_labels.size + "px " + this.properties.fonts.axes_labels.family;
+
+            maxLabelWidthX = this.caclulateMaxLabelWidthX();
+            for (var i = this.properties.y_axis.min; i <= this.properties.y_axis.max; i += this.properties.y_axis.label_interval) {
+                var labelData = this.parseLabel(i);
+                var labelWidth = this.backgroundContext.measureText(Helper.applyAffix(labelData.value, this.properties.y_axis.label_prefix, labelData.suffix)).width;
+                if (labelWidth > maxLabelWidthY) {
+                    maxLabelWidthY = labelWidth;
+                }
             }
+            labelHeightApproximation = this.backgroundContext.measureText("M").width;
         }
-        var labelHeightApproximation = this.backgroundContext.measureText("M").width;
 
         this.leftMargin = maxLabelWidthY * 2;
         var rightMargin = maxLabelWidthX / 2;
