@@ -1,4 +1,4 @@
-var NETWORK_INTERFACES_THUMB_PROPERTIES = {
+var DISKS_MINI_PROPERTIES = {
     "colours": {
         "alphas": {
             "under_graph": 0
@@ -31,8 +31,8 @@ var NETWORK_INTERFACES_THUMB_PROPERTIES = {
     },
     "y_axis": {
         "min": 0,
-        "max": 150000,
-        "label_interval": 75000,
+        "max": 250000,
+        "label_interval": 125000,
         "label_suffix": [[1000, " B/s"], [1000000, " kB/s"]]
     }
 };

@@ -1,28 +1,28 @@
 <html>
   <head>
-    <script src="properties/cpu-usage-thumb.js"></script>
+    <script src="properties/cpu-usage-mini.js"></script>
     <script src="properties/cpu-usage.js"></script>
-    <script src="properties/network-interfaces-thumb.js"></script>
+    <script src="properties/network-interfaces-mini.js"></script>
     <script src="properties/network-interfaces.js"></script>
     <script src="properties/disks.js"></script>
-    <script src="properties/disks-thumb.js"></script>
+    <script src="properties/disks-mini.js"></script>
     <script src="data/cpu-usage.js"></script>
     <script src="data/network-interfaces.js"></script>
     <script src="data/disks.js"></script>
     <script src="scripts/data-converter.js"></script>
   </head>
   <body>
-    <div style="position: relative; margin: 24px; display: inline-block;" id="cpu-usage-thumb" data-type="linegraph" data-properties="" data-data="">
-      <canvas id="cpu-usage-thumb-background" width="400" height="150"></canvas>
-      <canvas id="cpu-usage-thumb-foreground" width="400" height="150" style="position: absolute; left: 0; top: 0; z-index: 0;"></canvas>
+    <div style="position: relative; margin: 24px; display: inline-block;" id="cpu-usage-mini" data-type="linegraph" data-properties="" data-data="">
+      <canvas id="cpu-usage-mini-background" width="400" height="150"></canvas>
+      <canvas id="cpu-usage-mini-foreground" width="400" height="150" style="position: absolute; left: 0; top: 0; z-index: 0;"></canvas>
     </div>
-    <div style="position: relative; margin: 24px; display: inline-block;" id="network-interfaces-thumb" data-type="linegraph" data-properties="" data-data="">
-      <canvas id="network-interfaces-thumb-background" width="400" height="150"></canvas>
-      <canvas id="network-interfaces-thumb-foreground" width="400" height="150" style="position: absolute; left: 0; top: 0; z-index: 0;"></canvas>
+    <div style="position: relative; margin: 24px; display: inline-block;" id="network-interfaces-mini" data-type="linegraph" data-properties="" data-data="">
+      <canvas id="network-interfaces-mini-background" width="400" height="150"></canvas>
+      <canvas id="network-interfaces-mini-foreground" width="400" height="150" style="position: absolute; left: 0; top: 0; z-index: 0;"></canvas>
     </div>
-    <div style="position: relative; margin: 24px; display: inline-block;" id="disks-thumb" data-type="linegraph" data-properties="" data-data="">
-      <canvas id="disks-thumb-background" width="400" height="150"></canvas>
-      <canvas id="disks-thumb-foreground" width="400" height="150" style="position: absolute; left: 0; top: 0; z-index: 0;"></canvas>
+    <div style="position: relative; margin: 24px; display: inline-block;" id="disks-mini" data-type="linegraph" data-properties="" data-data="">
+      <canvas id="disks-mini-background" width="400" height="150"></canvas>
+      <canvas id="disks-mini-foreground" width="400" height="150" style="position: absolute; left: 0; top: 0; z-index: 0;"></canvas>
     </div>
     <div style="position: relative; margin: 48px;" id="cpu-usage" data-type="linegraph" data-properties="" data-data="">
       <canvas id="cpu-usage-background" width="1280" height="384"></canvas>
@@ -38,12 +38,12 @@
     </div>
   </body>
   <script>
-    document.getElementById("cpu-usage-thumb").dataset.properties = JSON.stringify(CPU_USAGE_THUMB_PROPERTIES);
-    document.getElementById("cpu-usage-thumb").dataset.data = JSON.stringify(convertArray(CPU_USAGE_DATA));
-    document.getElementById("network-interfaces-thumb").dataset.properties = JSON.stringify(NETWORK_INTERFACES_THUMB_PROPERTIES);
-    document.getElementById("network-interfaces-thumb").dataset.data = JSON.stringify(convertObject(NETWORK_INTERFACES_DATA));
-    document.getElementById("disks-thumb").dataset.properties = JSON.stringify(DISKS_THUMB_PROPERTIES);
-    document.getElementById("disks-thumb").dataset.data = JSON.stringify(convertObject(DISKS_DATA));
+    document.getElementById("cpu-usage-mini").dataset.properties = JSON.stringify(CPU_USAGE_MINI_PROPERTIES);
+    document.getElementById("cpu-usage-mini").dataset.data = JSON.stringify(convertArray(CPU_USAGE_DATA));
+    document.getElementById("network-interfaces-mini").dataset.properties = JSON.stringify(NETWORK_INTERFACES_MINI_PROPERTIES);
+    document.getElementById("network-interfaces-mini").dataset.data = JSON.stringify(convertObject(NETWORK_INTERFACES_DATA));
+    document.getElementById("disks-mini").dataset.properties = JSON.stringify(DISKS_MINI_PROPERTIES);
+    document.getElementById("disks-mini").dataset.data = JSON.stringify(convertObject(DISKS_DATA));
     document.getElementById("cpu-usage").dataset.properties = JSON.stringify(CPU_USAGE_PROPERTIES);
     document.getElementById("cpu-usage").dataset.data = JSON.stringify(convertArray(CPU_USAGE_DATA));
     document.getElementById("network-interfaces").dataset.properties = JSON.stringify(NETWORK_INTERFACES_PROPERTIES);

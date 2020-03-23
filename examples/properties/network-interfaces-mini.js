@@ -1,4 +1,4 @@
-var CPU_USAGE_THUMB_PROPERTIES = {
+var NETWORK_INTERFACES_MINI_PROPERTIES = {
     "colours": {
         "alphas": {
             "under_graph": 0
@@ -7,9 +7,7 @@ var CPU_USAGE_THUMB_PROPERTIES = {
         "background": "#FFFFFF",
         "data": [
             "#038FFB",
-            "#04E395",
-            "#FEB01A",
-            "#FF4560"
+            "#04E395"
         ],
         "highlight_indicator": "#E0DEFF",
         "horizontal_lines": "#FFFFFF"
@@ -33,8 +31,8 @@ var CPU_USAGE_THUMB_PROPERTIES = {
     },
     "y_axis": {
         "min": 0,
-        "max": 10,
-        "label_interval": 5,
-        "label_suffix": [[0, "%"]]
+        "max": 150000,
+        "label_interval": 75000,
+        "label_suffix": [[1000, " B/s"], [1000000, " kB/s"]]
     }
 };
