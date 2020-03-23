@@ -1,0 +1,86 @@
+<html>
+  <head>
+    <script src="properties/servers/billy.js"></script>
+    <script src="data/servers/billy.js"></script>
+    <script src="properties/servers/codebase.js"></script>
+    <script src="data/servers/codebase.js"></script>
+    <script src="properties/servers/deploy.js"></script>
+    <script src="data/servers/deploy.js"></script>
+    <script src="properties/servers/telecoms.js"></script>
+    <script src="data/servers/telecoms.js"></script>
+    <script src="scripts/data-converter.js"></script>
+  </head>
+  <body>
+    <table style="width:100%">
+      <tr>
+        <th style="text-align: left">Name</th>
+        <th style="text-align: left">State</th> 
+        <th style="text-align: left">Package</th>
+        <th style="text-align: left">Data Center</th>
+        <th style="text-align: left">Graph</th>
+      </tr>
+      <tr>
+        <td>Billy</td>
+        <td>Started</td> 
+        <td>Flexible</td>
+        <td>London (LON1)</td>
+        <td>
+          <div style="position: relative; margin: 4px;" id="billy" data-type="linegraph" data-properties="" data-data="">
+            <canvas id="billy-background" width="64" height="32"></canvas>
+            <canvas id="billy-foreground" width="64" height="32" style="position: absolute; left: 0; top: 0; z-index: 0;"></canvas>
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <td>Codebase</td>
+        <td>Started</td> 
+        <td>Flexible</td>
+        <td>London (LON1)</td>
+        <td>
+          <div style="position: relative; margin: 4px;" id="codebase" data-type="linegraph" data-properties="" data-data="">
+            <canvas id="codebase-background" width="64" height="32"></canvas>
+            <canvas id="codebase-foreground" width="64" height="32" style="position: absolute; left: 0; top: 0; z-index: 0;"></canvas>
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <td>Deploy</td>
+        <td>Started</td> 
+        <td>Flexible</td>
+        <td>London (LON1)</td>
+        <td>
+          <div style="position: relative; margin: 4px;" id="deploy" data-type="linegraph" data-properties="" data-data="">
+            <canvas id="deploy-background" width="64" height="32"></canvas>
+            <canvas id="deploy-foreground" width="64" height="32" style="position: absolute; left: 0; top: 0; z-index: 0;"></canvas>
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <td>Telecoms</td>
+        <td>Started</td> 
+        <td>Flexible</td>
+        <td>London (LON1)</td>
+        <td>
+          <div style="position: relative; margin: 4px;" id="telecoms" data-type="linegraph" data-properties="" data-data="">
+            <canvas id="telecoms-background" width="64" height="32"></canvas>
+            <canvas id="telecoms-foreground" width="64" height="32" style="position: absolute; left: 0; top: 0; z-index: 0;"></canvas>
+          </div>
+        </td>
+      </tr>
+    </table>
+  </body>
+  <script>
+    document.getElementById("billy").dataset.properties = JSON.stringify(BILLY_PROPERTIES);
+    document.getElementById("billy").dataset.data = JSON.stringify(convertArray(BILLY_DATA));
+    document.getElementById("codebase").dataset.properties = JSON.stringify(CODEBASE_PROPERTIES);
+    document.getElementById("codebase").dataset.data = JSON.stringify(convertArray(CODEBASE_DATA));
+    document.getElementById("deploy").dataset.properties = JSON.stringify(DEPLOY_PROPERTIES);
+    document.getElementById("deploy").dataset.data = JSON.stringify(convertArray(DEPLOY_DATA));
+    document.getElementById("telecoms").dataset.properties = JSON.stringify(TELECOMS_PROPERTIES);
+    document.getElementById("telecoms").dataset.data = JSON.stringify(convertArray(TELECOMS_DATA));
+  </script>
+  <script src="../src/graph.js"></script>
+  <script src="../src/helper.js"></script>
+  <script src="../src/linegraph.js"></script>
+  <script src="../src/engine.js"></script>
+</html>
