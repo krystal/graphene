@@ -76,7 +76,7 @@ class Linegraph extends Graph {
 
         this.leftMargin = maxLabelWidthY * 2;
         var rightMargin = maxLabelWidthX / 2;
-        var topMargin = labelHeightApproximation / 2;
+        var topMargin = labelHeightApproximation;
         this.bottomMargin = labelHeightApproximation * 3;
         this.graphStartX = this.leftMargin;
         this.graphStartY = topMargin;
