@@ -1,4 +1,4 @@
-var DISKS_MINI_PROPERTIES = {
+var CPU_USAGE_PROPERTIES = {
     "colours": {
         "alphas": {
             "under_graph": 0
@@ -7,7 +7,9 @@ var DISKS_MINI_PROPERTIES = {
         "background": "#FFFFFF",
         "data": [
             "#038FFB",
-            "#04E395"
+            "#04E395",
+            "#FEB01A",
+            "#FF4560"
         ],
         "highlight_indicator": "#E0DEFF",
         "horizontal_lines": "#FFFFFF"
@@ -31,8 +33,8 @@ var DISKS_MINI_PROPERTIES = {
     },
     "y_axis": {
         "min": 0,
-        "max": 250000,
-        "label_interval": 125000,
-        "label_suffix": [[1000, " B/s"], [1000000, " kB/s"]]
+        "max": 10,
+        "label_interval": 5,
+        "label_suffix": [[0, "%"]]
     }
 };
