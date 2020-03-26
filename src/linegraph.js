@@ -84,8 +84,8 @@ class Linegraph extends Graph {
         this.graphWidth = graphEndX - this.graphStartX;
         var graphHeight = this.graphEndY - this.graphStartY;
         this.graphScaleX = this.graphWidth / this.properties.x_axis.range;
-        var yAxisRange = this.properties.y_axis.max - this.properties.y_axis.min;
-        this.graphScaleY = graphHeight / yAxisRange;
+        this.yAxisRange = this.properties.y_axis.max - this.properties.y_axis.min;
+        this.graphScaleY = graphHeight / this.yAxisRange;
     }
 
     drawHorizontalLines() {
@@ -94,8 +94,7 @@ class Linegraph extends Graph {
         this.backgroundContext.save();
         this.backgroundContext.transform(this.graphScaleX, 0, 0, this.graphScaleY, this.graphStartX, this.graphStartY);
 
-        var yAxisRange = this.properties.y_axis.max - this.properties.y_axis.min;
-        var yAxisTotalIntervals = (yAxisRange / this.properties.y_axis.label_interval) + 1;
+        var yAxisTotalIntervals = (this.yAxisRange / this.properties.y_axis.label_interval) + 1;
         // skip drawing the last line (on the x-axis)
         for (var i = 0; i < yAxisTotalIntervals - 1; i++) {
             this.backgroundContext.moveTo(0, i * this.properties.y_axis.label_interval);
