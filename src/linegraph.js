@@ -83,7 +83,8 @@ class Linegraph extends Graph {
         this.graphEndY = this.canvasHeight - this.bottomMargin;
         this.graphWidth = graphEndX - this.graphStartX;
         var graphHeight = this.graphEndY - this.graphStartY;
-        this.graphScaleX = this.graphWidth / this.properties.x_axis.range;
+        this.xAxisRange = this.properties.x_axis.max - this.properties.x_axis.min;
+        this.graphScaleX = this.graphWidth / this.xAxisRange;
         this.yAxisRange = this.properties.y_axis.max - this.properties.y_axis.min;
         this.graphScaleY = graphHeight / this.yAxisRange;
     }
@@ -98,7 +99,7 @@ class Linegraph extends Graph {
         // skip drawing the last line (on the x-axis)
         for (var i = 0; i < yAxisTotalIntervals - 1; i++) {
             this.backgroundContext.moveTo(0, i * this.properties.y_axis.label_interval);
-            this.backgroundContext.lineTo(this.properties.x_axis.range, i * this.properties.y_axis.label_interval);
+            this.backgroundContext.lineTo(this.xAxisRange, i * this.properties.y_axis.label_interval);
         }
 
         this.backgroundContext.restore();
@@ -121,7 +122,7 @@ class Linegraph extends Graph {
             this.backgroundContext.lineTo(i, dataset[i]);
         }
 
-        this.backgroundContext.lineTo(this.properties.x_axis.range, this.properties.y_axis.min);
+        this.backgroundContext.lineTo(this.xAxisRange, this.properties.y_axis.min);
 
         this.backgroundContext.restore();
         this.backgroundContext.fill();
@@ -251,7 +252,7 @@ class Linegraph extends Graph {
 
     handleMouseMove(event) {
         var graphX = (event.offsetX - this.graphStartX) / this.graphScaleX;
-        var newHighlight = Math.min(Math.max(Math.round(graphX), 0), this.properties.x_axis.range);
+        var newHighlight = Math.min(Math.max(Math.round(graphX), 0), this.xAxisRange);
 
         if (newHighlight != this.currentHighlight) {
             this.highlight(newHighlight);

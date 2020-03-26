@@ -27,7 +27,8 @@ var CPU_USAGE_PROPERTIES = {
         "highlight_enabled": false
     },
     "x_axis": {
-        "range": 288,
+        "min": 0,
+        "max": 288,
         "label_start": 9,
         "label_interval": 48
     },

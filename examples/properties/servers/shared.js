@@ -24,7 +24,8 @@ var SHARED_PROPERTIES = {
       "highlight_enabled": false
   },
   "x_axis": {
-      "range": 71,
+    "min": 0,
+    "max": 71,
       "label_start": 0,
       "label_interval": 1
   },
