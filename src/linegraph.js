@@ -13,6 +13,7 @@ class Linegraph extends Graph {
         this.foreground.addEventListener('mouseup', this.handleMouseUp.bind(this), false);
     }
 
+    // TODO: add select and zoom
     // TODO: add property parsing (log unsupported ones in the console and fill in missing ones with defaults)
 
     draw() {
@@ -265,14 +266,18 @@ class Linegraph extends Graph {
         this.foregroundContext.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
     }
 
+    calculateHighlight(offsetX) {
+        var graphX = (offsetX - this.graphStartX) / this.graphScaleX;
+        return Math.min(Math.max(Math.round(graphX), 0), this.calculateAxisRangeX());
+    }
+
     // TODO: update the highlight as the graph is scrolled (it should stay in place but track the graph moving beneath it)
     // TODO: add a check that difference highlight is not the same as the last difference highlight to prevent unnecessary redraws
     // TODO: stop the graph from scrolling when the data limit is reached at either end
     // TODO: change to a grabbing cursor when moving with the mouse down
     // TODO: change to a no entry style cursor when trying to move a graph that is already showing the full extent of its range
     handleMouseMove(event) {
-        var graphX = (event.offsetX - this.graphStartX) / this.graphScaleX;
-        var newHighlight = Math.min(Math.max(Math.round(graphX), 0), this.calculateAxisRangeX());
+        var newHighlight = this.calculateHighlight(event.offsetX);
         if (this.isMouseDown) {
             var differenceHighlight = newHighlight - this.mouseDownHighlight;
             this.axisMinX = this.mouseDownAxisMinX - differenceHighlight;
@@ -306,9 +311,7 @@ class Linegraph extends Graph {
         this.isMouseDown = true;
         this.mouseDownAxisMinX = this.axisMinX;
         this.mouseDownAxisMaxX = this.axisMaxX;
-        // TODO: DRY this up
-        var graphX = (event.offsetX - this.graphStartX) / this.graphScaleX;
-        this.mouseDownHighlight = Math.min(Math.max(Math.round(graphX), 0), this.calculateAxisRangeX());
+        this.mouseDownHighlight = this.calculateHighlight(event.offsetX);
     }
 
     handleMouseUp(event) {
