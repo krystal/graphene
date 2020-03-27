@@ -55,6 +55,10 @@ class Linegraph extends Graph {
         return {"value": value / (lastLimit / lastButOneLimit), "suffix": lastSuffix};
     }
 
+    calculateAxisRangeX() {
+        return this.xAxisMax - this.xAxisMin;
+    }
+
     calculateParameters() {
         var maxLabelWidthX = 0;
         var maxLabelWidthY = 0;
@@ -83,10 +87,11 @@ class Linegraph extends Graph {
         this.graphEndY = this.canvasHeight - this.bottomMargin;
         this.graphWidth = graphEndX - this.graphStartX;
         var graphHeight = this.graphEndY - this.graphStartY;
-        this.xAxisRange = this.properties.x_axis.max - this.properties.x_axis.min;
-        this.graphScaleX = this.graphWidth / this.xAxisRange;
-        this.yAxisRange = this.properties.y_axis.max - this.properties.y_axis.min;
-        this.graphScaleY = graphHeight / this.yAxisRange;
+        this.xAxisMin = this.properties.x_axis.min;
+        this.xAxisMax = this.properties.x_axis.max;
+        this.graphScaleX = this.graphWidth / this.calculateAxisRangeX();
+        this.axisRangeY = this.properties.y_axis.max - this.properties.y_axis.min;
+        this.graphScaleY = graphHeight / this.axisRangeY;
     }
 
     drawHorizontalLines() {
@@ -95,11 +100,11 @@ class Linegraph extends Graph {
         this.backgroundContext.save();
         this.backgroundContext.transform(this.graphScaleX, 0, 0, this.graphScaleY, this.graphStartX, this.graphStartY);
 
-        var yAxisTotalIntervals = (this.yAxisRange / this.properties.y_axis.label_interval) + 1;
+        var yAxisTotalIntervals = (this.axisRangeY / this.properties.y_axis.label_interval) + 1;
         // skip drawing the last line (on the x-axis)
         for (var i = 0; i < yAxisTotalIntervals - 1; i++) {
             this.backgroundContext.moveTo(0, i * this.properties.y_axis.label_interval);
-            this.backgroundContext.lineTo(this.xAxisRange, i * this.properties.y_axis.label_interval);
+            this.backgroundContext.lineTo(this.calculateAxisRangeX(), i * this.properties.y_axis.label_interval);
         }
 
         this.backgroundContext.restore();
@@ -118,12 +123,12 @@ class Linegraph extends Graph {
 
         this.backgroundContext.moveTo(0, this.properties.y_axis.min);
 
-        for (var i = 0; i <= this.xAxisRange; i++) {
-            var yValue = dataset[this.properties.x_axis.min + i];
+        for (var i = 0; i <= this.calculateAxisRangeX(); i++) {
+            var yValue = dataset[this.xAxisMin + i];
             this.backgroundContext.lineTo(i, yValue);
         }
 
-        this.backgroundContext.lineTo(this.xAxisRange, this.properties.y_axis.min);
+        this.backgroundContext.lineTo(this.calculateAxisRangeX(), this.properties.y_axis.min);
 
         this.backgroundContext.restore();
         this.backgroundContext.fill();
@@ -140,8 +145,8 @@ class Linegraph extends Graph {
 
         this.backgroundContext.beginPath();
 
-        for (var i = 0; i <= this.xAxisRange; i++) {
-            var yValue = dataset[this.properties.x_axis.min + i];
+        for (var i = 0; i <= this.calculateAxisRangeX(); i++) {
+            var yValue = dataset[this.xAxisMin + i];
             if (i == 0) {
                 this.backgroundContext.moveTo(i, yValue);
             } else {
@@ -155,7 +160,7 @@ class Linegraph extends Graph {
 
     caclulateMaxLabelWidthX() {
         var maxLabelWidthX = 0;
-        for (var i = this.properties.x_axis.min; i <= this.properties.x_axis.max; i++) {
+        for (var i = this.xAxisMin; i <= this.xAxisMax; i++) {
             var labelWidth = this.backgroundContext.measureText(this.data.x[i]).width;
             if (labelWidth > maxLabelWidthX) {
                 maxLabelWidthX = labelWidth;
@@ -167,11 +172,11 @@ class Linegraph extends Graph {
     drawAxisLabels() {
         var xAxisLabelStart = 0;
         var xAxisLabelInterval = 1;
-        var availableWidthPerLabel = this.graphWidth / ((this.xAxisRange + 1) / xAxisLabelInterval);
+        var availableWidthPerLabel = this.graphWidth / ((this.calculateAxisRangeX() + 1) / xAxisLabelInterval);
         var maxLabelWidthX = this.caclulateMaxLabelWidthX();
         while ((availableWidthPerLabel / maxLabelWidthX) < 1.5) {
             xAxisLabelInterval++;
-            availableWidthPerLabel = this.graphWidth / ((this.xAxisRange + 1) / xAxisLabelInterval);
+            availableWidthPerLabel = this.graphWidth / ((this.calculateAxisRangeX() + 1) / xAxisLabelInterval);
         }
 
         if (this.properties.x_axis.label_start) {
@@ -186,8 +191,8 @@ class Linegraph extends Graph {
         this.backgroundContext.textAlign = "center";
         this.backgroundContext.textBaseline = "middle";
 
-        for (var i = xAxisLabelStart; i <= this.xAxisRange; i += xAxisLabelInterval) {
-            var xValue = this.data.x[this.properties.x_axis.min + i];
+        for (var i = xAxisLabelStart; i <= this.calculateAxisRangeX(); i += xAxisLabelInterval) {
+            var xValue = this.data.x[this.xAxisMin + i];
             this.backgroundContext.fillText(xValue, this.graphStartX + (i * this.graphScaleX), this.graphEndY + (this.bottomMargin / 2));
         }
 
@@ -206,8 +211,8 @@ class Linegraph extends Graph {
 
         var yValueMax = Infinity;
         for (var i = 0; i < this.data.y.length; i++) {
-            var y0 = this.data.y[i][Math.floor(this.properties.x_axis.min + index)];
-            var y1 = this.data.y[i][Math.ceil(this.properties.x_axis.min + index)];
+            var y0 = this.data.y[i][Math.floor(this.xAxisMin + index)];
+            var y1 = this.data.y[i][Math.ceil(this.xAxisMin + index)];
             var interpolatedY = Helper.lerp(y0, y1, index - Math.floor(index));
 
             var yValue = this.graphStartY + (-(interpolatedY - this.properties.y_axis.max) * this.graphScaleY);
@@ -255,7 +260,7 @@ class Linegraph extends Graph {
 
     handleMouseMove(event) {
         var graphX = (event.offsetX - this.graphStartX) / this.graphScaleX;
-        var newHighlight = Math.min(Math.max(Math.round(graphX), 0), this.xAxisRange);
+        var newHighlight = Math.min(Math.max(Math.round(graphX), 0), this.calculateAxisRangeX());
 
         if (newHighlight != this.currentHighlight) {
             this.highlight(newHighlight);
