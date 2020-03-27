@@ -2,16 +2,13 @@ class Linegraph extends Graph {
     constructor(backgroundId, foregroundId, properties, data) {
         super(backgroundId, foregroundId, properties, data);
 
-        this.currentHighlight = -1;
+        this.cancelMouseMove();
         if (this.properties.flags && this.properties.flags.highlight_enabled) {
             this.foreground.addEventListener('mousemove', this.handleMouseMove.bind(this), false);
             this.foreground.addEventListener('mouseleave', this.handleMouseLeave.bind(this), false);
         }
 
-        this.isMouseDown = false;
-        this.mouseDownAxisMinX = -1;
-        this.mouseDownAxisMaxX = -1;
-        this.mouseDownHighlight = -1;
+        this.cancelMouseDown();
         this.foreground.addEventListener('mousedown', this.handleMouseDown.bind(this), false);
         this.foreground.addEventListener('mouseup', this.handleMouseUp.bind(this), false);
     }
@@ -287,11 +284,22 @@ class Linegraph extends Graph {
             }
         }
     }
+
+    cancelMouseMove() {
+        this.currentHighlight = -1;
+    }
+
+    cancelMouseDown() {
+        this.isMouseDown = false;
+        this.mouseDownAxisMinX = -1;
+        this.mouseDownAxisMaxX = -1;
+        this.mouseDownHighlight = -1;
+    }
     
     handleMouseLeave(event) {
-        this.currentHighlight = -1;
+        this.cancelMouseMove();
         this.clearHighlight();
-        // TODO: cancel mouse down
+        this.cancelMouseDown();
     }
 
     handleMouseDown(event) {
@@ -304,9 +312,6 @@ class Linegraph extends Graph {
     }
 
     handleMouseUp(event) {
-        this.isMouseDown = false;
-        this.mouseDownAxisMinX = -1;
-        this.mouseDownAxisMaxX = -1;
-        this.mouseDownHighlight = -1;
+        this.cancelMouseDown();
     }
 }
