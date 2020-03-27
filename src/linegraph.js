@@ -9,7 +9,6 @@ class Linegraph extends Graph {
         }
 
         this.isMouseDown = false;
-        // TODO: change all variables so that X or Y are always at the end and that they read naturally
         this.mouseDownAxisMinX = -1;
         this.mouseDownAxisMaxX = -1;
         this.mouseDownHighlight = -1;
@@ -66,7 +65,7 @@ class Linegraph extends Graph {
     }
 
     calculateAxisRangeX() {
-        return this.xAxisMax - this.xAxisMin;
+        return this.axisMaxX - this.axisMinX;
     }
 
     calculateParameters() {
@@ -97,8 +96,8 @@ class Linegraph extends Graph {
         this.graphEndY = this.canvasHeight - this.bottomMargin;
         this.graphWidth = graphEndX - this.graphStartX;
         var graphHeight = this.graphEndY - this.graphStartY;
-        this.xAxisMin = this.properties.x_axis.min;
-        this.xAxisMax = this.properties.x_axis.max;
+        this.axisMinX = this.properties.x_axis.min;
+        this.axisMaxX = this.properties.x_axis.max;
         this.graphScaleX = this.graphWidth / this.calculateAxisRangeX();
         this.axisRangeY = this.properties.y_axis.max - this.properties.y_axis.min;
         this.graphScaleY = graphHeight / this.axisRangeY;
@@ -134,7 +133,7 @@ class Linegraph extends Graph {
         this.backgroundContext.moveTo(0, this.properties.y_axis.min);
 
         for (var i = 0; i <= this.calculateAxisRangeX(); i++) {
-            var yValue = dataset[this.xAxisMin + i];
+            var yValue = dataset[this.axisMinX + i];
             this.backgroundContext.lineTo(i, yValue);
         }
 
@@ -156,7 +155,7 @@ class Linegraph extends Graph {
         this.backgroundContext.beginPath();
 
         for (var i = 0; i <= this.calculateAxisRangeX(); i++) {
-            var yValue = dataset[this.xAxisMin + i];
+            var yValue = dataset[this.axisMinX + i];
             if (i == 0) {
                 this.backgroundContext.moveTo(i, yValue);
             } else {
@@ -170,7 +169,7 @@ class Linegraph extends Graph {
 
     caclulateMaxLabelWidthX() {
         var maxLabelWidthX = 0;
-        for (var i = this.xAxisMin; i <= this.xAxisMax; i++) {
+        for (var i = this.axisMinX; i <= this.axisMaxX; i++) {
             var labelWidth = this.backgroundContext.measureText(this.data.x[i]).width;
             if (labelWidth > maxLabelWidthX) {
                 maxLabelWidthX = labelWidth;
@@ -202,7 +201,7 @@ class Linegraph extends Graph {
         this.backgroundContext.textBaseline = "middle";
 
         for (var i = xAxisLabelStart; i <= this.calculateAxisRangeX(); i += xAxisLabelInterval) {
-            var xValue = this.data.x[this.xAxisMin + i];
+            var xValue = this.data.x[this.axisMinX + i];
             this.backgroundContext.fillText(xValue, this.graphStartX + (i * this.graphScaleX), this.graphEndY + (this.bottomMargin / 2));
         }
 
@@ -221,8 +220,8 @@ class Linegraph extends Graph {
 
         var yValueMax = Infinity;
         for (var i = 0; i < this.data.y.length; i++) {
-            var y0 = this.data.y[i][Math.floor(this.xAxisMin + index)];
-            var y1 = this.data.y[i][Math.ceil(this.xAxisMin + index)];
+            var y0 = this.data.y[i][Math.floor(this.axisMinX + index)];
+            var y1 = this.data.y[i][Math.ceil(this.axisMinX + index)];
             var interpolatedY = Helper.lerp(y0, y1, index - Math.floor(index));
 
             var yValue = this.graphStartY + (-(interpolatedY - this.properties.y_axis.max) * this.graphScaleY);
@@ -279,8 +278,8 @@ class Linegraph extends Graph {
         var newHighlight = Math.min(Math.max(Math.round(graphX), 0), this.calculateAxisRangeX());
         if (this.isMouseDown) {
             var differenceHighlight = newHighlight - this.mouseDownHighlight;
-            this.xAxisMin = this.mouseDownAxisMinX - differenceHighlight;
-            this.xAxisMax = this.mouseDownAxisMaxX - differenceHighlight;
+            this.axisMinX = this.mouseDownAxisMinX - differenceHighlight;
+            this.axisMaxX = this.mouseDownAxisMaxX - differenceHighlight;
             this.redraw();
         } else {
             if (newHighlight != this.currentHighlight) {
@@ -297,8 +296,8 @@ class Linegraph extends Graph {
 
     handleMouseDown(event) {
         this.isMouseDown = true;
-        this.mouseDownAxisMinX = this.xAxisMin;
-        this.mouseDownAxisMaxX = this.xAxisMax;
+        this.mouseDownAxisMinX = this.axisMinX;
+        this.mouseDownAxisMaxX = this.axisMaxX;
         // TODO: DRY this up
         var graphX = (event.offsetX - this.graphStartX) / this.graphScaleX;
         this.mouseDownHighlight = Math.min(Math.max(Math.round(graphX), 0), this.calculateAxisRangeX());
