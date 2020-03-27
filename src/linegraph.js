@@ -7,14 +7,24 @@ class Linegraph extends Graph {
             this.foreground.addEventListener('mousemove', this.handleMouseMove.bind(this), false);
             this.foreground.addEventListener('mouseleave', this.handleMouseLeave.bind(this), false);
         }
+
+        this.isMouseDown = false;
+        // TODO: change all variables so that X or Y are always at the end and that they read naturally
+        this.mouseDownAxisMinX = -1;
+        this.mouseDownAxisMaxX = -1;
+        this.mouseDownHighlight = -1;
+        this.foreground.addEventListener('mousedown', this.handleMouseDown.bind(this), false);
+        this.foreground.addEventListener('mouseup', this.handleMouseUp.bind(this), false);
     }
 
     // TODO: add property parsing (log unsupported ones in the console and fill in missing ones with defaults)
-    // TODO: add the concept of a viewport to facilitate scrolling of data in the x-axis
 
     draw() {
         this.calculateParameters();
+        this.redraw();
+    }
 
+    redraw() {
         this.backgroundContext.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
         this.backgroundContext.fillStyle = this.properties.colours.background;
         this.backgroundContext.fillRect(0, 0, this.canvasWidth, this.canvasHeight);
@@ -222,6 +232,7 @@ class Linegraph extends Graph {
             }
         }
 
+        // TODO: move this into its own method drawHighlight()?
         this.foregroundContext.strokeStyle = this.properties.colours.background;
         this.foregroundContext.lineWidth = this.properties.widths.highlight_indicator;
         this.foregroundContext.beginPath();
@@ -258,17 +269,45 @@ class Linegraph extends Graph {
         this.foregroundContext.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
     }
 
+    // TODO: update the highlight as the graph is scrolled (it should stay in place but track the graph moving beneath it)
+    // TODO: add a check that difference highlight is not the same as the last difference highlight to prevent unnecessary redraws
+    // TODO: stop the graph from scrolling when the data limit is reached at either end
+    // TODO: change to a grabbing cursor when moving with the mouse down
+    // TODO: change to a no entry style cursor when trying to move a graph that is already showing the full extent of its range
     handleMouseMove(event) {
         var graphX = (event.offsetX - this.graphStartX) / this.graphScaleX;
         var newHighlight = Math.min(Math.max(Math.round(graphX), 0), this.calculateAxisRangeX());
-
-        if (newHighlight != this.currentHighlight) {
-            this.highlight(newHighlight);
+        if (this.isMouseDown) {
+            var differenceHighlight = newHighlight - this.mouseDownHighlight;
+            this.xAxisMin = this.mouseDownAxisMinX - differenceHighlight;
+            this.xAxisMax = this.mouseDownAxisMaxX - differenceHighlight;
+            this.redraw();
+        } else {
+            if (newHighlight != this.currentHighlight) {
+                this.highlight(newHighlight);
+            }
         }
     }
-
+    
     handleMouseLeave(event) {
         this.currentHighlight = -1;
         this.clearHighlight();
+        // TODO: cancel mouse down
+    }
+
+    handleMouseDown(event) {
+        this.isMouseDown = true;
+        this.mouseDownAxisMinX = this.xAxisMin;
+        this.mouseDownAxisMaxX = this.xAxisMax;
+        // TODO: DRY this up
+        var graphX = (event.offsetX - this.graphStartX) / this.graphScaleX;
+        this.mouseDownHighlight = Math.min(Math.max(Math.round(graphX), 0), this.calculateAxisRangeX());
+    }
+
+    handleMouseUp(event) {
+        this.isMouseDown = false;
+        this.mouseDownAxisMinX = -1;
+        this.mouseDownAxisMaxX = -1;
+        this.mouseDownHighlight = -1;
     }
 }
