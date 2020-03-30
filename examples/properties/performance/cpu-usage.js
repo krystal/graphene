@@ -26,8 +26,8 @@ var CPU_USAGE_PROPERTIES = {
         "data_highlight_indicator": 4
     },
     "radii": {
-        "highlight_indicator": 4,
-        "data_highlight_indicator": 10
+        "highlight_indicator": 2,
+        "data_highlight_indicator": 5
     },
     "flags": {
         "highlight_enabled": true
