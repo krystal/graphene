@@ -64,6 +64,10 @@ class Linegraph extends Graph {
         return this.axisMaxX - this.axisMinX;
     }
 
+    calculateGraphScaleX() {
+        return this.graphWidth / this.calculateAxisRangeX();
+    }
+
     calculateParameters() {
         var maxLabelWidthX = 0;
         var maxLabelWidthY = 0;
@@ -94,7 +98,7 @@ class Linegraph extends Graph {
         var graphHeight = this.graphEndY - this.graphStartY;
         this.axisMinX = this.properties.x_axis.min;
         this.axisMaxX = this.properties.x_axis.max;
-        this.graphScaleX = this.graphWidth / this.calculateAxisRangeX();
+        this.graphScaleX = this.calculateGraphScaleX();
         this.axisRangeY = this.properties.y_axis.max - this.properties.y_axis.min;
         this.graphScaleY = graphHeight / this.axisRangeY;
     }
@@ -352,8 +356,7 @@ class Linegraph extends Graph {
                     this.axisMinX = this.shiftMouseDownStartIndex;
                     this.axisMaxX = this.shiftMouseDownEndIndex;
                 }
-                // TODO: dry this up
-                this.graphScaleX = this.graphWidth / this.calculateAxisRangeX();
+                this.graphScaleX = this.calculateGraphScaleX();
                 this.redraw();
                 this.clearHighlight();
             }
