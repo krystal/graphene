@@ -227,7 +227,7 @@ class Linegraph extends Graph {
     }
 
     highlight(index) {
-        this.clearHighlight();
+        this.clearForeground();
         // TODO: test the guard below now it has been moved
         if (!this.properties.flags || !this.properties.flags.highlight_enabled) { return false; }
         if (index == -1) { return false; }
@@ -281,8 +281,7 @@ class Linegraph extends Graph {
         this.mouseMoveIndex = index;
     }
 
-    // TODO: rename this 'clearForeground'
-    clearHighlight() {
+    clearForeground() {
         this.foregroundContext.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
     }
 
@@ -327,9 +326,8 @@ class Linegraph extends Graph {
     }
     
     handleMouseLeave(event) {
+        this.clearForeground();
         this.cancelMouseMove();
-        // TODO: review the placement of the line below
-        this.clearHighlight();
         this.cancelMouseDown();
         this.cancelShiftMouseDown();
     }
@@ -358,7 +356,7 @@ class Linegraph extends Graph {
                 }
                 this.graphScaleX = this.calculateGraphScaleX();
                 this.redraw();
-                this.clearHighlight();
+                this.clearForeground();
             }
             this.cancelShiftMouseDown();
         } else {
