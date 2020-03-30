@@ -259,7 +259,7 @@ class Linegraph extends Graph {
             this.foregroundContext.fill();
         }
 
-        this.currentHighlight = index;
+        this.mouseMoveIndex = index;
     }
 
     clearHighlight() {
@@ -282,16 +282,16 @@ class Linegraph extends Graph {
             this.axisMinX = this.mouseDownAxisMinX - differenceHighlight;
             this.axisMaxX = this.mouseDownAxisMaxX - differenceHighlight;
             this.redraw();
-            this.highlight(this.currentHighlight);
+            this.highlight(this.mouseMoveIndex);
         } else {
-            if (newHighlight != this.currentHighlight) {
+            if (newHighlight != this.mouseMoveIndex) {
                 this.highlight(newHighlight);
             }
         }
     }
 
     cancelMouseMove() {
-        this.currentHighlight = -1;
+        this.mouseMoveIndex = -1;
     }
 
     cancelMouseDown() {
