@@ -209,15 +209,19 @@ class Linegraph extends Graph {
         }
     }
 
-    // TODO: stop the graph from scrolling when the data limit is reached at either end
     // TODO: change to a grabbing cursor when moving with the mouse down
     // TODO: change to a no entry style cursor when trying to move a graph that is already showing the full extent of its range
     scroll(differenceIndex) {
-        this.axisMinX = this.mouseDownAxisMinX - differenceIndex;
-        this.axisMaxX = this.mouseDownAxisMaxX - differenceIndex;
-        this.redraw();
-        this.highlight(this.mouseMoveIndex);
-        this.mouseDownDifferenceIndex = differenceIndex;
+        var newAxisMinX = this.mouseDownAxisMinX - differenceIndex;
+        var newAxisMaxX = this.mouseDownAxisMaxX - differenceIndex;
+
+        if (newAxisMinX >= 0 && newAxisMaxX < this.data.x.length) {
+            this.axisMinX = this.mouseDownAxisMinX - differenceIndex;
+            this.axisMaxX = this.mouseDownAxisMaxX - differenceIndex;
+            this.redraw();
+            this.highlight(this.mouseMoveIndex);
+            this.mouseDownDifferenceIndex = differenceIndex;
+        }
     }
 
     highlight(index) {
