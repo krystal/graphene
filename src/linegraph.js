@@ -271,7 +271,6 @@ class Linegraph extends Graph {
         return Math.min(Math.max(Math.round(graphX), 0), this.calculateAxisRangeX());
     }
 
-    // TODO: update the highlight as the graph is scrolled (it should stay in place but track the graph moving beneath it)
     // TODO: add a check that difference highlight is not the same as the last difference highlight to prevent unnecessary redraws
     // TODO: stop the graph from scrolling when the data limit is reached at either end
     // TODO: change to a grabbing cursor when moving with the mouse down
@@ -283,6 +282,7 @@ class Linegraph extends Graph {
             this.axisMinX = this.mouseDownAxisMinX - differenceHighlight;
             this.axisMaxX = this.mouseDownAxisMaxX - differenceHighlight;
             this.redraw();
+            this.highlight(this.currentHighlight);
         } else {
             if (newHighlight != this.currentHighlight) {
                 this.highlight(newHighlight);
