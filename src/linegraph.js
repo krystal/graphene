@@ -271,7 +271,6 @@ class Linegraph extends Graph {
         return Math.min(Math.max(Math.round(graphX), 0), this.calculateAxisRangeX());
     }
 
-    // TODO: add a check that difference highlight is not the same as the last difference highlight to prevent unnecessary redraws
     // TODO: stop the graph from scrolling when the data limit is reached at either end
     // TODO: change to a grabbing cursor when moving with the mouse down
     // TODO: change to a no entry style cursor when trying to move a graph that is already showing the full extent of its range
@@ -279,10 +278,13 @@ class Linegraph extends Graph {
         var newIndex = this.calculateIndex(event.offsetX);
         if (this.isMouseDown) {
             var differenceIndex = newIndex - this.mouseDownIndex;
-            this.axisMinX = this.mouseDownAxisMinX - differenceIndex;
-            this.axisMaxX = this.mouseDownAxisMaxX - differenceIndex;
-            this.redraw();
-            this.highlight(this.mouseMoveIndex);
+            if (differenceIndex != this.mouseDownDifferenceIndex) {
+                this.axisMinX = this.mouseDownAxisMinX - differenceIndex;
+                this.axisMaxX = this.mouseDownAxisMaxX - differenceIndex;
+                this.redraw();
+                this.highlight(this.mouseMoveIndex);
+                this.mouseDownDifferenceIndex = differenceIndex;
+            }
         } else {
             if (newIndex != this.mouseMoveIndex) {
                 this.highlight(newIndex);
@@ -299,6 +301,7 @@ class Linegraph extends Graph {
         this.mouseDownAxisMinX = -1;
         this.mouseDownAxisMaxX = -1;
         this.mouseDownIndex = -1;
+        this.mouseDownDifferenceIndex = -1;
     }
     
     handleMouseLeave(event) {
