@@ -278,7 +278,7 @@ class Linegraph extends Graph {
     handleMouseMove(event) {
         var newHighlight = this.calculateHighlight(event.offsetX);
         if (this.isMouseDown) {
-            var differenceHighlight = newHighlight - this.mouseDownHighlight;
+            var differenceHighlight = newHighlight - this.mouseDownIndex;
             this.axisMinX = this.mouseDownAxisMinX - differenceHighlight;
             this.axisMaxX = this.mouseDownAxisMaxX - differenceHighlight;
             this.redraw();
@@ -298,7 +298,7 @@ class Linegraph extends Graph {
         this.isMouseDown = false;
         this.mouseDownAxisMinX = -1;
         this.mouseDownAxisMaxX = -1;
-        this.mouseDownHighlight = -1;
+        this.mouseDownIndex = -1;
     }
     
     handleMouseLeave(event) {
@@ -311,7 +311,7 @@ class Linegraph extends Graph {
         this.isMouseDown = true;
         this.mouseDownAxisMinX = this.axisMinX;
         this.mouseDownAxisMaxX = this.axisMaxX;
-        this.mouseDownHighlight = this.calculateHighlight(event.offsetX);
+        this.mouseDownIndex = this.calculateHighlight(event.offsetX);
     }
 
     handleMouseUp(event) {
