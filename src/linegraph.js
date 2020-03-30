@@ -209,6 +209,17 @@ class Linegraph extends Graph {
         }
     }
 
+    // TODO: stop the graph from scrolling when the data limit is reached at either end
+    // TODO: change to a grabbing cursor when moving with the mouse down
+    // TODO: change to a no entry style cursor when trying to move a graph that is already showing the full extent of its range
+    scroll(differenceIndex) {
+        this.axisMinX = this.mouseDownAxisMinX - differenceIndex;
+        this.axisMaxX = this.mouseDownAxisMaxX - differenceIndex;
+        this.redraw();
+        this.highlight(this.mouseMoveIndex);
+        this.mouseDownDifferenceIndex = differenceIndex;
+    }
+
     highlight(index) {
         this.clearHighlight();
         if (index == -1) { return false; }
@@ -271,23 +282,16 @@ class Linegraph extends Graph {
         return Math.min(Math.max(Math.round(graphX), 0), this.calculateAxisRangeX());
     }
 
-    // TODO: stop the graph from scrolling when the data limit is reached at either end
-    // TODO: change to a grabbing cursor when moving with the mouse down
-    // TODO: change to a no entry style cursor when trying to move a graph that is already showing the full extent of its range
     handleMouseMove(event) {
-        var newIndex = this.calculateIndex(event.offsetX);
+        var index = this.calculateIndex(event.offsetX);
         if (this.isMouseDown) {
-            var differenceIndex = newIndex - this.mouseDownIndex;
+            var differenceIndex = index - this.mouseDownIndex;
             if (differenceIndex != this.mouseDownDifferenceIndex) {
-                this.axisMinX = this.mouseDownAxisMinX - differenceIndex;
-                this.axisMaxX = this.mouseDownAxisMaxX - differenceIndex;
-                this.redraw();
-                this.highlight(this.mouseMoveIndex);
-                this.mouseDownDifferenceIndex = differenceIndex;
+                this.scroll(differenceIndex);
             }
         } else {
-            if (newIndex != this.mouseMoveIndex) {
-                this.highlight(newIndex);
+            if (index != this.mouseMoveIndex) {
+                this.highlight(index);
             }
         }
     }
