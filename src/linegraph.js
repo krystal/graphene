@@ -3,18 +3,16 @@ class Linegraph extends Graph {
         super(backgroundId, foregroundId, properties, data);
 
         this.cancelMouseMove();
-        if (this.properties.flags && this.properties.flags.highlight_enabled) {
-            this.foreground.addEventListener('mousemove', this.handleMouseMove.bind(this), false);
-            this.foreground.addEventListener('mouseleave', this.handleMouseLeave.bind(this), false);
-        }
-
         this.cancelMouseDown();
+        this.cancelShiftMouseDown();
+        this.foreground.addEventListener('mousemove', this.handleMouseMove.bind(this), false);
+        this.foreground.addEventListener('mouseleave', this.handleMouseLeave.bind(this), false);
         this.foreground.addEventListener('mousedown', this.handleMouseDown.bind(this), false);
         this.foreground.addEventListener('mouseup', this.handleMouseUp.bind(this), false);
     }
 
-    // TODO: add select and zoom
     // TODO: add property parsing (log unsupported ones in the console and fill in missing ones with defaults)
+    // TODO: implement double click to reset the graph (scroll and zoom)
 
     draw() {
         this.calculateParameters();
@@ -226,6 +224,8 @@ class Linegraph extends Graph {
 
     highlight(index) {
         this.clearHighlight();
+        // TODO: test the guard below now it has been moved
+        if (!this.properties.flags || !this.properties.flags.highlight_enabled) { return false; }
         if (index == -1) { return false; }
 
         var axisHighlight = { x: this.graphStartX + (index * this.graphScaleX), y: this.graphEndY };
@@ -293,6 +293,9 @@ class Linegraph extends Graph {
             if (differenceIndex != this.mouseDownDifferenceIndex) {
                 this.scroll(differenceIndex);
             }
+        } else if (this.isShiftMouseDown) {
+            this.shiftMouseDownEndIndex = index;
+            // TODO: draw a selection box
         } else {
             if (index != this.mouseMoveIndex) {
                 this.highlight(index);
@@ -311,21 +314,51 @@ class Linegraph extends Graph {
         this.mouseDownIndex = -1;
         this.mouseDownDifferenceIndex = -1;
     }
+
+    cancelShiftMouseDown() {
+        this.isShiftMouseDown = false;
+        this.shiftMouseDownStartIndex = -1;
+        this.shiftMouseDownEndIndex = -1;
+    }
     
     handleMouseLeave(event) {
         this.cancelMouseMove();
+        // TODO: review the placement of the line below
         this.clearHighlight();
         this.cancelMouseDown();
+        this.cancelShiftMouseDown();
     }
 
     handleMouseDown(event) {
-        this.isMouseDown = true;
-        this.mouseDownAxisMinX = this.axisMinX;
-        this.mouseDownAxisMaxX = this.axisMaxX;
-        this.mouseDownIndex = this.calculateIndex(event.offsetX);
+        if (event.shiftKey) {
+            this.isShiftMouseDown = true;
+            this.shiftMouseDownStartIndex = this.calculateIndex(event.offsetX);
+        } else {
+            this.isMouseDown = true;
+            this.mouseDownAxisMinX = this.axisMinX;
+            this.mouseDownAxisMaxX = this.axisMaxX;
+            this.mouseDownIndex = this.calculateIndex(event.offsetX);
+        }
     }
 
     handleMouseUp(event) {
-        this.cancelMouseDown();
+        if (this.isShiftMouseDown) {
+            if (this.shiftMouseDownStartIndex != this.shiftMouseDownEndIndex) {
+                if (this.shiftMouseDownStartIndex > this.shiftMouseDownEndIndex) {
+                    this.axisMinX = this.shiftMouseDownEndIndex;
+                    this.axisMaxX = this.shiftMouseDownStartIndex;
+                } else {
+                    this.axisMinX = this.shiftMouseDownStartIndex;
+                    this.axisMaxX = this.shiftMouseDownEndIndex;
+                }
+                // TODO: dry this up
+                this.graphScaleX = this.graphWidth / this.calculateAxisRangeX();
+                this.redraw();
+                this.clearHighlight();
+            }
+            this.cancelShiftMouseDown();
+        } else {
+            this.cancelMouseDown();
+        }
     }
 }
