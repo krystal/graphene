@@ -276,16 +276,16 @@ class Linegraph extends Graph {
     // TODO: change to a grabbing cursor when moving with the mouse down
     // TODO: change to a no entry style cursor when trying to move a graph that is already showing the full extent of its range
     handleMouseMove(event) {
-        var newHighlight = this.calculateHighlight(event.offsetX);
+        var newIndex = this.calculateHighlight(event.offsetX);
         if (this.isMouseDown) {
-            var differenceHighlight = newHighlight - this.mouseDownIndex;
-            this.axisMinX = this.mouseDownAxisMinX - differenceHighlight;
-            this.axisMaxX = this.mouseDownAxisMaxX - differenceHighlight;
+            var differenceIndex = newIndex - this.mouseDownIndex;
+            this.axisMinX = this.mouseDownAxisMinX - differenceIndex;
+            this.axisMaxX = this.mouseDownAxisMaxX - differenceIndex;
             this.redraw();
             this.highlight(this.mouseMoveIndex);
         } else {
-            if (newHighlight != this.mouseMoveIndex) {
-                this.highlight(newHighlight);
+            if (newIndex != this.mouseMoveIndex) {
+                this.highlight(newIndex);
             }
         }
     }
