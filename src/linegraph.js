@@ -226,29 +226,7 @@ class Linegraph extends Graph {
         }
     }
 
-    highlight(index) {
-        this.clearForeground();
-        // TODO: test the guard below now it has been moved
-        if (!this.properties.flags || !this.properties.flags.highlight_enabled) { return false; }
-        if (index == -1) { return false; }
-
-        var axisHighlight = { x: this.graphStartX + (index * this.graphScaleX), y: this.graphEndY };
-        var dataHighlights = new Array();
-
-        var yValueMax = Infinity;
-        for (var i = 0; i < this.data.y.length; i++) {
-            var y0 = this.data.y[i][Math.floor(this.axisMinX + index)];
-            var y1 = this.data.y[i][Math.ceil(this.axisMinX + index)];
-            var interpolatedY = Helper.lerp(y0, y1, index - Math.floor(index));
-
-            var yValue = this.graphStartY + (-(interpolatedY - this.properties.y_axis.max) * this.graphScaleY);
-            dataHighlights.push({ x: this.graphStartX + (index * this.graphScaleX), y: yValue });
-            if (yValue < yValueMax) {
-                yValueMax = yValue;
-            }
-        }
-
-        // TODO: move this into its own method drawHighlight()?
+    drawHighlight(axisHighlight, yValueMax, dataHighlights) {
         this.foregroundContext.strokeStyle = this.properties.colours.background;
         this.foregroundContext.lineWidth = this.properties.widths.highlight_indicator;
         this.foregroundContext.beginPath();
@@ -277,7 +255,31 @@ class Linegraph extends Graph {
             this.foregroundContext.stroke();
             this.foregroundContext.fill();
         }
+    }
 
+    highlight(index) {
+        this.clearForeground();
+        // TODO: test the guard below now it has been moved
+        if (!this.properties.flags || !this.properties.flags.highlight_enabled) { return false; }
+        if (index == -1) { return false; }
+
+        var axisHighlight = { x: this.graphStartX + (index * this.graphScaleX), y: this.graphEndY };
+        var dataHighlights = new Array();
+
+        var yValueMax = Infinity;
+        for (var i = 0; i < this.data.y.length; i++) {
+            var y0 = this.data.y[i][Math.floor(this.axisMinX + index)];
+            var y1 = this.data.y[i][Math.ceil(this.axisMinX + index)];
+            var interpolatedY = Helper.lerp(y0, y1, index - Math.floor(index));
+
+            var yValue = this.graphStartY + (-(interpolatedY - this.properties.y_axis.max) * this.graphScaleY);
+            dataHighlights.push({ x: this.graphStartX + (index * this.graphScaleX), y: yValue });
+            if (yValue < yValueMax) {
+                yValueMax = yValue;
+            }
+        }
+
+        this.drawHighlight(axisHighlight, yValueMax, dataHighlights);
         this.mouseMoveIndex = index;
     }
 
