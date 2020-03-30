@@ -9,10 +9,10 @@ class Linegraph extends Graph {
         this.foreground.addEventListener('mouseleave', this.handleMouseLeave.bind(this), false);
         this.foreground.addEventListener('mousedown', this.handleMouseDown.bind(this), false);
         this.foreground.addEventListener('mouseup', this.handleMouseUp.bind(this), false);
+        this.foreground.addEventListener('dblclick', this.handleDoubleClick.bind(this), false);
     }
 
     // TODO: add property parsing (log unsupported ones in the console and fill in missing ones with defaults)
-    // TODO: implement double click to reset the graph (scroll and zoom)
 
     draw() {
         this.calculateParameters();
@@ -277,6 +277,7 @@ class Linegraph extends Graph {
         this.mouseMoveIndex = index;
     }
 
+    // TODO: rename this 'clearForeground'
     clearHighlight() {
         this.foregroundContext.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
     }
@@ -358,7 +359,12 @@ class Linegraph extends Graph {
             }
             this.cancelShiftMouseDown();
         } else {
+            // TODO: move the highlight to wherever the cursor has ended up
             this.cancelMouseDown();
         }
+    }
+
+    handleDoubleClick(event) {
+        this.draw();
     }
 }
