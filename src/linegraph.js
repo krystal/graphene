@@ -266,7 +266,7 @@ class Linegraph extends Graph {
         this.foregroundContext.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
     }
 
-    calculateHighlight(offsetX) {
+    calculateIndex(offsetX) {
         var graphX = (offsetX - this.graphStartX) / this.graphScaleX;
         return Math.min(Math.max(Math.round(graphX), 0), this.calculateAxisRangeX());
     }
@@ -276,7 +276,7 @@ class Linegraph extends Graph {
     // TODO: change to a grabbing cursor when moving with the mouse down
     // TODO: change to a no entry style cursor when trying to move a graph that is already showing the full extent of its range
     handleMouseMove(event) {
-        var newIndex = this.calculateHighlight(event.offsetX);
+        var newIndex = this.calculateIndex(event.offsetX);
         if (this.isMouseDown) {
             var differenceIndex = newIndex - this.mouseDownIndex;
             this.axisMinX = this.mouseDownAxisMinX - differenceIndex;
@@ -311,7 +311,7 @@ class Linegraph extends Graph {
         this.isMouseDown = true;
         this.mouseDownAxisMinX = this.axisMinX;
         this.mouseDownAxisMaxX = this.axisMaxX;
-        this.mouseDownIndex = this.calculateHighlight(event.offsetX);
+        this.mouseDownIndex = this.calculateIndex(event.offsetX);
     }
 
     handleMouseUp(event) {
