@@ -20,6 +20,10 @@ var CPU_USAGE_PROPERTIES = {
         "axes_labels": {
             "family": "Arial",
             "size": 13
+        },
+        "information_panel": {
+            "family": "Arial",
+            "size": 13
         }
     },
     "widths": {
@@ -35,6 +39,14 @@ var CPU_USAGE_PROPERTIES = {
         "highlight_enabled": true,
         "scroll_enabled": true,
         "zoom_enabled": true
+    },
+    "names": {
+        "data": [
+            "CPU 0",
+            "CPU 1",
+            "CPU 2",
+            "CPU 3"
+        ]
     },
     "x_axis": {
         "min": 0,

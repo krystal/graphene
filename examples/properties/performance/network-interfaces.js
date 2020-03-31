@@ -18,6 +18,10 @@ var NETWORK_INTERFACES_PROPERTIES = {
         "axes_labels": {
             "family": "Arial",
             "size": 13
+        },
+        "information_panel": {
+            "family": "Arial",
+            "size": 13
         }
     },
     "widths": {
@@ -33,6 +37,12 @@ var NETWORK_INTERFACES_PROPERTIES = {
         "highlight_enabled": true,
         "scroll_enabled": true,
         "zoom_enabled": true
+    },
+    "names": {
+        "data": [
+            "Received",
+            "Sent"
+        ]
     },
     "x_axis": {
         "min": 0,

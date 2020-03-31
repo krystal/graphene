@@ -266,6 +266,48 @@ class Linegraph extends Graph {
         }
     }
 
+    // TODO: consider moving the calculation code in highlight(index) and reserve this method for actual drawing
+    drawInformationPanel(index) {
+        this.foregroundContext.font = this.properties.fonts.information_panel.size + "px " + this.properties.fonts.information_panel.family;
+        this.foregroundContext.textAlign = "left";
+        this.foregroundContext.textBaseline = "middle";
+
+        var sentences = new Array();
+        var maxSentenceWidth = 0;
+        for (var i = 0; i < this.data.y.length; i++) {
+            // TODO: format the last part of this string
+            var sentence = this.properties.names.data[i] + ": " + this.data.y[i][index];
+            var sentenceWidth = this.foregroundContext.measureText(sentence).width;
+            if (sentenceWidth > maxSentenceWidth) {
+                maxSentenceWidth = sentenceWidth;
+            }
+            sentences.push(sentence);
+        }
+        var sentenceHeightApproximation = this.foregroundContext.measureText("M").width;
+
+        // space + circle + space + sentence + space
+        // space and cricle are as wide as a sentence is tall
+        var requiredWidth = maxSentenceWidth + (4 * sentenceHeightApproximation);
+        // half space + sentence + space + sentence + space + ... + sentence + half space
+        var requiredHeight = (this.data.y.length + 1) * 2 * sentenceHeightApproximation;
+        var panelX = this.graphStartX + (index * this.graphScaleX) + (2 * sentenceHeightApproximation);
+        var panelY = this.graphStartY + (this.graphHeight / 2) - (requiredHeight / 2);
+
+        if ((panelX + requiredWidth) > this.graphWidth) {
+            panelX = this.graphStartX + (index * this.graphScaleX) - (2 * sentenceHeightApproximation) - requiredWidth;
+            if (panelX < 0) {
+                console.log("Information panel may be clipped horizontally!");
+            }
+        }
+
+        if (requiredHeight > this.graphHeight) {
+            console.log("Information panel may be clipped vertically!");
+        }
+
+        this.foregroundContext.fillStyle = this.properties.colours.alphas.selection_box;
+        this.foregroundContext.fillRect(panelX, panelY, requiredWidth, requiredHeight);
+    }
+
     highlight(index) {
         this.clearForeground();
         if (index == -1) { return false; }
@@ -275,6 +317,7 @@ class Linegraph extends Graph {
 
         var yValueMax = Infinity;
         for (var i = 0; i < this.data.y.length; i++) {
+            // TODO: check this, I think it's a relic from when index wasn't a whole number
             var y0 = this.data.y[i][Math.floor(this.axisMinX + index)];
             var y1 = this.data.y[i][Math.ceil(this.axisMinX + index)];
             var interpolatedY = Helper.lerp(y0, y1, index - Math.floor(index));
@@ -287,6 +330,7 @@ class Linegraph extends Graph {
         }
 
         this.drawHighlight(axisHighlight, yValueMax, dataHighlights);
+        this.drawInformationPanel(index);
         this.mouseMoveIndex = index;
     }
 
@@ -305,8 +349,6 @@ class Linegraph extends Graph {
         var boxX = this.graphStartX + (this.shiftMouseDownStartIndex * this.graphScaleX);
         var boxWidth = (this.shiftMouseDownEndIndex - this.shiftMouseDownStartIndex) * this.graphScaleX;
         
-        this.foregroundContext.strokeStyle = this.properties.colours.selection_box;
-        this.foregroundContext.lineWidth = this.properties.widths.selection_box;
         this.foregroundContext.fillStyle = Helper.hex2rgba(this.properties.colours.selection_box, this.properties.colours.alphas.selection_box);
         this.foregroundContext.fillRect(boxX, this.graphStartY, boxWidth, this.graphHeight);
     }
