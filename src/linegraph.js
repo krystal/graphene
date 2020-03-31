@@ -2,6 +2,8 @@ class Linegraph extends Graph {
     constructor(backgroundId, foregroundId, properties, data) {
         super(backgroundId, foregroundId, properties, data);
 
+        // TODO: add a flag for graph interaction to that can turn off scroll and select & zoom (anything else?)
+
         this.cancelMouseMove();
         this.cancelMouseDown();
         this.cancelShiftMouseDown();
@@ -12,6 +14,7 @@ class Linegraph extends Graph {
         this.foreground.addEventListener('dblclick', this.handleDoubleClick.bind(this), false);
     }
 
+    // TODO: if there are no labels for a selection then the the highlight indicator can get clipped in half
     // TODO: add property parsing (log unsupported ones in the console and fill in missing ones with defaults)
 
     draw() {
@@ -95,12 +98,12 @@ class Linegraph extends Graph {
         var graphEndX = this.canvasWidth - rightMargin;
         this.graphEndY = this.canvasHeight - this.bottomMargin;
         this.graphWidth = graphEndX - this.graphStartX;
-        var graphHeight = this.graphEndY - this.graphStartY;
+        this.graphHeight = this.graphEndY - this.graphStartY;
         this.axisMinX = this.properties.x_axis.min;
         this.axisMaxX = this.properties.x_axis.max;
         this.graphScaleX = this.calculateGraphScaleX();
         this.axisRangeY = this.properties.y_axis.max - this.properties.y_axis.min;
-        this.graphScaleY = graphHeight / this.axisRangeY;
+        this.graphScaleY = this.graphHeight / this.axisRangeY;
     }
 
     drawHorizontalLines() {
@@ -292,6 +295,19 @@ class Linegraph extends Graph {
         return Math.min(Math.max(Math.round(graphX), 0), this.calculateAxisRangeX());
     }
 
+    // TODO: add selection box fill, border colours, alphas and widths to the properties JSON
+    drawSelectionBox() {
+        this.clearForeground();
+
+        var boxX = this.graphStartX + (this.shiftMouseDownStartIndex * this.graphScaleX);
+        var boxWidth = (this.shiftMouseDownEndIndex - this.shiftMouseDownStartIndex) * this.graphScaleX;
+        
+        this.foregroundContext.strokeStyle = this.properties.colours.background;
+        this.foregroundContext.lineWidth = 1;
+        this.foregroundContext.fillStyle = Helper.hex2rgba(this.properties.colours.background, 0.5);
+        this.foregroundContext.fillRect(boxX, this.graphStartY, boxWidth, this.graphHeight);
+    }
+
     handleMouseMove(event) {
         var index = this.calculateIndex(event.offsetX);
         if (this.isMouseDown) {
@@ -301,7 +317,7 @@ class Linegraph extends Graph {
             }
         } else if (this.isShiftMouseDown) {
             this.shiftMouseDownEndIndex = index;
-            // TODO: draw a selection box
+            this.drawSelectionBox();
         } else {
             if (index != this.mouseMoveIndex) {
                 this.highlight(index);
@@ -362,7 +378,6 @@ class Linegraph extends Graph {
             }
             this.cancelShiftMouseDown();
         } else {
-            // TODO: move the highlight to wherever the cursor has ended up
             this.cancelMouseDown();
         }
     }
