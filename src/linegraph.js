@@ -266,7 +266,6 @@ class Linegraph extends Graph {
         }
     }
 
-    // TODO: make the values update on scroll (like highlight does)
     // TODO: try rounding the corners of the panel
     // TODO: try highlighting the heading (the x sentence)
     // TODO: consider moving the calculation code in highlight(index) and reserve this method for actual drawing
@@ -277,7 +276,7 @@ class Linegraph extends Graph {
         var sentences = new Array();
         var maxSentenceWidth = 0;
         for (var i = 0; i < this.data.y.length; i++) {
-            var labelData = this.parseLabel(this.data.y[i][index]);
+            var labelData = this.parseLabel(this.data.y[i][this.axisMinX + index]);
             var formattedData = Helper.applyAffix(labelData.value, this.properties.y_axis.label_prefix, labelData.suffix);
             var sentence = this.properties.names.data[i] + ": " + formattedData;
             var sentenceWidth = this.foregroundContext.measureText(sentence).width;
