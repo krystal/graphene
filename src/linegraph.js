@@ -266,11 +266,13 @@ class Linegraph extends Graph {
         }
     }
 
+    // TODO: make the values update on scroll (like highlight does)
+    // TODO: try rounding the corners of the panel
+    // TODO: try highlighting the heading (the x sentence)
     // TODO: consider moving the calculation code in highlight(index) and reserve this method for actual drawing
     drawInformationPanel(index) {
-        this.foregroundContext.font = this.properties.fonts.information_panel.size + "px " + this.properties.fonts.information_panel.family;
+        this.foregroundContext.font = this.properties.fonts.information_sentences.size + "px " + this.properties.fonts.information_sentences.family;
         this.foregroundContext.textAlign = "left";
-        this.foregroundContext.textBaseline = "middle";
 
         var sentences = new Array();
         var maxSentenceWidth = 0;
@@ -289,8 +291,8 @@ class Linegraph extends Graph {
         // space + circle + space + sentence + space
         // space and cricle are as wide as a sentence is tall
         var requiredWidth = maxSentenceWidth + (4 * sentenceHeightApproximation);
-        // half space + sentence + space + sentence + space + ... + sentence + half space
-        var requiredHeight = (this.data.y.length + 1) * 2 * sentenceHeightApproximation;
+        // space + sentence + space + sentence + space + ... + sentence + space
+        var requiredHeight = (((this.data.y.length + 1) * 2) + 1) * sentenceHeightApproximation;
         var panelX = this.graphStartX + (index * this.graphScaleX) + (2 * sentenceHeightApproximation);
         var panelY = this.graphStartY + (this.graphHeight / 2) - (requiredHeight / 2);
 
@@ -305,8 +307,22 @@ class Linegraph extends Graph {
             console.log("Information panel may be clipped vertically!");
         }
 
-        this.foregroundContext.fillStyle = this.properties.colours.alphas.selection_box;
+        this.foregroundContext.fillStyle = Helper.hex2rgba(this.properties.colours.information_panel, this.properties.colours.alphas.information_panel);
         this.foregroundContext.fillRect(panelX, panelY, requiredWidth, requiredHeight);
+
+        // TODO: draw the x sentence
+        var circleOffsetY = panelY + (3 * sentenceHeightApproximation);
+        var sentenceOffsetY = panelY + (4 * sentenceHeightApproximation);
+        for (var i = 0; i < sentences.length; i++) {
+            // TODO: change this to a circle
+            this.foregroundContext.fillStyle = this.properties.colours.data[i];
+            this.foregroundContext.fillRect(panelX + sentenceHeightApproximation, circleOffsetY, sentenceHeightApproximation, sentenceHeightApproximation);
+            this.foregroundContext.fillStyle = this.properties.colours.information_sentences;
+            this.foregroundContext.fillText(sentences[i], panelX + (3 * sentenceHeightApproximation), sentenceOffsetY);
+
+            circleOffsetY += 2 * sentenceHeightApproximation;
+            sentenceOffsetY += 2 * sentenceHeightApproximation;
+        }
     }
 
     highlight(index) {

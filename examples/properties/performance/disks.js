@@ -2,7 +2,8 @@ var DISKS_PROPERTIES = {
     "colours": {
         "alphas": {
             "under_graph": 0.1,
-            "selection_box": 0.25
+            "selection_box": 0.25,
+            "information_panel": 0.75
         },
         "axes_labels": "#555555",
         "background": "#FFFFFF",
@@ -12,14 +13,16 @@ var DISKS_PROPERTIES = {
         ],
         "highlight_indicator": "#E0DEFF",
         "horizontal_lines": "#EEEEEE",
-        "selection_box": "#0000FF"
+        "selection_box": "#0000FF",
+        "information_panel": "#333333",
+        "information_sentences": "#FFFFFF"
     },
     "fonts": {
         "axes_labels": {
             "family": "Arial",
             "size": 13
         },
-        "information_panel": {
+        "information_sentences": {
             "family": "Arial",
             "size": 13
         }
