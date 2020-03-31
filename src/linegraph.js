@@ -12,8 +12,6 @@ class Linegraph extends Graph {
         this.foreground.addEventListener('dblclick', this.handleDoubleClick.bind(this), false);
     }
 
-    // TODO: find out what is causing the "ghost" graphs in disks and network interfaces examples after a zoom (it remains after the first reset and goes on the second)
-
     // TODO: if there are no labels for a selection then the the highlight indicator can get clipped in half
     // TODO: add property parsing (log unsupported ones in the console and fill in missing ones with defaults)
 
@@ -117,6 +115,8 @@ class Linegraph extends Graph {
         this.backgroundContext.lineWidth = 1;
         this.backgroundContext.save();
         this.backgroundContext.transform(this.graphScaleX, 0, 0, this.graphScaleY, this.graphStartX, this.graphStartY);
+
+        this.backgroundContext.beginPath();
 
         var yAxisTotalIntervals = (this.axisRangeY / this.properties.y_axis.label_interval) + 1;
         // skip drawing the last line (on the x-axis)
