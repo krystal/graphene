@@ -275,8 +275,9 @@ class Linegraph extends Graph {
         var sentences = new Array();
         var maxSentenceWidth = 0;
         for (var i = 0; i < this.data.y.length; i++) {
-            // TODO: format the last part of this string
-            var sentence = this.properties.names.data[i] + ": " + this.data.y[i][index];
+            var labelData = this.parseLabel(this.data.y[i][index]);
+            var formattedData = Helper.applyAffix(labelData.value, this.properties.y_axis.label_prefix, labelData.suffix);
+            var sentence = this.properties.names.data[i] + ": " + formattedData;
             var sentenceWidth = this.foregroundContext.measureText(sentence).width;
             if (sentenceWidth > maxSentenceWidth) {
                 maxSentenceWidth = sentenceWidth;
