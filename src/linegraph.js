@@ -299,16 +299,15 @@ class Linegraph extends Graph {
         return Math.min(Math.max(Math.round(graphX), 0), this.calculateAxisRangeX());
     }
 
-    // TODO: add selection box fill, border colours, alphas and widths to the properties JSON
     drawSelectionBox() {
         this.clearForeground();
 
         var boxX = this.graphStartX + (this.shiftMouseDownStartIndex * this.graphScaleX);
         var boxWidth = (this.shiftMouseDownEndIndex - this.shiftMouseDownStartIndex) * this.graphScaleX;
         
-        this.foregroundContext.strokeStyle = this.properties.colours.background;
-        this.foregroundContext.lineWidth = 1;
-        this.foregroundContext.fillStyle = Helper.hex2rgba(this.properties.colours.background, 0.5);
+        this.foregroundContext.strokeStyle = this.properties.colours.selection_box;
+        this.foregroundContext.lineWidth = this.properties.widths.selection_box;
+        this.foregroundContext.fillStyle = Helper.hex2rgba(this.properties.colours.selection_box, this.properties.colours.alphas.selection_box);
         this.foregroundContext.fillRect(boxX, this.graphStartY, boxWidth, this.graphHeight);
     }
 

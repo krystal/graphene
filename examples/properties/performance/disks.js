@@ -1,7 +1,8 @@
 var DISKS_PROPERTIES = {
     "colours": {
         "alphas": {
-            "under_graph": 0.1
+            "under_graph": 0.1,
+            "selection_box": 0.25
         },
         "axes_labels": "#555555",
         "background": "#FFFFFF",
@@ -10,7 +11,8 @@ var DISKS_PROPERTIES = {
             "#04E395"
         ],
         "highlight_indicator": "#E0DEFF",
-        "horizontal_lines": "#EEEEEE"
+        "horizontal_lines": "#EEEEEE",
+        "selection_box": "#0000FF"
     },
     "fonts": {
         "axes_labels": {
