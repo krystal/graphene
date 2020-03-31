@@ -23,9 +23,6 @@ var CPU_USAGE_PROPERTIES = {
     "widths": {
         "data": 0.5
     },
-    "flags": {
-        "highlight_enabled": false
-    },
     "x_axis": {
         "min": 0,
         "max": 288,

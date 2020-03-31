@@ -2,8 +2,6 @@ class Linegraph extends Graph {
     constructor(backgroundId, foregroundId, properties, data) {
         super(backgroundId, foregroundId, properties, data);
 
-        // TODO: add a flag for graph interaction to that can turn off scroll and select & zoom (anything else?)
-
         this.cancelMouseMove();
         this.cancelMouseDown();
         this.cancelShiftMouseDown();
@@ -13,6 +11,8 @@ class Linegraph extends Graph {
         this.foreground.addEventListener('mouseup', this.handleMouseUp.bind(this), false);
         this.foreground.addEventListener('dblclick', this.handleDoubleClick.bind(this), false);
     }
+
+    // TODO: find out what is causing the "ghost" graphs in disks and network interfaces examples after a zoom (it remains after the first reset and goes on the second)
 
     // TODO: if there are no labels for a selection then the the highlight indicator can get clipped in half
     // TODO: add property parsing (log unsupported ones in the console and fill in missing ones with defaults)
@@ -104,6 +104,12 @@ class Linegraph extends Graph {
         this.graphScaleX = this.calculateGraphScaleX();
         this.axisRangeY = this.properties.y_axis.max - this.properties.y_axis.min;
         this.graphScaleY = this.graphHeight / this.axisRangeY;
+
+        if (this.properties.flags) {
+            this.highLightEnabled = this.properties.flags.highlight_enabled;
+            this.scrollEnabled = this.properties.flags.scroll_enabled;
+            this.zoomEnabled = this.properties.flags.zoom_enabled;
+        }
     }
 
     drawHorizontalLines() {
@@ -262,8 +268,6 @@ class Linegraph extends Graph {
 
     highlight(index) {
         this.clearForeground();
-        // TODO: test the guard below now it has been moved
-        if (!this.properties.flags || !this.properties.flags.highlight_enabled) { return false; }
         if (index == -1) { return false; }
 
         var axisHighlight = { x: this.graphStartX + (index * this.graphScaleX), y: this.graphEndY };
@@ -311,16 +315,22 @@ class Linegraph extends Graph {
     handleMouseMove(event) {
         var index = this.calculateIndex(event.offsetX);
         if (this.isMouseDown) {
-            var differenceIndex = index - this.mouseDownIndex;
-            if (differenceIndex != this.mouseDownDifferenceIndex) {
-                this.scroll(differenceIndex);
+            if (this.scrollEnabled) {
+                var differenceIndex = index - this.mouseDownIndex;
+                if (differenceIndex != this.mouseDownDifferenceIndex) {
+                    this.scroll(differenceIndex);
+                }
             }
         } else if (this.isShiftMouseDown) {
-            this.shiftMouseDownEndIndex = index;
-            this.drawSelectionBox();
+            if (this.zoomEnabled) {
+                this.shiftMouseDownEndIndex = index;
+                this.drawSelectionBox();
+            }
         } else {
-            if (index != this.mouseMoveIndex) {
-                this.highlight(index);
+            if (this.highLightEnabled) {
+                if (index != this.mouseMoveIndex) {
+                    this.highlight(index);
+                }
             }
         }
     }
@@ -352,37 +362,46 @@ class Linegraph extends Graph {
 
     handleMouseDown(event) {
         if (event.shiftKey) {
-            this.isShiftMouseDown = true;
-            this.shiftMouseDownStartIndex = this.calculateIndex(event.offsetX);
+            if (this.zoomEnabled) {
+                this.isShiftMouseDown = true;
+                this.shiftMouseDownStartIndex = this.calculateIndex(event.offsetX);
+            }
         } else {
-            this.isMouseDown = true;
-            this.mouseDownAxisMinX = this.axisMinX;
-            this.mouseDownAxisMaxX = this.axisMaxX;
-            this.mouseDownIndex = this.calculateIndex(event.offsetX);
+            if (this.scrollEnabled) {
+                this.isMouseDown = true;
+                this.mouseDownAxisMinX = this.axisMinX;
+                this.mouseDownAxisMaxX = this.axisMaxX;
+                this.mouseDownIndex = this.calculateIndex(event.offsetX);
+            }
         }
     }
 
     handleMouseUp(event) {
         if (this.isShiftMouseDown) {
-            if (this.shiftMouseDownStartIndex != this.shiftMouseDownEndIndex) {
-                if (this.shiftMouseDownStartIndex > this.shiftMouseDownEndIndex) {
-                    this.axisMinX = this.shiftMouseDownEndIndex;
-                    this.axisMaxX = this.shiftMouseDownStartIndex;
-                } else {
-                    this.axisMinX = this.shiftMouseDownStartIndex;
-                    this.axisMaxX = this.shiftMouseDownEndIndex;
+            if (this.zoomEnabled) {
+                if (this.shiftMouseDownStartIndex != this.shiftMouseDownEndIndex) {
+                    if (this.shiftMouseDownStartIndex > this.shiftMouseDownEndIndex) {
+                        this.axisMinX = this.shiftMouseDownEndIndex;
+                        this.axisMaxX = this.shiftMouseDownStartIndex;
+                    } else {
+                        this.axisMinX = this.shiftMouseDownStartIndex;
+                        this.axisMaxX = this.shiftMouseDownEndIndex;
+                    }
+                    this.graphScaleX = this.calculateGraphScaleX();
+                    this.redraw();
+                    this.clearForeground();
                 }
-                this.graphScaleX = this.calculateGraphScaleX();
-                this.redraw();
-                this.clearForeground();
+                this.cancelShiftMouseDown();
             }
-            this.cancelShiftMouseDown();
         } else {
-            this.cancelMouseDown();
+            if (this.scrollEnabled) {
+                this.cancelMouseDown();
+            }
         }
     }
 
     handleDoubleClick(event) {
+        // reset
         this.draw();
     }
 }

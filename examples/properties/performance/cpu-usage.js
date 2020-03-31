@@ -30,7 +30,9 @@ var CPU_USAGE_PROPERTIES = {
         "data_highlight_indicator": 5
     },
     "flags": {
-        "highlight_enabled": true
+        "highlight_enabled": true,
+        "scroll_enabled": true,
+        "zoom_enabled": true
     },
     "x_axis": {
         "min": 0,

@@ -20,9 +20,6 @@ var SHARED_PROPERTIES = {
   "widths": {
       "data": 0.1
   },
-  "flags": {
-      "highlight_enabled": false
-  },
   "x_axis": {
     "min": 0,
     "max": 71,
