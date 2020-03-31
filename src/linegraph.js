@@ -12,6 +12,7 @@ class Linegraph extends Graph {
         this.foreground.addEventListener('dblclick', this.handleDoubleClick.bind(this), false);
     }
 
+    // TODO: investigate "Save Image As..." in browsers, it currently, understandably, saves only the foreground layer
     // TODO: if there are no labels for a selection then the the highlight indicator can get clipped in half
     // TODO: add property parsing (log unsupported ones in the console and fill in missing ones with defaults)
 
