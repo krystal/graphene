@@ -341,12 +341,8 @@ class Linegraph extends Graph {
 
         var yValueMax = Infinity;
         for (var i = 0; i < this.data.y.length; i++) {
-            // TODO: check this, I think it's a relic from when index wasn't a whole number
-            var y0 = this.data.y[i][Math.floor(this.axisMinX + index)];
-            var y1 = this.data.y[i][Math.ceil(this.axisMinX + index)];
-            var interpolatedY = Helper.lerp(y0, y1, index - Math.floor(index));
-
-            var yValue = this.graphStartY + (-(interpolatedY - this.properties.y_axis.max) * this.graphScaleY);
+            var y = this.data.y[i][this.axisMinX + index];
+            var yValue = this.graphStartY + (-(y - this.properties.y_axis.max) * this.graphScaleY);
             dataHighlights.push({ x: this.graphStartX + (index * this.graphScaleX), y: yValue });
             if (yValue < yValueMax) {
                 yValueMax = yValue;

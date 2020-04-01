@@ -13,8 +13,4 @@ class Helper {
     const [r, g, b] = hex.match(/\w\w/g).map(x => parseInt(x, 16));
     return `rgba(${r},${g},${b},${alpha})`;
   };
-
-  static lerp(v0, v1, t) {
-    return (1.0 - t) * v0 + t * v1;
-  }
 }
