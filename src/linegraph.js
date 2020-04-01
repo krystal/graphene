@@ -268,7 +268,6 @@ class Linegraph extends Graph {
         }
     }
 
-    // TODO: try rounding the corners of the panel
     // TODO: consider moving the calculation code in highlight(index) and reserve this method for actual drawing
     drawInformationPanel(index) {
         this.foregroundContext.textAlign = "left";
@@ -321,7 +320,6 @@ class Linegraph extends Graph {
 
         this.foregroundContext.font = this.properties.fonts.information_sentences.weight + " " + this.properties.fonts.information_sentences.size + "px " + this.properties.fonts.information_sentences.family;
         for (var i = 0; i < sentences.length; i++) {
-            // TODO: change this to a circle
             this.foregroundContext.fillStyle = this.properties.colours.data[i];
             this.foregroundContext.fillRect(panelX + sentenceHeightApproximation, circleOffsetY, sentenceHeightApproximation, sentenceHeightApproximation);
             this.foregroundContext.fillStyle = this.properties.colours.information_sentences;
