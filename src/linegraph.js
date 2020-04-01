@@ -463,6 +463,7 @@ class Linegraph extends Graph {
 
     handleDoubleClick(event) {
         // reset
+        this.clearForeground();
         this.draw();
     }
 }
