@@ -76,7 +76,7 @@ class Linegraph extends Graph {
         var maxLabelWidthY = 0;
         var labelHeightApproximation = 0;
         if (this.properties.fonts.axes_labels.size > 0) {
-            this.backgroundContext.font = this.properties.fonts.axes_labels.size + "px " + this.properties.fonts.axes_labels.family;
+            this.backgroundContext.font = this.properties.fonts.axes_labels.weight + " " + this.properties.fonts.axes_labels.size + "px " + this.properties.fonts.axes_labels.family;
 
             maxLabelWidthX = this.caclulateMaxLabelWidthX();
             for (var i = this.properties.y_axis.min; i <= this.properties.y_axis.max; i += this.properties.y_axis.label_interval) {
@@ -206,7 +206,7 @@ class Linegraph extends Graph {
             xAxisLabelInterval = Math.max(xAxisLabelInterval, this.properties.x_axis.label_interval);
         }
 
-        this.backgroundContext.font = this.properties.fonts.axes_labels.size + "px " + this.properties.fonts.axes_labels.family;
+        this.backgroundContext.font = this.properties.fonts.axes_labels.weight + " " + this.properties.fonts.axes_labels.size + "px " + this.properties.fonts.axes_labels.family;
         this.backgroundContext.fillStyle = this.properties.colours.axes_labels;
         this.backgroundContext.textAlign = "center";
         this.backgroundContext.textBaseline = "middle";
@@ -269,16 +269,16 @@ class Linegraph extends Graph {
     }
 
     // TODO: try rounding the corners of the panel
-    // TODO: try highlighting the heading (the x sentence), possibly embolden it
     // TODO: consider moving the calculation code in highlight(index) and reserve this method for actual drawing
     drawInformationPanel(index) {
-        this.foregroundContext.font = this.properties.fonts.information_sentences.size + "px " + this.properties.fonts.information_sentences.family;
         this.foregroundContext.textAlign = "left";
+        this.foregroundContext.font = this.properties.fonts.information_heading.weight + " " + this.properties.fonts.information_heading.size + "px " + this.properties.fonts.information_heading.family;
 
         var heading = this.data.x[this.axisMinX + index][1];
         var sentences = new Array();
         var sentenceHeightApproximation = this.foregroundContext.measureText("M").width;
         var maxSentenceWidth = this.foregroundContext.measureText(heading).width + (2 * sentenceHeightApproximation);
+        this.foregroundContext.font = this.properties.fonts.information_sentences.weight + " " + this.properties.fonts.information_sentences.size + "px " + this.properties.fonts.information_sentences.family;
         for (var i = 0; i < this.data.y.length; i++) {
             var labelData = this.parseLabel(this.data.y[i][this.axisMinX + index]);
             var formattedData = Helper.applyAffix(labelData.value, this.properties.y_axis.label_prefix, labelData.suffix);
@@ -314,10 +314,12 @@ class Linegraph extends Graph {
         var circleOffsetY = panelY + (3 * sentenceHeightApproximation);
         var sentenceOffsetY = panelY + (2 * sentenceHeightApproximation);
 
-        this.foregroundContext.fillStyle = this.properties.colours.information_sentences;
+        this.foregroundContext.font = this.properties.fonts.information_heading.weight + " " + this.properties.fonts.information_heading.size + "px " + this.properties.fonts.information_heading.family;
+        this.foregroundContext.fillStyle = this.properties.colours.information_heading;
         this.foregroundContext.fillText(heading, panelX + sentenceHeightApproximation, sentenceOffsetY);
         sentenceOffsetY += 2 * sentenceHeightApproximation;
 
+        this.foregroundContext.font = this.properties.fonts.information_sentences.weight + " " + this.properties.fonts.information_sentences.size + "px " + this.properties.fonts.information_sentences.family;
         for (var i = 0; i < sentences.length; i++) {
             // TODO: change this to a circle
             this.foregroundContext.fillStyle = this.properties.colours.data[i];

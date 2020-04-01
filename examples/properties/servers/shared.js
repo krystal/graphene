@@ -14,7 +14,8 @@ var SHARED_PROPERTIES = {
   "fonts": {
       "axes_labels": {
           "family": "Arial",
-          "size": 0
+          "size": 0,
+          "weight": "normal"
       }
   },
   "widths": {

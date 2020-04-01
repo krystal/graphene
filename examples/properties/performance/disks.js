@@ -15,16 +15,24 @@ var DISKS_PROPERTIES = {
         "horizontal_lines": "#EEEEEE",
         "selection_box": "#0000FF",
         "information_panel": "#333333",
+        "information_heading": "#FFFFFF",
         "information_sentences": "#FFFFFF"
     },
     "fonts": {
         "axes_labels": {
             "family": "Arial",
-            "size": 13
+            "size": 13,
+            "weight": "normal"
+        },
+        "information_heading": {
+            "family": "Arial",
+            "size": 13,
+            "weight": "bold"
         },
         "information_sentences": {
             "family": "Arial",
-            "size": 13
+            "size": 13,
+            "weight": "normal"
         }
     },
     "widths": {

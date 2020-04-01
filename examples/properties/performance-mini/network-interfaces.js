@@ -15,8 +15,9 @@ var NETWORK_INTERFACES_PROPERTIES = {
     "fonts": {
         "axes_labels": {
             "family": "Arial",
-            "size": 11
-        }
+            "size": 13,
+            "weight": "normal"
+        },
     },
     "widths": {
         "data": 0.5
