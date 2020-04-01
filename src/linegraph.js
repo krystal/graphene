@@ -268,29 +268,31 @@ class Linegraph extends Graph {
     }
 
     // TODO: try rounding the corners of the panel
-    // TODO: try highlighting the heading (the x sentence)
+    // TODO: try highlighting the heading (the x sentence), possibly embolden it
     // TODO: consider moving the calculation code in highlight(index) and reserve this method for actual drawing
     drawInformationPanel(index) {
         this.foregroundContext.font = this.properties.fonts.information_sentences.size + "px " + this.properties.fonts.information_sentences.family;
         this.foregroundContext.textAlign = "left";
 
+        // TODO: replace this
+        var heading = "This is a test";
+
         var sentences = new Array();
-        var maxSentenceWidth = 0;
+        var sentenceHeightApproximation = this.foregroundContext.measureText("M").width;
+        var maxSentenceWidth = this.foregroundContext.measureText(heading).width + (2 * sentenceHeightApproximation);
         for (var i = 0; i < this.data.y.length; i++) {
             var labelData = this.parseLabel(this.data.y[i][this.axisMinX + index]);
             var formattedData = Helper.applyAffix(labelData.value, this.properties.y_axis.label_prefix, labelData.suffix);
             var sentence = this.properties.names.data[i] + ": " + formattedData;
-            var sentenceWidth = this.foregroundContext.measureText(sentence).width;
+            // space + circle + space + sentence + space (space and cricle are as wide as a sentence is tall)
+            var sentenceWidth = this.foregroundContext.measureText(sentence).width + (4 * sentenceHeightApproximation);
             if (sentenceWidth > maxSentenceWidth) {
                 maxSentenceWidth = sentenceWidth;
             }
             sentences.push(sentence);
         }
-        var sentenceHeightApproximation = this.foregroundContext.measureText("M").width;
 
-        // space + circle + space + sentence + space
-        // space and cricle are as wide as a sentence is tall
-        var requiredWidth = maxSentenceWidth + (4 * sentenceHeightApproximation);
+        var requiredWidth = maxSentenceWidth;
         // space + sentence + space + sentence + space + ... + sentence + space
         var requiredHeight = (((this.data.y.length + 1) * 2) + 1) * sentenceHeightApproximation;
         var panelX = this.graphStartX + (index * this.graphScaleX) + (2 * sentenceHeightApproximation);
@@ -310,16 +312,19 @@ class Linegraph extends Graph {
         this.foregroundContext.fillStyle = Helper.hex2rgba(this.properties.colours.information_panel, this.properties.colours.alphas.information_panel);
         this.foregroundContext.fillRect(panelX, panelY, requiredWidth, requiredHeight);
 
-        // TODO: draw the x sentence
         var circleOffsetY = panelY + (3 * sentenceHeightApproximation);
-        var sentenceOffsetY = panelY + (4 * sentenceHeightApproximation);
+        var sentenceOffsetY = panelY + (2 * sentenceHeightApproximation);
+
+        this.foregroundContext.fillStyle = this.properties.colours.information_sentences;
+        this.foregroundContext.fillText(heading, panelX + sentenceHeightApproximation, sentenceOffsetY);
+        sentenceOffsetY += 2 * sentenceHeightApproximation;
+
         for (var i = 0; i < sentences.length; i++) {
             // TODO: change this to a circle
             this.foregroundContext.fillStyle = this.properties.colours.data[i];
             this.foregroundContext.fillRect(panelX + sentenceHeightApproximation, circleOffsetY, sentenceHeightApproximation, sentenceHeightApproximation);
             this.foregroundContext.fillStyle = this.properties.colours.information_sentences;
             this.foregroundContext.fillText(sentences[i], panelX + (3 * sentenceHeightApproximation), sentenceOffsetY);
-
             circleOffsetY += 2 * sentenceHeightApproximation;
             sentenceOffsetY += 2 * sentenceHeightApproximation;
         }
