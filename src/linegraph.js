@@ -14,7 +14,6 @@ class Linegraph extends Graph {
 
     // TODO: do some refactoring
     // TODO: investigate "Save Image As..." in browsers, it currently, understandably, saves only the foreground layer
-    // TODO: the highlight indicator is getting clipped in half at the right hand limit of the graph
     // TODO: add property parsing (log unsupported ones in the console and fill in missing ones with defaults)
 
     draw() {
@@ -72,6 +71,9 @@ class Linegraph extends Graph {
     }
 
     calculateParameters() {
+        this.axisMinX = this.properties.x_axis.min;
+        this.axisMaxX = this.properties.x_axis.max;
+
         var maxLabelWidthX = 0;
         var maxLabelWidthY = 0;
         var labelHeightApproximation = 0;
@@ -99,8 +101,6 @@ class Linegraph extends Graph {
         this.graphEndY = this.canvasHeight - this.bottomMargin;
         this.graphWidth = graphEndX - this.graphStartX;
         this.graphHeight = this.graphEndY - this.graphStartY;
-        this.axisMinX = this.properties.x_axis.min;
-        this.axisMaxX = this.properties.x_axis.max;
         this.graphScaleX = this.calculateGraphScaleX();
         this.axisRangeY = this.properties.y_axis.max - this.properties.y_axis.min;
         this.graphScaleY = this.graphHeight / this.axisRangeY;
@@ -178,6 +178,9 @@ class Linegraph extends Graph {
         this.backgroundContext.stroke();
     }
 
+    // something is missing on the first pass...
+    // namely axisMinX and axisMaxX, need to set these earlier in calculate parameters
+    // ^ should set everything as early as we can, really
     caclulateMaxLabelWidthX() {
         var maxLabelWidthX = 0;
         for (var i = this.axisMinX; i <= this.axisMaxX; i++) {
