@@ -12,6 +12,7 @@ class Linegraph extends Graph {
         this.foreground.addEventListener('dblclick', this.handleDoubleClick.bind(this), false);
     }
 
+    // TODO: do some refactoring
     // TODO: investigate "Save Image As..." in browsers, it currently, understandably, saves only the foreground layer
     // TODO: if there are no labels for a selection then the the highlight indicator can get clipped in half
     // TODO: add property parsing (log unsupported ones in the console and fill in missing ones with defaults)
@@ -180,7 +181,7 @@ class Linegraph extends Graph {
     caclulateMaxLabelWidthX() {
         var maxLabelWidthX = 0;
         for (var i = this.axisMinX; i <= this.axisMaxX; i++) {
-            var labelWidth = this.backgroundContext.measureText(this.data.x[i]).width;
+            var labelWidth = this.backgroundContext.measureText(this.data.x[i][0]).width;
             if (labelWidth > maxLabelWidthX) {
                 maxLabelWidthX = labelWidth;
             }
@@ -211,7 +212,7 @@ class Linegraph extends Graph {
         this.backgroundContext.textBaseline = "middle";
 
         for (var i = xAxisLabelStart; i <= this.calculateAxisRangeX(); i += xAxisLabelInterval) {
-            var xValue = this.data.x[this.axisMinX + i];
+            var xValue = this.data.x[this.axisMinX + i][0];
             this.backgroundContext.fillText(xValue, this.graphStartX + (i * this.graphScaleX), this.graphEndY + (this.bottomMargin / 2));
         }
 
@@ -274,9 +275,7 @@ class Linegraph extends Graph {
         this.foregroundContext.font = this.properties.fonts.information_sentences.size + "px " + this.properties.fonts.information_sentences.family;
         this.foregroundContext.textAlign = "left";
 
-        // TODO: replace this
-        var heading = "This is a test";
-
+        var heading = this.data.x[this.axisMinX + index][1];
         var sentences = new Array();
         var sentenceHeightApproximation = this.foregroundContext.measureText("M").width;
         var maxSentenceWidth = this.foregroundContext.measureText(heading).width + (2 * sentenceHeightApproximation);
@@ -298,8 +297,10 @@ class Linegraph extends Graph {
         var panelX = this.graphStartX + (index * this.graphScaleX) + (2 * sentenceHeightApproximation);
         var panelY = this.graphStartY + (this.graphHeight / 2) - (requiredHeight / 2);
 
+        // TODO: this check is overzealous
         if ((panelX + requiredWidth) > this.graphWidth) {
             panelX = this.graphStartX + (index * this.graphScaleX) - (2 * sentenceHeightApproximation) - requiredWidth;
+            // TODO: correct this check as well
             if (panelX < 0) {
                 console.log("Information panel may be clipped horizontally!");
             }

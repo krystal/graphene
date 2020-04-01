@@ -1,3 +1,5 @@
+const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
 function convertArray(data) {
   var convertedData = {"x": [], "y": []};
 
@@ -7,7 +9,7 @@ function convertArray(data) {
       if (i == 0) {
         var utcMilliseconds = data[i][j][0];
         var date = new Date(utcMilliseconds);
-        convertedData.x.push(format(date));
+        convertedData.x.push([shortFormat(date), longFormat(date)]);
       }
       yValues.push(data[i][j][1]);
     }
@@ -27,7 +29,7 @@ function convertObject(data) {
       if (firstIteration) {
         var utcMilliseconds = data[key][j][0];
         var date = new Date(utcMilliseconds);
-        convertedData.x.push(format(date));
+        convertedData.x.push([shortFormat(date), longFormat(date)]);
       }
       yValues.push(data[key][j][1]);
     }
@@ -38,9 +40,19 @@ function convertObject(data) {
   return convertedData;
 }
 
-function format(date) {
+function shortFormat(date) {
   var hours = date.getUTCHours();
   var minutes = date.getUTCMinutes();
 
   return hours.toString().padStart(2, "0") + ":" + minutes.toString().padStart(2, "0");
+}
+
+function longFormat(date) {
+  var hours = date.getUTCHours();
+  var minutes = date.getUTCMinutes();
+  var day = date.getUTCDate();
+  var month = months[date.getUTCMonth()];
+  var year = date.getUTCFullYear();
+
+  return hours.toString().padStart(2, "0") + ":" + minutes.toString().padStart(2, "0") + " " + day + " " + month + " " + year;
 }
