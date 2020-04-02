@@ -176,9 +176,6 @@ class Linegraph extends Graph {
         this.backgroundContext.stroke();
     }
 
-    // something is missing on the first pass...
-    // namely axisMinX and axisMaxX, need to set these earlier in calculate parameters
-    // ^ should set everything as early as we can, really
     caclulateMaxLabelWidthX() {
         var maxLabelWidthX = 0;
         for (var i = this.axisMinX; i <= this.axisMaxX; i++) {
