@@ -21,6 +21,10 @@ class Linegraph extends Graph {
         this.redraw();
     }
 
+    getDataColour(i) {
+        return this.properties.colours.data[i % this.properties.colours.data.length];
+    }
+
     redraw() {
         this.backgroundContext.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
         this.backgroundContext.fillStyle = this.properties.colours.background;
@@ -28,8 +32,8 @@ class Linegraph extends Graph {
 
         this.drawHorizontalLines();
         for (var i = 0; i < this.data.y.length; i++) {
-            this.drawAreaUnderGraph(this.data.y[i], this.properties.colours.data[i]);
-            this.drawGraph(this.data.y[i], this.properties.colours.data[i]);
+            this.drawAreaUnderGraph(this.data.y[i], this.getDataColour(i));
+            this.drawGraph(this.data.y[i], this.getDataColour(i));
         }
         if (this.properties.fonts.axes_labels.size > 0) {
             this.drawAxisLabels();
@@ -274,7 +278,7 @@ class Linegraph extends Graph {
         this.foregroundContext.fill();
 
         for (var i = 0; i < dataHighlights.length; i++) {
-            this.foregroundContext.strokeStyle = this.properties.colours.data[i];
+            this.foregroundContext.strokeStyle = this.getDataColour(i);
             this.foregroundContext.lineWidth = this.properties.widths.data_highlight_indicator;
             this.foregroundContext.fillStyle = this.properties.colours.background;
 
@@ -338,7 +342,7 @@ class Linegraph extends Graph {
 
         this.foregroundContext.font = this.properties.fonts.information_sentences.weight + " " + this.properties.fonts.information_sentences.size + "px " + this.properties.fonts.information_sentences.family;
         for (var i = 0; i < sentences.length; i++) {
-            this.foregroundContext.fillStyle = this.properties.colours.data[i];
+            this.foregroundContext.fillStyle = this.getDataColour(i);
             this.foregroundContext.fillRect(panelX + sentenceHeightApproximation, circleOffsetY, sentenceHeightApproximation, sentenceHeightApproximation);
             this.foregroundContext.fillStyle = this.properties.colours.information_sentences;
             this.foregroundContext.fillText(sentences[i], panelX + (3 * sentenceHeightApproximation), sentenceOffsetY);
