@@ -63,8 +63,8 @@ var NETWORK_INTERFACES_PROPERTIES = {
     },
     "y_axis": {
         "min": 0,
-        "max": 150000,
-        "label_interval": 30000,
-        "label_suffix": [[1000, " B/s"], [1000000, " kB/s"]]
+        "max": 12500000,
+        "label_interval": 2500000,
+        "label_suffix": [[1000, " B/s"], [1000000, " kB/s"], [1000000000, " mB/s"]]
     }
 };
