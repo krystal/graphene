@@ -143,12 +143,23 @@ class Linegraph extends Graph {
 
         this.backgroundContext.moveTo(0, this.properties.y_axis.min);
 
-        for (var i = 0; i <= this.calculateAxisRangeX(); i++) {
-            var yValue = dataset[this.axisMinX + i];
-            this.backgroundContext.lineTo(i, yValue);
+        var axisRangeX = this.calculateAxisRangeX();
+        if (axisRangeX > 0) { this.backgroundContext.lineTo(0, dataset[this.axisMinX]); }
+        for (var i = 0; i < axisRangeX; i++) {
+            var x0 = i;
+            var x1 = i + 1;
+            var y0 = dataset[this.axisMinX + i];
+            var y1 = dataset[this.axisMinX + i + 1];
+            var midPointX = (x0 + x1) / 2;
+            var midPointY = (y0 + y1) / 2;
+            var controlPointX1 = (midPointX + x0) / 2;
+            var controlPointX2 = (midPointX + x1) / 2;
+
+            this.backgroundContext.quadraticCurveTo(controlPointX1, y0, midPointX, midPointY);
+            this.backgroundContext.quadraticCurveTo(controlPointX2, y1, x1, y1);
         }
 
-        this.backgroundContext.lineTo(this.calculateAxisRangeX(), this.properties.y_axis.min);
+        this.backgroundContext.lineTo(axisRangeX, this.properties.y_axis.min);
 
         this.backgroundContext.restore();
         this.backgroundContext.fill();
@@ -166,10 +177,19 @@ class Linegraph extends Graph {
         this.backgroundContext.beginPath();
 
         var axisRangeX = this.calculateAxisRangeX();
-        if (axisRangeX > 0) { this.backgroundContext.moveTo(i, yValue); }
-        for (var i = 1; i <= axisRangeX; i++) {
-            var yValue = dataset[this.axisMinX + i];
-            this.backgroundContext.lineTo(i, yValue);
+        if (axisRangeX > 0) { this.backgroundContext.moveTo(0, dataset[this.axisMinX]); }
+        for (var i = 0; i < axisRangeX; i++) {
+            var x0 = i;
+            var x1 = i + 1;
+            var y0 = dataset[this.axisMinX + i];
+            var y1 = dataset[this.axisMinX + i + 1];
+            var midPointX = (x0 + x1) / 2;
+            var midPointY = (y0 + y1) / 2;
+            var controlPointX1 = (midPointX + x0) / 2;
+            var controlPointX2 = (midPointX + x1) / 2;
+
+            this.backgroundContext.quadraticCurveTo(controlPointX1, y0, midPointX, midPointY);
+            this.backgroundContext.quadraticCurveTo(controlPointX2, y1, x1, y1);
         }
 
         this.backgroundContext.restore();
