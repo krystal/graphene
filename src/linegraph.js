@@ -165,13 +165,11 @@ class Linegraph extends Graph {
 
         this.backgroundContext.beginPath();
 
-        for (var i = 0; i <= this.calculateAxisRangeX(); i++) {
+        var axisRangeX = this.calculateAxisRangeX();
+        if (axisRangeX > 0) { this.backgroundContext.moveTo(i, yValue); }
+        for (var i = 1; i <= axisRangeX; i++) {
             var yValue = dataset[this.axisMinX + i];
-            if (i == 0) {
-                this.backgroundContext.moveTo(i, yValue);
-            } else {
-                this.backgroundContext.lineTo(i, yValue)
-            }
+            this.backgroundContext.lineTo(i, yValue);
         }
 
         this.backgroundContext.restore();
