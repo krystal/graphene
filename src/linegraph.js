@@ -460,12 +460,13 @@ class Linegraph extends Graph {
         if (this.isShiftMouseDown) {
             if (this.zoomEnabled) {
                 if (this.shiftMouseDownStartIndex != this.shiftMouseDownEndIndex) {
+                    var offsetAxisX = this.axisMinX;
                     if (this.shiftMouseDownStartIndex > this.shiftMouseDownEndIndex) {
-                        this.axisMinX = this.shiftMouseDownEndIndex;
-                        this.axisMaxX = this.shiftMouseDownStartIndex;
+                        this.axisMinX = offsetAxisX + this.shiftMouseDownEndIndex;
+                        this.axisMaxX = offsetAxisX + this.shiftMouseDownStartIndex;
                     } else {
-                        this.axisMinX = this.shiftMouseDownStartIndex;
-                        this.axisMaxX = this.shiftMouseDownEndIndex;
+                        this.axisMinX = offsetAxisX + this.shiftMouseDownStartIndex;
+                        this.axisMaxX = offsetAxisX + this.shiftMouseDownEndIndex;
                     }
                     this.graphScaleX = this.calculateGraphScaleX();
                     this.redraw();
