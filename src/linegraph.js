@@ -74,7 +74,26 @@ class Linegraph extends Graph {
         return this.graphWidth / this.calculateAxisRangeX();
     }
 
-    // TODO: insert new methods here
+    getMaxY() {
+        var maxY = 0;
+        for (var i = 0; i < this.data.y.length; i++) {
+            for (var j = 0; j < this.data.y[i].length; j++) {
+                var y = this.data.y[i][j];
+                if (y > maxY) { maxY = y; }
+            }
+        }
+        return maxY;
+    }
+
+    roundToNearestPowerOfTen(value) {
+        var floorPowerOfTen = Math.pow(10, Math.floor(Math.log10(value)));
+        var ceilingPowerOfTen = Math.pow(10, Math.ceil(Math.log10(value)));
+
+        var floorDifference = value - floorPowerOfTen;
+        var ceilingDifference = ceilingPowerOfTen - value;
+
+        return floorDifference > ceilingDifference ? ceilingPowerOfTen : floorPowerOfTen;
+    }
 
     calculateParameters() {
         this.axisMinX = this.properties.x_axis.min;
@@ -92,10 +111,23 @@ class Linegraph extends Graph {
             this.graphEndY = this.canvasHeight - this.bottomMargin;
             this.graphHeight = this.graphEndY - this.graphStartY;
 
-            // TODO: insert calculatory interval code here
+            // TODO: try this out with data sets covering different ranges
+            var maxLabelsY = Math.round(this.graphHeight / (labelHeightApproximation * 4));
+            var roughInterval = this.getMaxY() / maxLabelsY;
+            var smoothInterval = this.roundToNearestPowerOfTen(roughInterval);
+
+            var proposedLabelsY = this.axisRangeY / smoothInterval;
+            while (proposedLabelsY > maxLabelsY) {
+                // TODO: come back to this, it needs to be more sophisticated than simply doubling the interval
+                // ^ for the labels and horizontal lines to match the interval needs to be a divisor of the y position of the horizontal line at the very top of the graph
+                smoothInterval *= 2;
+                proposedLabelsY = this.axisRangeY / smoothInterval;
+            }
+
+            this.labelIntervalY = smoothInterval;
 
             maxLabelWidthX = this.caclulateMaxLabelWidthX();
-            for (var i = this.properties.y_axis.min; i <= this.properties.y_axis.max; i += this.properties.y_axis.label_interval) {
+            for (var i = this.properties.y_axis.min; i <= this.properties.y_axis.max; i += this.labelIntervalY) {
                 var labelData = this.parseLabel(i);
                 var labelWidth = this.backgroundContext.measureText(Helper.applyAffix(labelData.value, this.properties.y_axis.label_prefix, labelData.suffix)).width;
                 if (labelWidth > maxLabelWidthY) {
@@ -133,11 +165,11 @@ class Linegraph extends Graph {
 
         this.backgroundContext.beginPath();
 
-        var yAxisTotalIntervals = (this.axisRangeY / this.properties.y_axis.label_interval) + 1;
+        var yAxisTotalIntervals = (this.axisRangeY / this.labelIntervalY) + 1;
         // skip drawing the last line (on the x-axis)
         for (var i = 0; i < yAxisTotalIntervals - 1; i++) {
-            this.backgroundContext.moveTo(0, i * this.properties.y_axis.label_interval);
-            this.backgroundContext.lineTo(this.calculateAxisRangeX(), i * this.properties.y_axis.label_interval);
+            this.backgroundContext.moveTo(0, i * this.labelIntervalY);
+            this.backgroundContext.lineTo(this.calculateAxisRangeX(), i * this.labelIntervalY);
         }
 
         this.backgroundContext.restore();
@@ -239,7 +271,7 @@ class Linegraph extends Graph {
             this.backgroundContext.fillText(xValue, this.graphStartX + (i * this.graphScaleX), this.graphEndY + (this.bottomMargin / 2));
         }
 
-        for (var i = this.properties.y_axis.min; i <= this.properties.y_axis.max; i += this.properties.y_axis.label_interval) {
+        for (var i = this.properties.y_axis.min; i <= this.properties.y_axis.max; i += this.labelIntervalY) {
             var labelData = this.parseLabel(i);
             this.backgroundContext.fillText(Helper.applyAffix(labelData.value, this.properties.y_axis.label_prefix, labelData.suffix), (this.leftMargin / 2), this.graphEndY - ((i - this.properties.y_axis.min) * this.graphScaleY));
         }

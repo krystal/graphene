@@ -67,7 +67,6 @@ var CPU_USAGE_PROPERTIES = {
     "y_axis": {
         "min": 0,
         "max": 70,
-        "label_interval": 10,
         "label_suffix": [[0, "%"]]
     }
 };

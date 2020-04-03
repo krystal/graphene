@@ -65,7 +65,6 @@ var DISKS_PROPERTIES = {
     "y_axis": {
         "min": 0,
         "max": 1200000,
-        "label_interval": 200000,
         "label_suffix": [[1000, " B/s"], [1000000, " kB/s"], [1000000000, " mB/s"]]
     }
 };
