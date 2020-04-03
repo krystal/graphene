@@ -212,7 +212,6 @@ class Linegraph extends Graph {
     }
 
     drawAxisLabels() {
-        var xAxisLabelStart = 0;
         var xAxisLabelInterval = 1;
         var availableWidthPerLabel = this.graphWidth / ((this.calculateAxisRangeX() + 1) / xAxisLabelInterval);
         var maxLabelWidthX = this.caclulateMaxLabelWidthX();
@@ -221,19 +220,12 @@ class Linegraph extends Graph {
             availableWidthPerLabel = this.graphWidth / ((this.calculateAxisRangeX() + 1) / xAxisLabelInterval);
         }
 
-        if (this.properties.x_axis.label_start) {
-            xAxisLabelStart = this.properties.x_axis.label_start;
-        }
-        if (this.properties.x_axis.label_interval) {
-            xAxisLabelInterval = Math.max(xAxisLabelInterval, this.properties.x_axis.label_interval);
-        }
-
         this.backgroundContext.font = this.properties.fonts.axes_labels.weight + " " + this.properties.fonts.axes_labels.size + "px " + this.properties.fonts.axes_labels.family;
         this.backgroundContext.fillStyle = this.properties.colours.axes_labels;
         this.backgroundContext.textAlign = "center";
         this.backgroundContext.textBaseline = "middle";
 
-        for (var i = xAxisLabelStart; i <= this.calculateAxisRangeX(); i += xAxisLabelInterval) {
+        for (var i = 0; i <= this.calculateAxisRangeX(); i += xAxisLabelInterval) {
             var xValue = this.data.x[this.axisMinX + i][0];
             this.backgroundContext.fillText(xValue, this.graphStartX + (i * this.graphScaleX), this.graphEndY + (this.bottomMargin / 2));
         }

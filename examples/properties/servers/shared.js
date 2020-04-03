@@ -23,9 +23,7 @@ var SHARED_PROPERTIES = {
   },
   "x_axis": {
     "min": 0,
-    "max": 71,
-      "label_start": 0,
-      "label_interval": 1
+    "max": 71
   },
   "y_axis": {
       "min": 5,

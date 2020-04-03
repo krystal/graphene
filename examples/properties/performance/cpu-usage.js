@@ -11,7 +11,8 @@ var CPU_USAGE_PROPERTIES = {
             "#038FFB",
             "#04E395",
             "#FEB01A",
-            "#FF4560"
+            "#FF4560",
+            "#765DD0"
         ],
         "highlight_indicator": "#E0DEFF",
         "horizontal_lines": "#EEEEEE",
@@ -61,9 +62,7 @@ var CPU_USAGE_PROPERTIES = {
     },
     "x_axis": {
         "min": 0,
-        "max": 288,
-        "label_start": 9,
-        "label_interval": 24
+        "max": 288
     },
     "y_axis": {
         "min": 0,
