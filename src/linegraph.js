@@ -74,15 +74,25 @@ class Linegraph extends Graph {
         return this.graphWidth / this.calculateAxisRangeX();
     }
 
+    // TODO: insert new methods here
+
     calculateParameters() {
         this.axisMinX = this.properties.x_axis.min;
         this.axisMaxX = this.properties.x_axis.max;
+        this.axisRangeY = this.properties.y_axis.max - this.properties.y_axis.min;
 
         var maxLabelWidthX = 0;
         var maxLabelWidthY = 0;
-        var labelHeightApproximation = 0;
         if (this.properties.fonts.axes_labels.size > 0) {
             this.backgroundContext.font = this.properties.fonts.axes_labels.weight + " " + this.properties.fonts.axes_labels.size + "px " + this.properties.fonts.axes_labels.family;
+            var labelHeightApproximation = this.backgroundContext.measureText("M").width;
+            var topMargin = labelHeightApproximation;
+            this.bottomMargin = labelHeightApproximation * 3;
+            this.graphStartY = topMargin;
+            this.graphEndY = this.canvasHeight - this.bottomMargin;
+            this.graphHeight = this.graphEndY - this.graphStartY;
+
+            // TODO: insert calculatory interval code here
 
             maxLabelWidthX = this.caclulateMaxLabelWidthX();
             for (var i = this.properties.y_axis.min; i <= this.properties.y_axis.max; i += this.properties.y_axis.label_interval) {
@@ -92,21 +102,20 @@ class Linegraph extends Graph {
                     maxLabelWidthY = labelWidth;
                 }
             }
-            labelHeightApproximation = this.backgroundContext.measureText("M").width;
+        } else {
+            var topMargin = 0;
+            this.bottomMargin = 0;
+            this.graphStartY = topMargin;
+            this.graphEndY = this.canvasHeight - this.bottomMargin;
+            this.graphHeight = this.graphEndY - this.graphStartY;
         }
 
         this.leftMargin = maxLabelWidthY * 2;
         var rightMargin = maxLabelWidthX / 2;
-        var topMargin = labelHeightApproximation;
-        this.bottomMargin = labelHeightApproximation * 3;
         this.graphStartX = this.leftMargin;
-        this.graphStartY = topMargin;
         var graphEndX = this.canvasWidth - rightMargin;
-        this.graphEndY = this.canvasHeight - this.bottomMargin;
         this.graphWidth = graphEndX - this.graphStartX;
-        this.graphHeight = this.graphEndY - this.graphStartY;
         this.graphScaleX = this.calculateGraphScaleX();
-        this.axisRangeY = this.properties.y_axis.max - this.properties.y_axis.min;
         this.graphScaleY = this.graphHeight / this.axisRangeY;
 
         if (this.properties.flags) {
