@@ -181,13 +181,17 @@ class Linegraph extends Graph {
         }
     }
 
-    drawHorizontalLines() {
-        this.backgroundContext.strokeStyle = this.properties.colours.horizontal_lines;
-        this.backgroundContext.lineWidth = 1;
+    transformDrawingArea() {
         this.backgroundContext.save();
         this.backgroundContext.transform(this.graphScaleX, 0, 0, this.graphScaleY, this.graphStartX, this.graphStartY);
         this.backgroundContext.transform(1, 0, 0, -1, 0, 0);
         this.backgroundContext.transform(1, 0, 0, 1, 0, -this.axisMaxY);
+    }
+
+    drawHorizontalLines() {
+        this.backgroundContext.strokeStyle = this.properties.colours.horizontal_lines;
+        this.backgroundContext.lineWidth = 1;
+        this.transformDrawingArea();
 
         this.backgroundContext.beginPath();
 
@@ -204,11 +208,7 @@ class Linegraph extends Graph {
 
     drawAreaUnderGraph(dataset, colour) {
         this.backgroundContext.fillStyle = Helper.hex2rgba(colour, this.properties.colours.alphas.under_graph);
-        this.backgroundContext.save();
-
-        this.backgroundContext.transform(this.graphScaleX, 0, 0, this.graphScaleY, this.graphStartX, this.graphStartY);
-        this.backgroundContext.transform(1, 0, 0, -1, 0, 0);
-        this.backgroundContext.transform(1, 0, 0, 1, 0, -this.axisMaxY);
+        this.transformDrawingArea();
 
         this.backgroundContext.beginPath();
 
@@ -239,11 +239,7 @@ class Linegraph extends Graph {
     drawGraph(dataset, colour) {
         this.backgroundContext.strokeStyle = colour;
         this.backgroundContext.lineWidth = this.properties.widths.data;
-        this.backgroundContext.save();
-
-        this.backgroundContext.transform(this.graphScaleX, 0, 0, this.graphScaleY, this.graphStartX, this.graphStartY);
-        this.backgroundContext.transform(1, 0, 0, -1, 0, 0);
-        this.backgroundContext.transform(1, 0, 0, 1, 0, -this.axisMaxY);
+        this.transformDrawingArea();
 
         this.backgroundContext.beginPath();
 
