@@ -162,12 +162,14 @@ class Linegraph extends Graph {
         this.backgroundContext.lineWidth = 1;
         this.backgroundContext.save();
         this.backgroundContext.transform(this.graphScaleX, 0, 0, this.graphScaleY, this.graphStartX, this.graphStartY);
+        this.backgroundContext.transform(1, 0, 0, -1, 0, 0);
+        this.backgroundContext.transform(1, 0, 0, 1, 0, -this.properties.y_axis.max);
 
         this.backgroundContext.beginPath();
 
         var yAxisTotalIntervals = (this.axisRangeY / this.labelIntervalY) + 1;
-        // skip drawing the last line (on the x-axis)
-        for (var i = 0; i < yAxisTotalIntervals - 1; i++) {
+        // skip drawing the first line (on the x-axis)
+        for (var i = 1; i < yAxisTotalIntervals; i++) {
             this.backgroundContext.moveTo(0, i * this.labelIntervalY);
             this.backgroundContext.lineTo(this.calculateAxisRangeX(), i * this.labelIntervalY);
         }
