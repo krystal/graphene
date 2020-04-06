@@ -52,14 +52,6 @@ var CPU_USAGE_PROPERTIES = {
         "scroll_enabled": true,
         "zoom_enabled": true
     },
-    "names": {
-        "data": [
-            "CPU 0",
-            "CPU 1",
-            "CPU 2",
-            "CPU 3"
-        ]
-    },
     "y_axis": {
         "label_suffix": [[0, "%"]]
     }

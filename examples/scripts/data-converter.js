@@ -1,9 +1,10 @@
 const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
 function convertArray(data) {
-  var convertedData = {"x": [], "y": []};
+  var convertedData = {"names": [], "x": [], "y": []};
 
   for (var i = 0; i < data.length; i++) {
+    convertedData.names.push("CPU " + i);
     var yValues = [];
     for (var j = 0; j < data[i].length; j++) {
       if (i == 0) {
@@ -20,10 +21,11 @@ function convertArray(data) {
 }
 
 function convertObject(data) {
-  var convertedData = {"x": [], "y": []};
+  var convertedData = {"names": [], "x": [], "y": []};
 
   var firstIteration = true;
   for (const key in data) {
+    convertedData.names.push(key);
     var yValues = [];
     for (var j = 0; j < data[key].length; j++) {
       if (firstIteration) {

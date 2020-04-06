@@ -362,7 +362,7 @@ class Linegraph extends Graph {
         for (var i = 0; i < this.data.y.length; i++) {
             var labelData = this.parseLabel(this.data.y[i][this.axisMinX + index]);
             var formattedData = Helper.applyAffix(labelData.value, this.properties.y_axis.label_prefix, labelData.suffix);
-            var sentence = this.properties.names.data[i] + ": " + formattedData;
+            var sentence = this.data.names[i] + ": " + formattedData;
             // space + circle + space + sentence + space (space and cricle are as wide as a sentence is tall)
             var sentenceWidth = this.foregroundContext.measureText(sentence).width + (4 * sentenceHeightApproximation);
             if (sentenceWidth > maxSentenceWidth) {
