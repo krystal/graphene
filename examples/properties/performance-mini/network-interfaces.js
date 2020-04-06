@@ -26,8 +26,6 @@ var NETWORK_INTERFACES_PROPERTIES = {
         "data": 0.5
     },
     "y_axis": {
-        "min": 0,
-        "max": 150000,
         "label_suffix": [[1000, " B/s"], [1000000, " kB/s"]]
     }
 };

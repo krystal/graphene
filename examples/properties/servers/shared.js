@@ -22,8 +22,6 @@ var SHARED_PROPERTIES = {
       "data": 0.1
   },
   "y_axis": {
-      "min": 5,
-      "max": 10,
       "label_suffix": [[0, "%"]]
   }
 };

@@ -122,7 +122,7 @@ class Linegraph extends Graph {
             if (this.properties.y_axis.min) { this.axisMinY = this.properties.y_axis.min; };
             if (this.properties.y_axis.max) { this.axisMaxY = this.properties.y_axis.max; };
         }
-        this.axisRangeY = this.properties.y_axis.max - this.properties.y_axis.min;
+        this.axisRangeY = this.axisMaxY - this.axisMinY;
 
         var maxLabelWidthX = 0;
         var maxLabelWidthY = 0;
@@ -136,7 +136,7 @@ class Linegraph extends Graph {
             this.graphHeight = this.graphEndY - this.graphStartY;
 
             var maxLabelsY = Math.round(this.graphHeight / (labelHeightApproximation * 4));
-            var factors = Helper.calculateFactors(this.properties.y_axis.max);
+            var factors = Helper.calculateFactors(this.axisMaxY);
             
             var factorIndex = 0;
             var workingInterval = factors[factorIndex];
@@ -151,7 +151,7 @@ class Linegraph extends Graph {
             this.labelIntervalY = workingInterval;
 
             maxLabelWidthX = this.caclulateMaxLabelWidthX();
-            for (var i = this.properties.y_axis.min; i <= this.properties.y_axis.max; i += this.labelIntervalY) {
+            for (var i = this.axisMinY; i <= this.axisMaxY; i += this.labelIntervalY) {
                 var labelData = this.parseLabel(i);
                 var labelWidth = this.backgroundContext.measureText(Helper.applyAffix(labelData.value, this.properties.y_axis.label_prefix, labelData.suffix)).width;
                 if (labelWidth > maxLabelWidthY) {
@@ -187,7 +187,7 @@ class Linegraph extends Graph {
         this.backgroundContext.save();
         this.backgroundContext.transform(this.graphScaleX, 0, 0, this.graphScaleY, this.graphStartX, this.graphStartY);
         this.backgroundContext.transform(1, 0, 0, -1, 0, 0);
-        this.backgroundContext.transform(1, 0, 0, 1, 0, -this.properties.y_axis.max);
+        this.backgroundContext.transform(1, 0, 0, 1, 0, -this.axisMaxY);
 
         this.backgroundContext.beginPath();
 
@@ -208,11 +208,11 @@ class Linegraph extends Graph {
 
         this.backgroundContext.transform(this.graphScaleX, 0, 0, this.graphScaleY, this.graphStartX, this.graphStartY);
         this.backgroundContext.transform(1, 0, 0, -1, 0, 0);
-        this.backgroundContext.transform(1, 0, 0, 1, 0, -this.properties.y_axis.max);
+        this.backgroundContext.transform(1, 0, 0, 1, 0, -this.axisMaxY);
 
         this.backgroundContext.beginPath();
 
-        this.backgroundContext.moveTo(0, this.properties.y_axis.min);
+        this.backgroundContext.moveTo(0, this.axisMinY);
 
         var axisRangeX = this.calculateAxisRangeX();
         if (axisRangeX > 0) { this.backgroundContext.lineTo(0, dataset[this.axisMinX]); }
@@ -230,7 +230,7 @@ class Linegraph extends Graph {
             this.backgroundContext.quadraticCurveTo(controlPointX2, y1, x1, y1);
         }
 
-        this.backgroundContext.lineTo(axisRangeX, this.properties.y_axis.min);
+        this.backgroundContext.lineTo(axisRangeX, this.axisMinY);
 
         this.backgroundContext.restore();
         this.backgroundContext.fill();
@@ -243,7 +243,7 @@ class Linegraph extends Graph {
 
         this.backgroundContext.transform(this.graphScaleX, 0, 0, this.graphScaleY, this.graphStartX, this.graphStartY);
         this.backgroundContext.transform(1, 0, 0, -1, 0, 0);
-        this.backgroundContext.transform(1, 0, 0, 1, 0, -this.properties.y_axis.max);
+        this.backgroundContext.transform(1, 0, 0, 1, 0, -this.axisMaxY);
 
         this.backgroundContext.beginPath();
 
@@ -297,9 +297,9 @@ class Linegraph extends Graph {
             this.backgroundContext.fillText(xValue, this.graphStartX + (i * this.graphScaleX), this.graphEndY + (this.bottomMargin / 2));
         }
 
-        for (var i = this.properties.y_axis.min; i <= this.properties.y_axis.max; i += this.labelIntervalY) {
+        for (var i = this.axisMinY; i <= this.axisMaxY; i += this.labelIntervalY) {
             var labelData = this.parseLabel(i);
-            this.backgroundContext.fillText(Helper.applyAffix(labelData.value, this.properties.y_axis.label_prefix, labelData.suffix), (this.leftMargin / 2), this.graphEndY - ((i - this.properties.y_axis.min) * this.graphScaleY));
+            this.backgroundContext.fillText(Helper.applyAffix(labelData.value, this.properties.y_axis.label_prefix, labelData.suffix), (this.leftMargin / 2), this.graphEndY - ((i - this.axisMinY) * this.graphScaleY));
         }
     }
 
@@ -420,7 +420,7 @@ class Linegraph extends Graph {
         var yValueMax = Infinity;
         for (var i = 0; i < this.data.y.length; i++) {
             var y = this.data.y[i][this.axisMinX + index];
-            var yValue = this.graphStartY + (-(y - this.properties.y_axis.max) * this.graphScaleY);
+            var yValue = this.graphStartY + (-(y - this.axisMaxY) * this.graphScaleY);
             dataHighlights.push({ x: this.graphStartX + (index * this.graphScaleX), y: yValue });
             if (yValue < yValueMax) {
                 yValueMax = yValue;
