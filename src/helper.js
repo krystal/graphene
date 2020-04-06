@@ -14,16 +14,11 @@ class Helper {
     return `rgba(${r},${g},${b},${alpha})`;
   };
 
-  static roundToNearestPowerOfTen(number) {
-    var floorPowerOfTen = Math.pow(10, Math.floor(Math.log10(number)));
-    var ceilingPowerOfTen = Math.pow(10, Math.ceil(Math.log10(number)));
-
-    var floorDifference = number - floorPowerOfTen;
-    var ceilingDifference = ceilingPowerOfTen - number;
-
-    return floorDifference > ceilingDifference ? ceilingPowerOfTen : floorPowerOfTen;
+  static calculateFloorPowerOfTen(number) {
+    return Math.pow(10, Math.floor(Math.log10(number)));
   }
 
+  // TODO: find a solution for numbers < 1
   static calculateFactors(number) {
     var factors = new Array();
     var limit = Math.round(number / 2);

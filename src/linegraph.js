@@ -76,7 +76,7 @@ class Linegraph extends Graph {
         return this.graphWidth / this.calculateAxisRangeX();
     }
 
-    getMaxY() {
+    getMaxValueY() {
         var maxY = 0;
         for (var i = 0; i < this.data.y.length; i++) {
             for (var j = 0; j < this.data.y[i].length; j++) {
@@ -87,6 +87,28 @@ class Linegraph extends Graph {
         return maxY;
     }
 
+    calculateAxisMaxY() {
+        var maxY = this.getMaxValueY();
+        var floorPowerOfTen = Helper.calculateFloorPowerOfTen(maxY);
+        var floorPowerOfTenOverTen = floorPowerOfTen / 10;
+        
+        var candidateMaxY = floorPowerOfTen;
+        while (maxY > candidateMaxY) {
+            candidateMaxY += floorPowerOfTen;
+        }
+
+        // in an effort to keep the graph aesthetically pleasing, limit potential blank space at the top to 20%
+        if (maxY / candidateMaxY < 0.8) {
+            candidateMaxY = floorPowerOfTen;
+            while (maxY > candidateMaxY) {
+                candidateMaxY += floorPowerOfTenOverTen;
+            }
+        }
+        
+        return candidateMaxY;
+    }
+
+    // TODO: test this with data sets covering different ranges
     calculateParameters() {
         this.axisMinX = 0;
         this.axisMaxX = this.data.x.length - 1;
@@ -94,7 +116,12 @@ class Linegraph extends Graph {
             if (this.properties.x_axis.min) { this.axisMinX = this.properties.x_axis.min; };
             if (this.properties.x_axis.max) { this.axisMaxX = this.properties.x_axis.max; };
         }
-        
+        this.axisMinY = 0;
+        this.axisMaxY = this.calculateAxisMaxY();
+        if (this.properties.y_axis) {
+            if (this.properties.y_axis.min) { this.axisMinY = this.properties.y_axis.min; };
+            if (this.properties.y_axis.max) { this.axisMaxY = this.properties.y_axis.max; };
+        }
         this.axisRangeY = this.properties.y_axis.max - this.properties.y_axis.min;
 
         var maxLabelWidthX = 0;
@@ -108,7 +135,6 @@ class Linegraph extends Graph {
             this.graphEndY = this.canvasHeight - this.bottomMargin;
             this.graphHeight = this.graphEndY - this.graphStartY;
 
-            // TODO: try this out with data sets covering different ranges
             var maxLabelsY = Math.round(this.graphHeight / (labelHeightApproximation * 4));
             var factors = Helper.calculateFactors(this.properties.y_axis.max);
             
