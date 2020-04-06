@@ -30,7 +30,9 @@ class Linegraph extends Graph {
         this.backgroundContext.fillStyle = this.properties.colours.background;
         this.backgroundContext.fillRect(0, 0, this.canvasWidth, this.canvasHeight);
 
-        this.drawHorizontalLines();
+        if (this.properties.fonts.axes_labels.size > 0) {
+            this.drawHorizontalLines();
+        }
         for (var i = 0; i < this.data.y.length; i++) {
             this.drawAreaUnderGraph(this.data.y[i], this.getDataColour(i));
             this.drawGraph(this.data.y[i], this.getDataColour(i));
