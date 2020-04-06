@@ -6,7 +6,6 @@ var CPU_USAGE_PROPERTIES = {
             "information_panel": 0.75
         },
         "axes_labels": "#555555",
-        "background": "#FFFFFF",
         "data": [
             "#038FFB",
             "#04E395",

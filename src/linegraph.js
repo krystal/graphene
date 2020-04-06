@@ -17,6 +17,7 @@ class Linegraph extends Graph {
     // TODO: add property parsing (log unsupported ones in the console and fill in missing ones with defaults)
 
     draw() {
+        this.retrieveStyles();
         this.calculateParameters();
         this.redraw();
     }
@@ -27,7 +28,7 @@ class Linegraph extends Graph {
 
     redraw() {
         this.backgroundContext.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
-        this.backgroundContext.fillStyle = this.properties.colours.background;
+        this.backgroundContext.fillStyle = this.coloursBackground;
         this.backgroundContext.fillRect(0, 0, this.canvasWidth, this.canvasHeight);
 
         if (this.properties.fonts.axes_labels.size > 0) {
@@ -106,6 +107,10 @@ class Linegraph extends Graph {
         }
         
         return candidateMaxY;
+    }
+
+    retrieveStyles() {
+        this.coloursBackground = getComputedStyle(document.documentElement).getPropertyValue("--colours-background");
     }
 
     // TODO: test this with data sets covering different ranges
@@ -315,7 +320,7 @@ class Linegraph extends Graph {
     }
 
     drawHighlight(axisHighlight, yValueMax, dataHighlights) {
-        this.foregroundContext.strokeStyle = this.properties.colours.background;
+        this.foregroundContext.strokeStyle = this.coloursBackground;
         this.foregroundContext.lineWidth = this.properties.widths.highlight_indicator;
         this.foregroundContext.beginPath();
         this.foregroundContext.moveTo(axisHighlight.x, axisHighlight.y);
@@ -324,7 +329,7 @@ class Linegraph extends Graph {
 
         this.foregroundContext.strokeStyle = this.properties.colours.highlight_indicator;
         this.foregroundContext.lineWidth = this.properties.widths.highlight_indicator;
-        this.foregroundContext.fillStyle = this.properties.colours.background;
+        this.foregroundContext.fillStyle = this.coloursBackground;
 
         this.foregroundContext.beginPath();
         this.foregroundContext.arc(axisHighlight.x, axisHighlight.y, this.properties.radii.highlight_indicator, 0, 2 * Math.PI);
@@ -335,7 +340,7 @@ class Linegraph extends Graph {
         for (var i = 0; i < dataHighlights.length; i++) {
             this.foregroundContext.strokeStyle = this.getDataColour(i);
             this.foregroundContext.lineWidth = this.properties.widths.data_highlight_indicator;
-            this.foregroundContext.fillStyle = this.properties.colours.background;
+            this.foregroundContext.fillStyle = this.coloursBackground;
 
             this.foregroundContext.beginPath();
             this.foregroundContext.arc(dataHighlights[i].x, dataHighlights[i].y, this.properties.radii.data_highlight_indicator, 0, 2 * Math.PI);

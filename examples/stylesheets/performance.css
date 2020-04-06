@@ -1,3 +1,7 @@
+:root {
+  --colours-background: #FFFFFF;
+}
+
 .graph {
   position: relative;
   margin: 48px;
