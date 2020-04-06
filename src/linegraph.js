@@ -85,16 +85,6 @@ class Linegraph extends Graph {
         return maxY;
     }
 
-    roundToNearestPowerOfTen(value) {
-        var floorPowerOfTen = Math.pow(10, Math.floor(Math.log10(value)));
-        var ceilingPowerOfTen = Math.pow(10, Math.ceil(Math.log10(value)));
-
-        var floorDifference = value - floorPowerOfTen;
-        var ceilingDifference = ceilingPowerOfTen - value;
-
-        return floorDifference > ceilingDifference ? ceilingPowerOfTen : floorPowerOfTen;
-    }
-
     calculateParameters() {
         this.axisMinX = this.properties.x_axis.min;
         this.axisMaxX = this.properties.x_axis.max;
@@ -113,18 +103,19 @@ class Linegraph extends Graph {
 
             // TODO: try this out with data sets covering different ranges
             var maxLabelsY = Math.round(this.graphHeight / (labelHeightApproximation * 4));
-            var roughInterval = this.getMaxY() / maxLabelsY;
-            var smoothInterval = this.roundToNearestPowerOfTen(roughInterval);
-
-            var proposedLabelsY = this.axisRangeY / smoothInterval;
+            var factors = Helper.calculateFactors(this.properties.y_axis.max);
+            
+            var factorIndex = 0;
+            var workingInterval = factors[factorIndex];
+            var proposedLabelsY = this.axisRangeY / workingInterval;
+            
             while (proposedLabelsY > maxLabelsY) {
-                // TODO: come back to this, it needs to be more sophisticated than simply doubling the interval
-                // ^ for the labels and horizontal lines to match the interval needs to be a divisor of the y position of the horizontal line at the very top of the graph
-                smoothInterval *= 2;
-                proposedLabelsY = this.axisRangeY / smoothInterval;
+                factorIndex++;
+                workingInterval = factors[factorIndex];
+                proposedLabelsY = this.axisRangeY / workingInterval;
             }
 
-            this.labelIntervalY = smoothInterval;
+            this.labelIntervalY = workingInterval;
 
             maxLabelWidthX = this.caclulateMaxLabelWidthX();
             for (var i = this.properties.y_axis.min; i <= this.properties.y_axis.max; i += this.labelIntervalY) {
