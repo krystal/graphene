@@ -60,10 +60,6 @@ var CPU_USAGE_PROPERTIES = {
             "CPU 3"
         ]
     },
-    "x_axis": {
-        "min": 0,
-        "max": 288
-    },
     "y_axis": {
         "min": 0,
         "max": 70,

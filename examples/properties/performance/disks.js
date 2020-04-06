@@ -58,10 +58,6 @@ var DISKS_PROPERTIES = {
             "Write"
         ]
     },
-    "x_axis": {
-        "min": 0,
-        "max": 288
-    },
     "y_axis": {
         "min": 0,
         "max": 1200000,

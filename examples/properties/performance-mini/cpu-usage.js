@@ -25,14 +25,9 @@ var CPU_USAGE_PROPERTIES = {
     "widths": {
         "data": 0.5
     },
-    "x_axis": {
-        "min": 0,
-        "max": 288
-    },
     "y_axis": {
         "min": 0,
         "max": 10,
-        "label_interval": 5,
         "label_suffix": [[0, "%"]]
     }
 };

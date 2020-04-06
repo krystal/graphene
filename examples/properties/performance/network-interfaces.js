@@ -58,10 +58,6 @@ var NETWORK_INTERFACES_PROPERTIES = {
             "Sent"
         ]
     },
-    "x_axis": {
-        "min": 0,
-        "max": 288
-    },
     "y_axis": {
         "min": 0,
         "max": 14000000,

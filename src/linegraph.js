@@ -88,8 +88,13 @@ class Linegraph extends Graph {
     }
 
     calculateParameters() {
-        this.axisMinX = this.properties.x_axis.min;
-        this.axisMaxX = this.properties.x_axis.max;
+        this.axisMinX = 0;
+        this.axisMaxX = this.data.x.length - 1;
+        if (this.properties.x_axis) {
+            if (this.properties.x_axis.min) { this.axisMinX = this.properties.x_axis.min; };
+            if (this.properties.x_axis.max) { this.axisMaxX = this.properties.x_axis.max; };
+        }
+        
         this.axisRangeY = this.properties.y_axis.max - this.properties.y_axis.min;
 
         var maxLabelWidthX = 0;

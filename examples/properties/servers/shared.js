@@ -21,14 +21,9 @@ var SHARED_PROPERTIES = {
   "widths": {
       "data": 0.1
   },
-  "x_axis": {
-    "min": 0,
-    "max": 71
-  },
   "y_axis": {
       "min": 5,
       "max": 10,
-      "label_interval": 1,
       "label_suffix": [[0, "%"]]
   }
 };
