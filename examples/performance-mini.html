@@ -1,5 +1,6 @@
 <html>
   <head>
+    <link rel="stylesheet" type="text/css" href="stylesheets/performance-mini.css">
     <script src="properties/performance-mini/cpu-usage.js"></script>
     <script src="properties/performance-mini/network-interfaces.js"></script>
     <script src="properties/performance-mini/disks.js"></script>
@@ -9,17 +10,17 @@
     <script src="scripts/data-converter.js"></script>
   </head>
   <body>
-    <div style="position: relative; margin: 24px; display: inline-block;" id="cpu-usage" data-type="linegraph" data-properties="" data-data="">
+    <div class="graph" id="cpu-usage" data-type="linegraph" data-properties="" data-data="">
       <canvas id="cpu-usage-background" width="400" height="150"></canvas>
-      <canvas id="cpu-usage-foreground" width="400" height="150" style="position: absolute; left: 0; top: 0; z-index: 0;"></canvas>
+      <canvas class="foreground" id="cpu-usage-foreground" width="400" height="150"></canvas>
     </div>
-    <div style="position: relative; margin: 24px; display: inline-block;" id="network-interfaces" data-type="linegraph" data-properties="" data-data="">
+    <div class="graph" id="network-interfaces" data-type="linegraph" data-properties="" data-data="">
       <canvas id="network-interfaces-background" width="400" height="150"></canvas>
-      <canvas id="network-interfaces-foreground" width="400" height="150" style="position: absolute; left: 0; top: 0; z-index: 0;"></canvas>
+      <canvas class="foreground" id="network-interfaces-foreground" width="400" height="150"></canvas>
     </div>
-    <div style="position: relative; margin: 24px; display: inline-block;" id="disks" data-type="linegraph" data-properties="" data-data="">
+    <div class="graph" id="disks" data-type="linegraph" data-properties="" data-data="">
       <canvas id="disks-background" width="400" height="150"></canvas>
-      <canvas id="disks-foreground" width="400" height="150" style="position: absolute; left: 0; top: 0; z-index: 0;"></canvas>
+      <canvas class="foreground" id="disks-foreground" width="400" height="150"></canvas>
     </div>
   </body>
   <script>
