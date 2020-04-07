@@ -1,9 +1,4 @@
 var SHARED_PROPERTIES = {
-  "colours": {
-      "data": [
-          "#04E395"
-      ]
-  },
   "fonts": {
       "axes_labels": {
           "family": "Arial",

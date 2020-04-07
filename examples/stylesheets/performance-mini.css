@@ -4,6 +4,12 @@
   --colours-axes-labels: #888888;
   --colours-background: #FFFFFF;
   --colours-horizontal-lines: #FFFFFF;
+
+  --colours-data-0: #038FFB;
+  --colours-data-1: #04E395;
+  --colours-data-2: #FEB01A;
+  --colours-data-3: #FF4560;
+  --colours-data-4: #765DD0;
 }
 
 .graph {

@@ -23,7 +23,7 @@ class Linegraph extends Graph {
     }
 
     getDataColour(i) {
-        return this.properties.colours.data[i % this.properties.colours.data.length];
+        return this.coloursData[i % this.coloursData.length];
     }
 
     redraw() {
@@ -123,6 +123,12 @@ class Linegraph extends Graph {
         this.coloursInformationPanel = getComputedStyle(document.documentElement).getPropertyValue("--colours-information-panel");
         this.coloursInformationSentences = getComputedStyle(document.documentElement).getPropertyValue("--colours-information-sentences");
         this.coloursSelectionBox = getComputedStyle(document.documentElement).getPropertyValue("--colours-selection-box");
+
+        this.coloursData = new Array();
+        for (var i = 0; i < this.data.y.length; i++) {
+            var colour = getComputedStyle(document.documentElement).getPropertyValue("--colours-data-" + i);
+            if (colour) { this.coloursData.push(colour); }
+        }
     }
 
     // TODO: test this with data sets covering different ranges
