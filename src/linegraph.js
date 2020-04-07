@@ -14,7 +14,6 @@ class Linegraph extends Graph {
 
     // TODO: do some refactoring
     // TODO: investigate "Save Image As..." in browsers, it currently, understandably, saves only the foreground layer
-    // TODO: all properties will be soon be optional, so parsing won't be needed, remove this once this is the case
 
     draw() {
         this.retrieveStyles();
@@ -43,21 +42,30 @@ class Linegraph extends Graph {
         }
     }
 
-    parseLabel(value) {
-        if (!this.properties.y_axis.label_suffix) {
+    getLabelPrefix() {
+        if (this.properties.y_axis && this.properties.y_axis.label_suffix) {
+            return this.properties.y_axis.label_suffix;
+        }
+        return "";
+    }
+
+    getLabelComponents(value) {
+        if (!this.properties.y_axis || !this.properties.y_axis.label_suffix) {
             return {"value": value, "suffix": ""};
         }
 
-        if (this.properties.y_axis.label_suffix.length == 1) {
-            return {"value": value, "suffix": this.properties.y_axis.label_suffix[0][1]};
+        var labelSuffixArray = this.properties.y_axis.label_suffix;
+
+        if (labelSuffixArray.length == 1) {
+            return {"value": value, "suffix": labelSuffixArray[0][1]};
         }
 
         var lastLimit = 1;
         var lastButOneLimit = 1;
         var lastSuffix = "";
-        for (var i = 0; i < this.properties.y_axis.label_suffix.length; i++) {
-            var limit = this.properties.y_axis.label_suffix[i][0];
-            var suffix = this.properties.y_axis.label_suffix[i][1];
+        for (var i = 0; i < labelSuffixArray.length; i++) {
+            var limit = labelSuffixArray[i][0];
+            var suffix = labelSuffixArray[i][1];
             if (value < limit) {
                 return {"value": value / (lastLimit), "suffix": suffix};
             }
@@ -192,8 +200,8 @@ class Linegraph extends Graph {
 
             maxLabelWidthX = this.caclulateMaxLabelWidthX();
             for (var i = this.axisMinY; i <= this.axisMaxY; i += this.labelIntervalY) {
-                var labelData = this.parseLabel(i);
-                var labelWidth = this.backgroundContext.measureText(Helper.applyAffix(labelData.value, this.properties.y_axis.label_prefix, labelData.suffix)).width;
+                var labelComponents = this.getLabelComponents(i);
+                var labelWidth = this.backgroundContext.measureText(Helper.applyAffix(labelComponents.value, this.getLabelPrefix(), labelComponents.suffix)).width;
                 if (labelWidth > maxLabelWidthY) {
                     maxLabelWidthY = labelWidth;
                 }
@@ -215,9 +223,9 @@ class Linegraph extends Graph {
         this.graphScaleY = this.graphHeight / this.axisRangeY;
 
         if (this.properties.flags) {
-            this.highLightEnabled = this.properties.flags.highlight_enabled;
-            this.scrollEnabled = this.properties.flags.scroll_enabled;
-            this.zoomEnabled = this.properties.flags.zoom_enabled;
+            this.highLightEnabled = this.properties.flags.highlight_enabled ? true : false;
+            this.scrollEnabled = this.properties.flags.scroll_enabled ? true : false;
+            this.zoomEnabled = this.properties.flags.zoom_enabled ? true : false;
         }
     }
 
@@ -334,8 +342,8 @@ class Linegraph extends Graph {
         }
 
         for (var i = this.axisMinY; i <= this.axisMaxY; i += this.labelIntervalY) {
-            var labelData = this.parseLabel(i);
-            this.backgroundContext.fillText(Helper.applyAffix(labelData.value, this.properties.y_axis.label_prefix, labelData.suffix), (this.leftMargin / 2), this.graphEndY - ((i - this.axisMinY) * this.graphScaleY));
+            var labelComponents = this.getLabelComponents(i);
+            this.backgroundContext.fillText(Helper.applyAffix(labelComponents.value, this.getLabelPrefix(), labelComponents.suffix), (this.leftMargin / 2), this.graphEndY - ((i - this.axisMinY) * this.graphScaleY));
         }
     }
 
@@ -396,8 +404,8 @@ class Linegraph extends Graph {
         var maxSentenceWidth = this.foregroundContext.measureText(heading).width + (2 * sentenceHeightApproximation);
         this.foregroundContext.font = this.fontsInformationSentencesWeight + " " + this.fontsInformationSentencesSize + "px " + this.fontsInformationSentencesFamily;
         for (var i = 0; i < this.data.y.length; i++) {
-            var labelData = this.parseLabel(this.data.y[i][this.axisMinX + index]);
-            var formattedData = Helper.applyAffix(labelData.value, this.properties.y_axis.label_prefix, labelData.suffix);
+            var labelComponents = this.getLabelComponents(this.data.y[i][this.axisMinX + index]);
+            var formattedData = Helper.applyAffix(labelComponents.value, this.getLabelPrefix(), labelComponents.suffix);
             var sentence = this.data.names[i] + ": " + formattedData;
             // space + circle + space + sentence + space (space and cricle are as wide as a sentence is tall)
             var sentenceWidth = this.foregroundContext.measureText(sentence).width + (4 * sentenceHeightApproximation);
