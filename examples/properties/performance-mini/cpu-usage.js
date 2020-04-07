@@ -1,19 +1,12 @@
 var CPU_USAGE_PROPERTIES = {
     "colours": {
-        "alphas": {
-            "under_graph": 0
-        },
-        "axes_labels": "#888888",
-        "background": "#FFFFFF",
         "data": [
             "#038FFB",
             "#04E395",
             "#FEB01A",
             "#FF4560",
             "#765DD0"
-        ],
-        "highlight_indicator": "#E0DEFF",
-        "horizontal_lines": "#FFFFFF"
+        ]
     },
     "fonts": {
         "axes_labels": {

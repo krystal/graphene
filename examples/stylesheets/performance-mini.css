@@ -1,3 +1,11 @@
+:root {
+  --alphas-under-graph: 0;
+
+  --colours-axes-labels: #888888;
+  --colours-background: #FFFFFF;
+  --colours-horizontal-lines: #FFFFFF;
+}
+
 .graph {
   position: relative;
   margin: 24px;

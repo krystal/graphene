@@ -111,7 +111,18 @@ class Linegraph extends Graph {
 
     // TODO: add parsing to this -> defaults when styles have not been set along with a message in the console
     retrieveStyles() {
+        this.alphasInformationPanel = getComputedStyle(document.documentElement).getPropertyValue("--alphas-information-panel");
+        this.alphasSelectionBox = getComputedStyle(document.documentElement).getPropertyValue("--alphas-selection-box");
+        this.alphasUnderGraph = getComputedStyle(document.documentElement).getPropertyValue("--alphas-under-graph");
+
+        this.coloursAxesLabels = getComputedStyle(document.documentElement).getPropertyValue("--colours-axes-labels");
         this.coloursBackground = getComputedStyle(document.documentElement).getPropertyValue("--colours-background");
+        this.coloursHighlightIndicator = getComputedStyle(document.documentElement).getPropertyValue("--colours-highlight-indicator");
+        this.coloursHorizontalLines = getComputedStyle(document.documentElement).getPropertyValue("--colours-horizontal-lines");
+        this.coloursInformationHeading = getComputedStyle(document.documentElement).getPropertyValue("--colours-information-heading");
+        this.coloursInformationPanel = getComputedStyle(document.documentElement).getPropertyValue("--colours-information-panel");
+        this.coloursInformationSentences = getComputedStyle(document.documentElement).getPropertyValue("--colours-information-sentences");
+        this.coloursSelectionBox = getComputedStyle(document.documentElement).getPropertyValue("--colours-selection-box");
     }
 
     // TODO: test this with data sets covering different ranges
@@ -195,7 +206,7 @@ class Linegraph extends Graph {
     }
 
     drawHorizontalLines() {
-        this.backgroundContext.strokeStyle = this.properties.colours.horizontal_lines;
+        this.backgroundContext.strokeStyle = this.coloursHorizontalLines;
         this.backgroundContext.lineWidth = 1;
         this.transformDrawingArea();
 
@@ -213,7 +224,7 @@ class Linegraph extends Graph {
     }
 
     drawAreaUnderGraph(dataset, colour) {
-        this.backgroundContext.fillStyle = Helper.hex2rgba(colour, this.properties.colours.alphas.under_graph);
+        this.backgroundContext.fillStyle = Helper.hex2rgba(colour, this.alphasUnderGraph);
         this.transformDrawingArea();
 
         this.backgroundContext.beginPath();
@@ -290,7 +301,7 @@ class Linegraph extends Graph {
         }
 
         this.backgroundContext.font = this.properties.fonts.axes_labels.weight + " " + this.properties.fonts.axes_labels.size + "px " + this.properties.fonts.axes_labels.family;
-        this.backgroundContext.fillStyle = this.properties.colours.axes_labels;
+        this.backgroundContext.fillStyle = this.coloursAxesLabels;
         this.backgroundContext.textAlign = "center";
         this.backgroundContext.textBaseline = "middle";
 
@@ -328,7 +339,7 @@ class Linegraph extends Graph {
         this.foregroundContext.lineTo(axisHighlight.x, yValueMax);
         this.foregroundContext.stroke();
 
-        this.foregroundContext.strokeStyle = this.properties.colours.highlight_indicator;
+        this.foregroundContext.strokeStyle = this.coloursHighlightIndicator;
         this.foregroundContext.lineWidth = this.properties.widths.highlight_indicator;
         this.foregroundContext.fillStyle = this.coloursBackground;
 
@@ -390,14 +401,14 @@ class Linegraph extends Graph {
             console.log("Information panel may be clipped vertically!");
         }
 
-        this.foregroundContext.fillStyle = Helper.hex2rgba(this.properties.colours.information_panel, this.properties.colours.alphas.information_panel);
+        this.foregroundContext.fillStyle = Helper.hex2rgba(this.coloursInformationPanel, this.alphasInformationPanel);
         this.foregroundContext.fillRect(panelX, panelY, requiredWidth, requiredHeight);
 
         var circleOffsetY = panelY + (3 * sentenceHeightApproximation);
         var sentenceOffsetY = panelY + (2 * sentenceHeightApproximation);
 
         this.foregroundContext.font = this.properties.fonts.information_heading.weight + " " + this.properties.fonts.information_heading.size + "px " + this.properties.fonts.information_heading.family;
-        this.foregroundContext.fillStyle = this.properties.colours.information_heading;
+        this.foregroundContext.fillStyle = this.coloursInformationHeading;
         this.foregroundContext.fillText(heading, panelX + sentenceHeightApproximation, sentenceOffsetY);
         sentenceOffsetY += 2 * sentenceHeightApproximation;
 
@@ -405,7 +416,7 @@ class Linegraph extends Graph {
         for (var i = 0; i < sentences.length; i++) {
             this.foregroundContext.fillStyle = this.getDataColour(i);
             this.foregroundContext.fillRect(panelX + sentenceHeightApproximation, circleOffsetY, sentenceHeightApproximation, sentenceHeightApproximation);
-            this.foregroundContext.fillStyle = this.properties.colours.information_sentences;
+            this.foregroundContext.fillStyle = this.coloursInformationSentences;
             this.foregroundContext.fillText(sentences[i], panelX + (3 * sentenceHeightApproximation), sentenceOffsetY);
             circleOffsetY += 2 * sentenceHeightApproximation;
             sentenceOffsetY += 2 * sentenceHeightApproximation;
@@ -449,7 +460,7 @@ class Linegraph extends Graph {
         var boxX = this.graphStartX + (this.shiftMouseDownStartIndex * this.graphScaleX);
         var boxWidth = (this.shiftMouseDownEndIndex - this.shiftMouseDownStartIndex) * this.graphScaleX;
         
-        this.foregroundContext.fillStyle = Helper.hex2rgba(this.properties.colours.selection_box, this.properties.colours.alphas.selection_box);
+        this.foregroundContext.fillStyle = Helper.hex2rgba(this.coloursSelectionBox, this.alphasSelectionBox);
         this.foregroundContext.fillRect(boxX, this.graphStartY, boxWidth, this.graphHeight);
     }
 
