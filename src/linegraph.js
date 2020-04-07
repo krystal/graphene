@@ -14,7 +14,7 @@ class Linegraph extends Graph {
 
     // TODO: do some refactoring
     // TODO: investigate "Save Image As..." in browsers, it currently, understandably, saves only the foreground layer
-    // TODO: add property parsing (log unsupported ones in the console and fill in missing ones with defaults)
+    // TODO: all properties will be soon be optional, so parsing won't be needed, remove this once this is the case
 
     draw() {
         this.retrieveStyles();
@@ -109,6 +109,7 @@ class Linegraph extends Graph {
         return candidateMaxY;
     }
 
+    // TODO: add parsing to this -> defaults when styles have not been set along with a message in the console
     retrieveStyles() {
         this.coloursBackground = getComputedStyle(document.documentElement).getPropertyValue("--colours-background");
     }
