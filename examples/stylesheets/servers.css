@@ -1,10 +1,11 @@
 :root {
   --alphas-under-graph: 0.25;
 
-  --colours-axes-labels: #888888;
   --colours-background: #FFFFFF;
 
   --colours-data-0: #04E395;
+
+  --widths-data: 0.1;
 }
 
 table {

@@ -31,14 +31,14 @@ class Linegraph extends Graph {
         this.backgroundContext.fillStyle = this.coloursBackground;
         this.backgroundContext.fillRect(0, 0, this.canvasWidth, this.canvasHeight);
 
-        if (this.properties.fonts.axes_labels.size > 0) {
+        if (this.fontsAxesLabelsSize > 0) {
             this.drawHorizontalLines();
         }
         for (var i = 0; i < this.data.y.length; i++) {
             this.drawAreaUnderGraph(this.data.y[i], this.getDataColour(i));
             this.drawGraph(this.data.y[i], this.getDataColour(i));
         }
-        if (this.properties.fonts.axes_labels.size > 0) {
+        if (this.fontsAxesLabelsSize > 0) {
             this.drawAxisLabels();
         }
     }
@@ -129,6 +129,23 @@ class Linegraph extends Graph {
             var colour = getComputedStyle(document.documentElement).getPropertyValue("--colours-data-" + i);
             if (colour) { this.coloursData.push(colour); }
         }
+
+        this.fontsAxesLabelsFamily = getComputedStyle(document.documentElement).getPropertyValue("--fonts-axes-labels-family");
+        this.fontsAxesLabelsSize = getComputedStyle(document.documentElement).getPropertyValue("--fonts-axes-labels-size");
+        this.fontsAxesLabelsWeight = getComputedStyle(document.documentElement).getPropertyValue("--fonts-axes-labels-weight");
+        this.fontsInformationHeadingFamily = getComputedStyle(document.documentElement).getPropertyValue("--fonts-information-heading-family");
+        this.fontsInformationHeadingSize = getComputedStyle(document.documentElement).getPropertyValue("--fonts-information-heading-size");
+        this.fontsInformationHeadingWeight = getComputedStyle(document.documentElement).getPropertyValue("--fonts-information-heading-weight");
+        this.fontsInformationSentencesFamily = getComputedStyle(document.documentElement).getPropertyValue("--fonts-information-sentences-family");
+        this.fontsInformationSentencesSize = getComputedStyle(document.documentElement).getPropertyValue("--fonts-information-sentences-size");
+        this.fontsInformationSentencesWeight = getComputedStyle(document.documentElement).getPropertyValue("--fonts-information-sentences-weight");
+
+        this.radiiDataHighlightIndicator = getComputedStyle(document.documentElement).getPropertyValue("--radii-data-highlight-indicator");
+        this.radiiHighlightIndicator = getComputedStyle(document.documentElement).getPropertyValue("--radii-highlight-indicator");
+        
+        this.widthsData = getComputedStyle(document.documentElement).getPropertyValue("--widths-data");
+        this.widthsDataHighlightIndicator = getComputedStyle(document.documentElement).getPropertyValue("--widths-data-highlight-indicator");
+        this.widthsHighlightIndicator = getComputedStyle(document.documentElement).getPropertyValue("--widths-highlight-indicator");
     }
 
     // TODO: test this with data sets covering different ranges
@@ -149,8 +166,8 @@ class Linegraph extends Graph {
 
         var maxLabelWidthX = 0;
         var maxLabelWidthY = 0;
-        if (this.properties.fonts.axes_labels.size > 0) {
-            this.backgroundContext.font = this.properties.fonts.axes_labels.weight + " " + this.properties.fonts.axes_labels.size + "px " + this.properties.fonts.axes_labels.family;
+        if (this.fontsAxesLabelsSize > 0) {
+            this.backgroundContext.font = this.fontsAxesLabelsWeight + " " + this.fontsAxesLabelsSize + "px " + this.fontsAxesLabelsFamily;
             var labelHeightApproximation = this.backgroundContext.measureText("M").width;
             var topMargin = labelHeightApproximation;
             this.bottomMargin = labelHeightApproximation * 3;
@@ -261,7 +278,7 @@ class Linegraph extends Graph {
 
     drawGraph(dataset, colour) {
         this.backgroundContext.strokeStyle = colour;
-        this.backgroundContext.lineWidth = this.properties.widths.data;
+        this.backgroundContext.lineWidth = this.widthsData;
         this.transformDrawingArea();
 
         this.backgroundContext.beginPath();
@@ -306,7 +323,7 @@ class Linegraph extends Graph {
             availableWidthPerLabel = this.graphWidth / ((this.calculateAxisRangeX() + 1) / xAxisLabelInterval);
         }
 
-        this.backgroundContext.font = this.properties.fonts.axes_labels.weight + " " + this.properties.fonts.axes_labels.size + "px " + this.properties.fonts.axes_labels.family;
+        this.backgroundContext.font = this.fontsAxesLabelsWeight + " " + this.fontsAxesLabelsSize + "px " + this.fontsAxesLabelsFamily;
         this.backgroundContext.fillStyle = this.coloursAxesLabels;
         this.backgroundContext.textAlign = "center";
         this.backgroundContext.textBaseline = "middle";
@@ -339,29 +356,29 @@ class Linegraph extends Graph {
 
     drawHighlight(axisHighlight, yValueMax, dataHighlights) {
         this.foregroundContext.strokeStyle = this.coloursBackground;
-        this.foregroundContext.lineWidth = this.properties.widths.highlight_indicator;
+        this.foregroundContext.lineWidth = this.widthsHighlightIndicator;
         this.foregroundContext.beginPath();
         this.foregroundContext.moveTo(axisHighlight.x, axisHighlight.y);
         this.foregroundContext.lineTo(axisHighlight.x, yValueMax);
         this.foregroundContext.stroke();
 
         this.foregroundContext.strokeStyle = this.coloursHighlightIndicator;
-        this.foregroundContext.lineWidth = this.properties.widths.highlight_indicator;
+        this.foregroundContext.lineWidth = this.widthsHighlightIndicator;
         this.foregroundContext.fillStyle = this.coloursBackground;
 
         this.foregroundContext.beginPath();
-        this.foregroundContext.arc(axisHighlight.x, axisHighlight.y, this.properties.radii.highlight_indicator, 0, 2 * Math.PI);
+        this.foregroundContext.arc(axisHighlight.x, axisHighlight.y, this.radiiHighlightIndicator, 0, 2 * Math.PI);
         this.foregroundContext.closePath();
         this.foregroundContext.stroke();
         this.foregroundContext.fill();
 
         for (var i = 0; i < dataHighlights.length; i++) {
             this.foregroundContext.strokeStyle = this.getDataColour(i);
-            this.foregroundContext.lineWidth = this.properties.widths.data_highlight_indicator;
+            this.foregroundContext.lineWidth = this.widthsDataHighlightIndicator;
             this.foregroundContext.fillStyle = this.coloursBackground;
 
             this.foregroundContext.beginPath();
-            this.foregroundContext.arc(dataHighlights[i].x, dataHighlights[i].y, this.properties.radii.data_highlight_indicator, 0, 2 * Math.PI);
+            this.foregroundContext.arc(dataHighlights[i].x, dataHighlights[i].y, this.radiiDataHighlightIndicator, 0, 2 * Math.PI);
             this.foregroundContext.closePath();
             this.foregroundContext.stroke();
             this.foregroundContext.fill();
@@ -371,13 +388,13 @@ class Linegraph extends Graph {
     // TODO: consider moving the calculation code in highlight(index) and reserve this method for actual drawing
     drawInformationPanel(index) {
         this.foregroundContext.textAlign = "left";
-        this.foregroundContext.font = this.properties.fonts.information_heading.weight + " " + this.properties.fonts.information_heading.size + "px " + this.properties.fonts.information_heading.family;
+        this.foregroundContext.font = this.fontsInformationHeadingWeight + " " + this.fontsInformationHeadingSize + "px " + this.fontsInformationHeadingFamily;
 
         var heading = this.data.x[this.axisMinX + index][1];
         var sentences = new Array();
         var sentenceHeightApproximation = this.foregroundContext.measureText("M").width;
         var maxSentenceWidth = this.foregroundContext.measureText(heading).width + (2 * sentenceHeightApproximation);
-        this.foregroundContext.font = this.properties.fonts.information_sentences.weight + " " + this.properties.fonts.information_sentences.size + "px " + this.properties.fonts.information_sentences.family;
+        this.foregroundContext.font = this.fontsInformationSentencesWeight + " " + this.fontsInformationSentencesSize + "px " + this.fontsInformationSentencesFamily;
         for (var i = 0; i < this.data.y.length; i++) {
             var labelData = this.parseLabel(this.data.y[i][this.axisMinX + index]);
             var formattedData = Helper.applyAffix(labelData.value, this.properties.y_axis.label_prefix, labelData.suffix);
@@ -413,12 +430,12 @@ class Linegraph extends Graph {
         var circleOffsetY = panelY + (3 * sentenceHeightApproximation);
         var sentenceOffsetY = panelY + (2 * sentenceHeightApproximation);
 
-        this.foregroundContext.font = this.properties.fonts.information_heading.weight + " " + this.properties.fonts.information_heading.size + "px " + this.properties.fonts.information_heading.family;
+        this.foregroundContext.font = this.fontsInformationHeadingWeight + " " + this.fontsInformationHeadingSize + "px " + this.fontsInformationHeadingFamily;
         this.foregroundContext.fillStyle = this.coloursInformationHeading;
         this.foregroundContext.fillText(heading, panelX + sentenceHeightApproximation, sentenceOffsetY);
         sentenceOffsetY += 2 * sentenceHeightApproximation;
 
-        this.foregroundContext.font = this.properties.fonts.information_sentences.weight + " " + this.properties.fonts.information_sentences.size + "px " + this.properties.fonts.information_sentences.family;
+        this.foregroundContext.font = this.fontsInformationSentencesWeight + " " + this.fontsInformationSentencesSize + "px " + this.fontsInformationSentencesFamily;
         for (var i = 0; i < sentences.length; i++) {
             this.foregroundContext.fillStyle = this.getDataColour(i);
             this.foregroundContext.fillRect(panelX + sentenceHeightApproximation, circleOffsetY, sentenceHeightApproximation, sentenceHeightApproximation);

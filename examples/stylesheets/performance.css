@@ -17,6 +17,23 @@
   --colours-data-2: #FEB01A;
   --colours-data-3: #FF4560;
   --colours-data-4: #765DD0;
+
+  --fonts-axes-labels-family: "Arial";
+  --fonts-axes-labels-size: 13;
+  --fonts-axes-labels-weight: normal;
+  --fonts-information-heading-family: "Arial";
+  --fonts-information-heading-size: 13;
+  --fonts-information-heading-weight: bold;
+  --fonts-information-sentences-family: "Arial";
+  --fonts-information-sentences-size: 13;
+  --fonts-information-sentences-weight: normal;
+
+  --radii-data-highlight-indicator: 4;
+  --radii-highlight-indicator: 2;
+
+  --widths-data: 1;
+  --widths-data-highlight-indicator: 4;
+  --widths-highlight-indicator: 2;
 }
 
 .graph {

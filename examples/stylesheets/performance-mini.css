@@ -10,6 +10,12 @@
   --colours-data-2: #FEB01A;
   --colours-data-3: #FF4560;
   --colours-data-4: #765DD0;
+
+  --fonts-axes-labels-family: "Arial";
+  --fonts-axes-labels-size: 13;
+  --fonts-axes-labels-weight: normal;
+
+  --widths-data: 0.5;
 }
 
 .graph {
