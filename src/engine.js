@@ -6,7 +6,8 @@ function loadGraphs() {
         if (divs[i].dataset.type) {
             var id = divs[i].getAttribute("id");
             var type = divs[i].dataset.type;
-            var properties = JSON.parse(divs[i].dataset.properties);
+            var datasetProperties = divs[i].dataset.properties;
+            var properties = (datasetProperties && datasetProperties != "") ? JSON.parse(datasetProperties) : null
             var data = JSON.parse(divs[i].dataset.data);
             var backgroundId = id + "-background";
             var foregroundId = id + "-foreground";

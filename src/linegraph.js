@@ -43,14 +43,14 @@ class Linegraph extends Graph {
     }
 
     getLabelPrefix() {
-        if (this.properties.y_axis && this.properties.y_axis.label_suffix) {
-            return this.properties.y_axis.label_suffix;
+        if (this.properties && this.properties.y_axis && this.properties.y_axis.label_prefix) {
+            return this.properties.y_axis.label_prefix;
         }
         return "";
     }
 
     getLabelComponents(value) {
-        if (!this.properties.y_axis || !this.properties.y_axis.label_suffix) {
+        if (!this.properties || !this.properties.y_axis || !this.properties.y_axis.label_suffix) {
             return {"value": value, "suffix": ""};
         }
 
@@ -160,13 +160,13 @@ class Linegraph extends Graph {
     calculateParameters() {
         this.axisMinX = 0;
         this.axisMaxX = this.data.x.length - 1;
-        if (this.properties.x_axis) {
+        if (this.properties && this.properties.x_axis) {
             if (this.properties.x_axis.min) { this.axisMinX = this.properties.x_axis.min; };
             if (this.properties.x_axis.max) { this.axisMaxX = this.properties.x_axis.max; };
         }
         this.axisMinY = 0;
         this.axisMaxY = this.calculateAxisMaxY();
-        if (this.properties.y_axis) {
+        if (this.properties && this.properties.y_axis) {
             if (this.properties.y_axis.min) { this.axisMinY = this.properties.y_axis.min; };
             if (this.properties.y_axis.max) { this.axisMaxY = this.properties.y_axis.max; };
         }
@@ -222,7 +222,7 @@ class Linegraph extends Graph {
         this.graphScaleX = this.calculateGraphScaleX();
         this.graphScaleY = this.graphHeight / this.axisRangeY;
 
-        if (this.properties.flags) {
+        if (this.properties && this.properties.flags) {
             this.highLightEnabled = this.properties.flags.highlight_enabled ? true : false;
             this.scrollEnabled = this.properties.flags.scroll_enabled ? true : false;
             this.zoomEnabled = this.properties.flags.zoom_enabled ? true : false;
