@@ -118,6 +118,7 @@ class Linegraph extends Graph {
     }
 
     // TODO: add parsing to this -> defaults when styles have not been set along with a message in the console
+    // ^but only when that style is required i.e. highlight is enabled but coloursHighlightIndicator is not set
     retrieveStyles() {
         this.alphasInformationPanel = getComputedStyle(document.documentElement).getPropertyValue("--alphas-information-panel");
         this.alphasSelectionBox = getComputedStyle(document.documentElement).getPropertyValue("--alphas-selection-box");
