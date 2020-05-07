@@ -5,8 +5,10 @@ class Graph {
       this.canvasWidth = background.width;
       this.canvasHeight = background.height;
       this.backgroundContext = this.getContext(background);
-      this.foregroundContext = this.getContext(this.foreground);
-
+      if (this.foreground) {
+        this.foregroundContext = this.getContext(this.foreground);
+      }
+      
       this.properties = properties;
       this.data = data;
       this.draw();

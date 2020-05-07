@@ -5,11 +5,13 @@ class Linegraph extends Graph {
         this.cancelMouseMove();
         this.cancelMouseDown();
         this.cancelShiftMouseDown();
-        this.foreground.addEventListener('mousemove', this.handleMouseMove.bind(this), false);
-        this.foreground.addEventListener('mouseleave', this.handleMouseLeave.bind(this), false);
-        this.foreground.addEventListener('mousedown', this.handleMouseDown.bind(this), false);
-        this.foreground.addEventListener('mouseup', this.handleMouseUp.bind(this), false);
-        this.foreground.addEventListener('dblclick', this.handleDoubleClick.bind(this), false);
+        if (this.foreground) {
+            this.foreground.addEventListener('mousemove', this.handleMouseMove.bind(this), false);
+            this.foreground.addEventListener('mouseleave', this.handleMouseLeave.bind(this), false);
+            this.foreground.addEventListener('mousedown', this.handleMouseDown.bind(this), false);
+            this.foreground.addEventListener('mouseup', this.handleMouseUp.bind(this), false);
+            this.foreground.addEventListener('dblclick', this.handleDoubleClick.bind(this), false);
+        }
     }
 
     // TODO: do some refactoring
@@ -51,13 +53,13 @@ class Linegraph extends Graph {
 
     getLabelComponents(value) {
         if (!this.properties || !this.properties.y_axis || !this.properties.y_axis.label_suffix) {
-            return {"value": value, "suffix": ""};
+            return { "value": value, "suffix": "" };
         }
 
         var labelSuffixArray = this.properties.y_axis.label_suffix;
 
         if (labelSuffixArray.length == 1) {
-            return {"value": value, "suffix": labelSuffixArray[0][1]};
+            return { "value": value, "suffix": labelSuffixArray[0][1] };
         }
 
         var lastLimit = 1;
@@ -67,14 +69,14 @@ class Linegraph extends Graph {
             var limit = labelSuffixArray[i][0];
             var suffix = labelSuffixArray[i][1];
             if (value < limit) {
-                return {"value": value / (lastLimit), "suffix": suffix};
+                return { "value": value / (lastLimit), "suffix": suffix };
             }
             lastButOneLimit = lastLimit;
             lastLimit = limit;
             lastSuffix = suffix;
         }
 
-        return {"value": value / (lastLimit / lastButOneLimit), "suffix": lastSuffix};
+        return { "value": value / (lastLimit / lastButOneLimit), "suffix": lastSuffix };
     }
 
     calculateAxisRangeX() {
@@ -100,7 +102,7 @@ class Linegraph extends Graph {
         var maxY = this.getMaxValueY();
         var floorPowerOfTen = Helper.calculateFloorPowerOfTen(maxY);
         var floorPowerOfTenOverTen = floorPowerOfTen / 10;
-        
+
         var candidateMaxY = floorPowerOfTen;
         while (maxY > candidateMaxY) {
             candidateMaxY += floorPowerOfTen;
@@ -113,7 +115,7 @@ class Linegraph extends Graph {
                 candidateMaxY += floorPowerOfTenOverTen;
             }
         }
-        
+
         return candidateMaxY;
     }
 
@@ -151,7 +153,7 @@ class Linegraph extends Graph {
 
         this.radiiDataHighlightIndicator = getComputedStyle(document.documentElement).getPropertyValue("--radii-data-highlight-indicator");
         this.radiiHighlightIndicator = getComputedStyle(document.documentElement).getPropertyValue("--radii-highlight-indicator");
-        
+
         this.widthsData = getComputedStyle(document.documentElement).getPropertyValue("--widths-data");
         this.widthsDataHighlightIndicator = getComputedStyle(document.documentElement).getPropertyValue("--widths-data-highlight-indicator");
         this.widthsHighlightIndicator = getComputedStyle(document.documentElement).getPropertyValue("--widths-highlight-indicator");
@@ -186,11 +188,11 @@ class Linegraph extends Graph {
 
             var maxLabelsY = Math.round(this.graphHeight / (labelHeightApproximation * 4));
             var factors = Helper.calculateFactors(this.axisMaxY);
-            
+
             var factorIndex = 0;
             var workingInterval = factors[factorIndex];
             var proposedLabelsY = this.axisRangeY / workingInterval;
-            
+
             while (proposedLabelsY > maxLabelsY) {
                 factorIndex++;
                 workingInterval = factors[factorIndex];
@@ -491,7 +493,7 @@ class Linegraph extends Graph {
 
         var boxX = this.graphStartX + (this.shiftMouseDownStartIndex * this.graphScaleX);
         var boxWidth = (this.shiftMouseDownEndIndex - this.shiftMouseDownStartIndex) * this.graphScaleX;
-        
+
         this.foregroundContext.fillStyle = Helper.hex2rgba(this.coloursSelectionBox, this.alphasSelectionBox);
         this.foregroundContext.fillRect(boxX, this.graphStartY, boxWidth, this.graphHeight);
     }
@@ -536,7 +538,7 @@ class Linegraph extends Graph {
         this.shiftMouseDownStartIndex = -1;
         this.shiftMouseDownEndIndex = -1;
     }
-    
+
     handleMouseLeave(event) {
         this.clearForeground();
         this.cancelMouseMove();
