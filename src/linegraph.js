@@ -24,7 +24,7 @@ class Linegraph extends Graph {
     }
 
     getDataColour(i) {
-        if (this.coloursData &&  i < this.coloursData.length) {
+        if (this.coloursData && this.coloursData.length > 0) {
             return this.coloursData[i % this.coloursData.length];
         }
         return this.defaultDataColour;
@@ -152,8 +152,8 @@ class Linegraph extends Graph {
 
         this.coloursData = new Array();
         for (var i = 0; i < this.data.y.length; i++) {
-            var colour = this.getStyle('--colours-data-' + i, this.defaultDataColour);
-            if (colour) { this.coloursData.push(colour); }
+            var colour = this.getStyle('--colours-data-' + i, false);
+            if (colour && colour != false) { this.coloursData.push(colour); }
         }
 
         this.fontsAxesLabelsFamily = this.getStyle('--fonts-axes-labels-family', 'Arial');
