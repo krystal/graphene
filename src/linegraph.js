@@ -123,14 +123,16 @@ class Linegraph extends Graph {
     }
 
     getStyle(name, defaultStyle) {
-        // TODO: update this inline with the newly scoped CSS variables
-        var style = getComputedStyle(document.documentElement).getPropertyValue(name);
-        if (style) {
-            return style;
-        } else {
-            console.log(name + " style was not present in CSS, reverting to default of " + defaultStyle);
-            return defaultStyle;
+        var elements = document.getElementsByClassName('graphene');
+        if (elements.length > 0) {
+            var style = getComputedStyle(elements[0]).getPropertyValue(name);
+            if (style) {
+                return style;
+            }
         }
+
+        console.log(name + " style was not present in CSS, reverting to default of " + defaultStyle);
+        return defaultStyle;
     }
 
     // TODO: add optional parsing (there is no point writing to the console log about a colour we're not going to use)
