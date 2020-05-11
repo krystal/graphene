@@ -24,7 +24,10 @@ class Linegraph extends Graph {
     }
 
     getDataColour(i) {
-        return this.coloursData[i % this.coloursData.length];
+        if (this.coloursData &&  i < this.coloursData.length) {
+            return this.coloursData[i % this.coloursData.length];
+        }
+        return this.defaultDataColour;
     }
 
     redraw() {
@@ -119,44 +122,56 @@ class Linegraph extends Graph {
         return candidateMaxY;
     }
 
-    // TODO: add parsing to this -> defaults when styles have not been set along with a message in the console
-    // ^but only when that style is required i.e. highlight is enabled but coloursHighlightIndicator is not set
-    retrieveStyles() {
-        this.alphasInformationPanel = getComputedStyle(document.documentElement).getPropertyValue("--alphas-information-panel");
-        this.alphasSelectionBox = getComputedStyle(document.documentElement).getPropertyValue("--alphas-selection-box");
-        this.alphasUnderGraph = getComputedStyle(document.documentElement).getPropertyValue("--alphas-under-graph");
+    getStyle(name, defaultStyle) {
+        // TODO: update this inline with the newly scoped CSS variables
+        var style = getComputedStyle(document.documentElement).getPropertyValue(name);
+        if (style) {
+            return style;
+        } else {
+            console.log(name + " style was not present in CSS, reverting to default of " + defaultStyle);
+            return defaultStyle;
+        }
+    }
 
-        this.coloursAxesLabels = getComputedStyle(document.documentElement).getPropertyValue("--colours-axes-labels");
-        this.coloursBackground = getComputedStyle(document.documentElement).getPropertyValue("--colours-background");
-        this.coloursHighlightIndicator = getComputedStyle(document.documentElement).getPropertyValue("--colours-highlight-indicator");
-        this.coloursHorizontalLines = getComputedStyle(document.documentElement).getPropertyValue("--colours-horizontal-lines");
-        this.coloursInformationHeading = getComputedStyle(document.documentElement).getPropertyValue("--colours-information-heading");
-        this.coloursInformationPanel = getComputedStyle(document.documentElement).getPropertyValue("--colours-information-panel");
-        this.coloursInformationSentences = getComputedStyle(document.documentElement).getPropertyValue("--colours-information-sentences");
-        this.coloursSelectionBox = getComputedStyle(document.documentElement).getPropertyValue("--colours-selection-box");
+    // TODO: add optional parsing (there is no point writing to the console log about a colour we're not going to use)
+    retrieveStyles() {
+        this.defaultDataColour = '#000000';
+
+        this.alphasInformationPanel = this.getStyle('--alphas-information-panel', 0.75);
+        this.alphasSelectionBox = this.getStyle('--alphas-selection-box', 0.25);
+        this.alphasUnderGraph = this.getStyle('--alphas-under-graph', 0.1);
+
+        this.coloursAxesLabels = this.getStyle('--colours-axes-labels', '#555555');
+        this.coloursBackground = this.getStyle('--colours-background', '#FFFFFF');
+        this.coloursHighlightIndicator = this.getStyle('--colours-highlight-indicator', '#E0DEFF');
+        this.coloursHorizontalLines = this.getStyle('--colours-horizontal-lines', '#EEEEEE');
+        this.coloursInformationHeading = this.getStyle('--colours-information-heading', '#FFFFFF');
+        this.coloursInformationPanel = this.getStyle('--colours-information-panel', '#333333');
+        this.coloursInformationSentences = this.getStyle('--colours-information-sentences', '#FFFFFF');
+        this.coloursSelectionBox = this.getStyle('--colours-selection-box', '#0000FF');
 
         this.coloursData = new Array();
         for (var i = 0; i < this.data.y.length; i++) {
-            var colour = getComputedStyle(document.documentElement).getPropertyValue("--colours-data-" + i);
+            var colour = this.getStyle('--colours-data-' + i, this.defaultDataColour);
             if (colour) { this.coloursData.push(colour); }
         }
 
-        this.fontsAxesLabelsFamily = getComputedStyle(document.documentElement).getPropertyValue("--fonts-axes-labels-family");
-        this.fontsAxesLabelsSize = getComputedStyle(document.documentElement).getPropertyValue("--fonts-axes-labels-size");
-        this.fontsAxesLabelsWeight = getComputedStyle(document.documentElement).getPropertyValue("--fonts-axes-labels-weight");
-        this.fontsInformationHeadingFamily = getComputedStyle(document.documentElement).getPropertyValue("--fonts-information-heading-family");
-        this.fontsInformationHeadingSize = getComputedStyle(document.documentElement).getPropertyValue("--fonts-information-heading-size");
-        this.fontsInformationHeadingWeight = getComputedStyle(document.documentElement).getPropertyValue("--fonts-information-heading-weight");
-        this.fontsInformationSentencesFamily = getComputedStyle(document.documentElement).getPropertyValue("--fonts-information-sentences-family");
-        this.fontsInformationSentencesSize = getComputedStyle(document.documentElement).getPropertyValue("--fonts-information-sentences-size");
-        this.fontsInformationSentencesWeight = getComputedStyle(document.documentElement).getPropertyValue("--fonts-information-sentences-weight");
+        this.fontsAxesLabelsFamily = this.getStyle('--fonts-axes-labels-family', 'Arial');
+        this.fontsAxesLabelsSize = this.getStyle('--fonts-axes-labels-size', 13);
+        this.fontsAxesLabelsWeight = this.getStyle('--fonts-axes-labels-weight', 'normal');
+        this.fontsInformationHeadingFamily = this.getStyle('--fonts-information-heading-family', 'Arial');
+        this.fontsInformationHeadingSize = this.getStyle('--fonts-information-heading-size', 13);
+        this.fontsInformationHeadingWeight = this.getStyle('--fonts-information-heading-weight', 'normal');
+        this.fontsInformationSentencesFamily = this.getStyle('--fonts-information-sentences-family', 'Arial');
+        this.fontsInformationSentencesSize = this.getStyle('--fonts-information-sentences-size', 13);
+        this.fontsInformationSentencesWeight = this.getStyle('--fonts-information-sentences-weight', 'normal');
 
-        this.radiiDataHighlightIndicator = getComputedStyle(document.documentElement).getPropertyValue("--radii-data-highlight-indicator");
-        this.radiiHighlightIndicator = getComputedStyle(document.documentElement).getPropertyValue("--radii-highlight-indicator");
+        this.radiiDataHighlightIndicator = this.getStyle('--radii-data-highlight-indicator', 4);
+        this.radiiHighlightIndicator = this.getStyle('--radii-highlight-indicator', 2);
 
-        this.widthsData = getComputedStyle(document.documentElement).getPropertyValue("--widths-data");
-        this.widthsDataHighlightIndicator = getComputedStyle(document.documentElement).getPropertyValue("--widths-data-highlight-indicator");
-        this.widthsHighlightIndicator = getComputedStyle(document.documentElement).getPropertyValue("--widths-highlight-indicator");
+        this.widthsData = this.getStyle('--widths-data', 1);
+        this.widthsDataHighlightIndicator = this.getStyle('--widths-data-highlight-indicator', 4);
+        this.widthsHighlightIndicator = this.getStyle('--widths-highlight-indicator', 2);
     }
 
     // TODO: test this with data sets covering different ranges
