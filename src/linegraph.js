@@ -18,6 +18,7 @@ class Linegraph extends Graph {
     // TODO: investigate "Save Image As..." in browsers, it currently, understandably, saves only the foreground layer
 
     draw() {
+        console.clear();
         this.retrieveStyles();
         this.calculateParameters();
         this.redraw();
@@ -131,49 +132,54 @@ class Linegraph extends Graph {
             }
         }
 
-        console.log(name + " style was not present in CSS, reverting to default of " + defaultStyle);
+        if (defaultStyle != false) {
+            console.log(name + " style was not present in CSS, reverting to default of " + defaultStyle);
+        }
         return defaultStyle;
     }
 
-    // TODO: add optional parsing (there is no point writing to the console log about a colour we're not going to use)
     retrieveStyles() {
         this.defaultDataColour = '#000000';
 
-        this.alphasInformationPanel = this.getStyle('--alphas-information-panel', 0.75);
-        this.alphasSelectionBox = this.getStyle('--alphas-selection-box', 0.25);
         this.alphasUnderGraph = this.getStyle('--alphas-under-graph', 0.1);
-
-        this.coloursAxesLabels = this.getStyle('--colours-axes-labels', '#555555');
         this.coloursBackground = this.getStyle('--colours-background', '#FFFFFF');
-        this.coloursHighlightIndicator = this.getStyle('--colours-highlight-indicator', '#E0DEFF');
-        this.coloursHorizontalLines = this.getStyle('--colours-horizontal-lines', '#EEEEEE');
-        this.coloursInformationHeading = this.getStyle('--colours-information-heading', '#FFFFFF');
-        this.coloursInformationPanel = this.getStyle('--colours-information-panel', '#333333');
-        this.coloursInformationSentences = this.getStyle('--colours-information-sentences', '#FFFFFF');
-        this.coloursSelectionBox = this.getStyle('--colours-selection-box', '#0000FF');
-
         this.coloursData = new Array();
         for (var i = 0; i < this.data.y.length; i++) {
             var colour = this.getStyle('--colours-data-' + i, false);
             if (colour && colour != false) { this.coloursData.push(colour); }
         }
-
-        this.fontsAxesLabelsFamily = this.getStyle('--fonts-axes-labels-family', 'Arial');
-        this.fontsAxesLabelsSize = this.getStyle('--fonts-axes-labels-size', 13);
-        this.fontsAxesLabelsWeight = this.getStyle('--fonts-axes-labels-weight', 'normal');
-        this.fontsInformationHeadingFamily = this.getStyle('--fonts-information-heading-family', 'Arial');
-        this.fontsInformationHeadingSize = this.getStyle('--fonts-information-heading-size', 13);
-        this.fontsInformationHeadingWeight = this.getStyle('--fonts-information-heading-weight', 'normal');
-        this.fontsInformationSentencesFamily = this.getStyle('--fonts-information-sentences-family', 'Arial');
-        this.fontsInformationSentencesSize = this.getStyle('--fonts-information-sentences-size', 13);
-        this.fontsInformationSentencesWeight = this.getStyle('--fonts-information-sentences-weight', 'normal');
-
-        this.radiiDataHighlightIndicator = this.getStyle('--radii-data-highlight-indicator', 4);
-        this.radiiHighlightIndicator = this.getStyle('--radii-highlight-indicator', 2);
-
+        this.fontsAxesLabelsSize = this.getStyle('--fonts-axes-labels-size', 0);
         this.widthsData = this.getStyle('--widths-data', 1);
-        this.widthsDataHighlightIndicator = this.getStyle('--widths-data-highlight-indicator', 4);
-        this.widthsHighlightIndicator = this.getStyle('--widths-highlight-indicator', 2);
+
+        if (this.fontsAxesLabelsSize > 0) {
+            this.coloursAxesLabels = this.getStyle('--colours-axes-labels', '#555555');
+            this.coloursHorizontalLines = this.getStyle('--colours-horizontal-lines', '#EEEEEE');
+            this.fontsAxesLabelsFamily = this.getStyle('--fonts-axes-labels-family', 'Arial');
+            this.fontsAxesLabelsWeight = this.getStyle('--fonts-axes-labels-weight', 'normal');
+        }
+
+        if (this.highLightEnabled) {
+            this.alphasInformationPanel = this.getStyle('--alphas-information-panel', 0.75);
+            this.coloursHighlightIndicator = this.getStyle('--colours-highlight-indicator', '#E0DEFF');
+            this.radiiDataHighlightIndicator = this.getStyle('--radii-data-highlight-indicator', 4);
+            this.radiiHighlightIndicator = this.getStyle('--radii-highlight-indicator', 2);
+            this.widthsDataHighlightIndicator = this.getStyle('--widths-data-highlight-indicator', 4);
+            this.widthsHighlightIndicator = this.getStyle('--widths-highlight-indicator', 2);
+        }
+
+        if (this.zoomEnabled) {
+            this.alphasSelectionBox = this.getStyle('--alphas-selection-box', 0.25);
+            this.coloursInformationHeading = this.getStyle('--colours-information-heading', '#FFFFFF');
+            this.coloursInformationPanel = this.getStyle('--colours-information-panel', '#333333');
+            this.coloursInformationSentences = this.getStyle('--colours-information-sentences', '#FFFFFF');
+            this.coloursSelectionBox = this.getStyle('--colours-selection-box', '#0000FF');
+            this.fontsInformationHeadingFamily = this.getStyle('--fonts-information-heading-family', 'Arial');
+            this.fontsInformationHeadingSize = this.getStyle('--fonts-information-heading-size', 13);
+            this.fontsInformationHeadingWeight = this.getStyle('--fonts-information-heading-weight', 'normal');
+            this.fontsInformationSentencesFamily = this.getStyle('--fonts-information-sentences-family', 'Arial');
+            this.fontsInformationSentencesSize = this.getStyle('--fonts-information-sentences-size', 13);
+            this.fontsInformationSentencesWeight = this.getStyle('--fonts-information-sentences-weight', 'normal');
+        }
     }
 
     // TODO: test this with data sets covering different ranges
