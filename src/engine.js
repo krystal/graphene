@@ -1,4 +1,4 @@
-class Engine {
+class GrapheneEngine {
     // TODO: rename all classes, add graphene in so we don't get conflicts (also do this with the css variables)
 
     constructor(graphComponentsArray) {
@@ -7,7 +7,7 @@ class Engine {
         for (let graphComponents of graphComponentsArray) {
             switch (graphComponents.type) {
                 case "linegraph":
-                    var linegraph = new Linegraph(graphComponents.backgroundId, graphComponents.foregroundId, graphComponents.properties, graphComponents.data);
+                    var linegraph = new GrapheneLinegraph(graphComponents.backgroundId, graphComponents.foregroundId, graphComponents.properties, graphComponents.data);
                     this.graphs.push(linegraph);
                     break
                 default:

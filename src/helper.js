@@ -1,4 +1,4 @@
-class Helper {
+class GrapheneHelper {
   static applyAffix(value, prefix = "", suffix = "") {
     var negative = value < 0;
     var absoluteValue = Math.abs(value);

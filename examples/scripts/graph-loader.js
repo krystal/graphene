@@ -1,4 +1,4 @@
-var engine = null;
+var grapheneEngine = null;
 
 function loadGraphs() {
     var graphComponentsArray = new Array();
@@ -17,7 +17,7 @@ function loadGraphs() {
         }
     }
 
-    engine = new Engine(graphComponentsArray);
+    grapheneEngine = new GrapheneEngine(graphComponentsArray);
 }
 
 window.addEventListener('load', loadGraphs, false);

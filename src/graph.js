@@ -1,4 +1,4 @@
-class Graph {
+class GrapheneGraph {
   constructor(backgroundId, foregroundId, properties, data) {
       var background = document.getElementById(backgroundId);
       this.foreground = document.getElementById(foregroundId);
