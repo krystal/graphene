@@ -161,6 +161,15 @@ class GrapheneLinegraph extends GrapheneGraph {
         if (this.highLightEnabled) {
             this.alphasInformationPanel = this.getStyle('--alphas-information-panel', 0.75);
             this.coloursHighlightIndicator = this.getStyle('--colours-highlight-indicator', '#E0DEFF');
+            this.coloursInformationHeading = this.getStyle('--colours-information-heading', '#FFFFFF');
+            this.coloursInformationPanel = this.getStyle('--colours-information-panel', '#333333');
+            this.coloursInformationSentences = this.getStyle('--colours-information-sentences', '#FFFFFF');
+            this.fontsInformationHeadingFamily = this.getStyle('--fonts-information-heading-family', 'Arial');
+            this.fontsInformationHeadingSize = this.getStyle('--fonts-information-heading-size', 13);
+            this.fontsInformationHeadingWeight = this.getStyle('--fonts-information-heading-weight', 'normal');
+            this.fontsInformationSentencesFamily = this.getStyle('--fonts-information-sentences-family', 'Arial');
+            this.fontsInformationSentencesSize = this.getStyle('--fonts-information-sentences-size', 13);
+            this.fontsInformationSentencesWeight = this.getStyle('--fonts-information-sentences-weight', 'normal');
             this.radiiDataHighlightIndicator = this.getStyle('--radii-data-highlight-indicator', 4);
             this.radiiHighlightIndicator = this.getStyle('--radii-highlight-indicator', 2);
             this.widthsDataHighlightIndicator = this.getStyle('--widths-data-highlight-indicator', 4);
@@ -169,16 +178,7 @@ class GrapheneLinegraph extends GrapheneGraph {
 
         if (this.zoomEnabled) {
             this.alphasSelectionBox = this.getStyle('--alphas-selection-box', 0.25);
-            this.coloursInformationHeading = this.getStyle('--colours-information-heading', '#FFFFFF');
-            this.coloursInformationPanel = this.getStyle('--colours-information-panel', '#333333');
-            this.coloursInformationSentences = this.getStyle('--colours-information-sentences', '#FFFFFF');
             this.coloursSelectionBox = this.getStyle('--colours-selection-box', '#0000FF');
-            this.fontsInformationHeadingFamily = this.getStyle('--fonts-information-heading-family', 'Arial');
-            this.fontsInformationHeadingSize = this.getStyle('--fonts-information-heading-size', 13);
-            this.fontsInformationHeadingWeight = this.getStyle('--fonts-information-heading-weight', 'normal');
-            this.fontsInformationSentencesFamily = this.getStyle('--fonts-information-sentences-family', 'Arial');
-            this.fontsInformationSentencesSize = this.getStyle('--fonts-information-sentences-size', 13);
-            this.fontsInformationSentencesWeight = this.getStyle('--fonts-information-sentences-weight', 'normal');
         }
     }
 
