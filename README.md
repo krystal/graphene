@@ -2,73 +2,82 @@
 
 Graphene is a JavaScript powered HTML5 Canvas based graphing library.
 
-# Usage
+## Usage
 
-Graphene's engine searches for graphs by parsing all the `<div>` elements on a HTML page. A graphene graph requires a `<div>` with `type`, `properties` and `data` data attributes along with nested background and foreground canvases:
+In its simplest form, a graphene graph only requires three components, all of which are strings:
+
+- type
+- element id of the background layer
+- data
+
+There are two additional, optional components, both of which are strings:
+
+- element id of the foreground layer
+- properties
 
 ```
-<div id="foo" data-type="linegraph" data-properties="<insert JSON>" data-data="<insert JSON>" style="position: relative;">
-  <canvas id="foo-background" width="960" height="320"></canvas>
-  <canvas id="foo-foreground" width="960" height="320" style="position: absolute; left: 0; top: 0; z-index: 0;"></canvas>
-</div>
+var graphComponentsArray = [{"type": "linegraph", "backgroundId": "foo-background", "foregroundId": "foo-foreground", "properties": "...", 'data': "..."}];
+
+var grapheneEngine = new GrapheneEngine(graphComponentsArray);
 ```
 
-The id of the canvases should be the `<div>` id suffixed with `-background` or `-foreground` respectively. The graphs are drawn on the background canvas and the user interacts with them via the foreground canvas.
+### Type
 
-### Available graph types
+Currently available graph types:
 
 - linegraph
 
-### Properties
+### Background layer
 
-The `properties` JSON defines how a graph is presented, here's an example:
+This is the HTML element that the graph is drawn on.
+
+### Data
+
+The data string contains the raw data, in JSON format:
 
 ```
 {
-    "colours": {
-        "alphas": {
-            "under_graph": 0.25
-        },
-        "axes_labels": "#000000",
-        "background": "#FFFFFF",
-        "data": [
-            "#FF0000",
-            "#00FF00",
-            "#0000FF"
-        ],
-        "horizontal_lines": "#EEEEEE"
-    },
-    "fonts": {
-        "axes_labels": {
-            "family": "Arial",
-            "size": 13
-        }
-    },
-    "widths": {
-        "data": 1
-    },
-    "x_axis": {
-        "range": 3
+    "names": ["Dataset A","Dataset B","Dataset C"],
+    "x":[["Q1", "2020 Q1"], ["Q2", "2020 Q2"], ["Q3", "2020 Q3"], ["Q4", "2020 Q4"]],
+    "y":[[33, 66, 95, 50], [66, 80, 50, 33], [80, 50, 16, 66]]
+}
+```
+
+### Foreground layer
+
+This is the HTML element that facilitates user interaction with the graph.
+
+### Properties
+
+The properties string controls advanced features of the graph, in JSON format:
+
+```
+{
+    "flags": {
+        "highlight_enabled": true,
+        "scroll_enabled": true,
+        "zoom_enabled": true
     },
     "y_axis": {
-        "min": 0,
-        "max": 100,
-        "label_interval": 10
+        "label_suffix": [[0, "%"]]
     }
 }
 ```
 
-### Data
+## Styling
 
-The `data` JSON contains the raw data, here's an example:
+Colours, fonts, sizes, etc. can all be defined via CSS variables in a class named `graphene`:
 
 ```
-{
-    "x": ["Q1", "Q2", "Q3", "Q4"],
-    "y": [[33, 66, 80, 50], [66, 80, 50, 33], [80, 50, 33, 66]]
+.graphene {
+  --colours-background: #FFFFFF;
+  ...
+  --fonts-axes-labels-family: "Arial";
+  ...
+  --widths-data: 1;
 }
 ```
 
-Together, this produces the following graph:
+Putting this all together, produces the following graph:
 
 ![test.png](examples/images/test.png)
