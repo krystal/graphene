@@ -1,3 +1,5 @@
+var engine = null;
+
 function loadGraphs() {
     var graphComponentsArray = new Array();
     var divs = document.getElementsByTagName("div");
@@ -15,7 +17,7 @@ function loadGraphs() {
         }
     }
 
-    initialise(graphComponentsArray);
+    engine = new Engine(graphComponentsArray);
 }
 
 window.addEventListener('load', loadGraphs, false);
