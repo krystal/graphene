@@ -1,6 +1,4 @@
 class GrapheneEngine {
-    // TODO: rename all classes, add graphene in so we don't get conflicts (also do this with the css variables)
-
     constructor(graphComponentsArray) {
         this.graphs = new Array();
 
