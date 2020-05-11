@@ -9,8 +9,8 @@ class GrapheneGraph {
         this.foregroundContext = this.getContext(this.foreground);
       }
       
-      this.properties = properties;
-      this.data = data;
+      this.properties = properties ? JSON.parse(properties) : null;
+      this.data = JSON.parse(data);
       this.draw();
   }
 

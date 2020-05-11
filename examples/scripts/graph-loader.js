@@ -8,8 +8,8 @@ function loadGraphs() {
             var id = divs[i].getAttribute("id");
             var type = divs[i].dataset.type;
             var datasetProperties = divs[i].dataset.properties;
-            var properties = (datasetProperties && datasetProperties != "") ? JSON.parse(datasetProperties) : null
-            var data = JSON.parse(divs[i].dataset.data);
+            var properties = (datasetProperties && datasetProperties != "") ? datasetProperties : null
+            var data = divs[i].dataset.data;
             var backgroundId = id + "-background";
             var foregroundId = id + "-foreground";
 
