@@ -1,4 +1,4 @@
-.graphene {
+.graph_light_mode {
   --alphas-information-panel: 0.75;
   --alphas-under-graph: 0.25;
 
@@ -35,4 +35,11 @@
 .graph {
   position: relative;
   margin: 48px;
+}
+
+.foreground {
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 0;
 }

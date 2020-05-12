@@ -3,9 +3,9 @@
     <link rel="stylesheet" type="text/css" href="stylesheets/test.css">
   </head>
   <body>
-    <div class="graph graphene" id="foo" data-type="linegraph" data-properties='{"flags":{"highlight_enabled":true},"y_axis":{"label_suffix":[[0,"%"]]}}' data-data='{"names": ["Dataset A","Dataset B","Dataset C"], "x":[["Q1","2020 Q1"],["Q2","2020 Q2"],["Q3","2020 Q3"],["Q4","2020 Q4"]],"y":[[33,66,95,50],[66,80,50,33],[80,50,16,66]]}'>
-      <canvas id="foo-background" width="960" height="320"></canvas>
-      <canvas id="foo-foreground" width="960" height="320" style="position: absolute; left: 0; top: 0; z-index: 0;"></canvas>
+    <div class="graph" id="foo" data-type="linegraph" data-properties='{"flags":{"highlight_enabled":true},"y_axis":{"label_suffix":[[0,"%"]]}}' data-data='{"names": ["Dataset A","Dataset B","Dataset C"], "x":[["Q1","2020 Q1"],["Q2","2020 Q2"],["Q3","2020 Q3"],["Q4","2020 Q4"]],"y":[[33,66,95,50],[66,80,50,33],[80,50,16,66]]}'>
+      <canvas class="graph_light_mode" id="foo-background" width="960" height="320"></canvas>
+      <canvas class="foreground" id="foo-foreground" width="960" height="320"></canvas>
     </div>
   </body>
   <script src="../src/graph.js"></script>
