@@ -14,6 +14,7 @@ class GrapheneLinegraph extends GrapheneGraph {
         }
     }
 
+    // TODO: add more thorough documentation
     // TODO: do some refactoring
     // TODO: investigate "Save Image As..." in browsers, it currently, understandably, saves only the foreground layer
 
@@ -32,6 +33,7 @@ class GrapheneLinegraph extends GrapheneGraph {
 
     redraw() {
         this.backgroundContext.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
+        // TODO: add an alpha style to the background (for the things like images that could be placed behind graphs)
         this.backgroundContext.fillStyle = this.coloursBackground;
         this.backgroundContext.fillRect(0, 0, this.canvasWidth, this.canvasHeight);
 
