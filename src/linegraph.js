@@ -123,12 +123,9 @@ class GrapheneLinegraph extends GrapheneGraph {
     }
 
     getStyle(name, defaultStyle) {
-        var elements = document.getElementsByClassName('graphene');
-        if (elements.length > 0) {
-            var style = getComputedStyle(elements[0]).getPropertyValue(name);
-            if (style) {
-                return style;
-            }
+        var style = getComputedStyle(this.background).getPropertyValue(name);
+        if (style) {
+            return style;
         }
 
         if (defaultStyle != false) {

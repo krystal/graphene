@@ -1,10 +1,10 @@
 class GrapheneGraph {
   constructor(backgroundId, foregroundId, properties, data) {
-      var background = document.getElementById(backgroundId);
+      this.background = document.getElementById(backgroundId);
       this.foreground = document.getElementById(foregroundId);
-      this.canvasWidth = background.width;
-      this.canvasHeight = background.height;
-      this.backgroundContext = this.getContext(background);
+      this.canvasWidth = this.background.width;
+      this.canvasHeight = this.background.height;
+      this.backgroundContext = this.getContext(this.background);
       if (this.foreground) {
         this.foregroundContext = this.getContext(this.foreground);
       }

@@ -1,4 +1,4 @@
-.graphene {
+.dark_mode {
   --alphas-information-panel: 0.75;
   --alphas-selection-box: 0.25;
   --alphas-under-graph: 0.5;
@@ -32,6 +32,44 @@
   --radii-highlight-indicator: 2;
 
   --widths-data: 1.5;
+  --widths-data-highlight-indicator: 4;
+  --widths-highlight-indicator: 2;
+}
+
+.light_mode {
+  --alphas-information-panel: 0.75;
+  --alphas-selection-box: 0.25;
+  --alphas-under-graph: 0.1;
+
+  --colours-axes-labels: #555555;
+  --colours-background: #FFFFFF;
+  --colours-highlight-indicator: #E0DEFF;
+  --colours-horizontal-lines: #EEEEEE;
+  --colours-information-heading: #FFFFFF;
+  --colours-information-panel: #333333;
+  --colours-information-sentences: #FFFFFF;
+  --colours-selection-box: #0000FF;
+
+  --colours-data-0: #038FFB;
+  --colours-data-1: #04E395;
+  --colours-data-2: #FEB01A;
+  --colours-data-3: #FF4560;
+  --colours-data-4: #765DD0;
+
+  --fonts-axes-labels-family: "Arial";
+  --fonts-axes-labels-size: 13;
+  --fonts-axes-labels-weight: normal;
+  --fonts-information-heading-family: "Arial";
+  --fonts-information-heading-size: 13;
+  --fonts-information-heading-weight: bold;
+  --fonts-information-sentences-family: "Arial";
+  --fonts-information-sentences-size: 13;
+  --fonts-information-sentences-weight: normal;
+
+  --radii-data-highlight-indicator: 4;
+  --radii-highlight-indicator: 2;
+
+  --widths-data: 1;
   --widths-data-highlight-indicator: 4;
   --widths-highlight-indicator: 2;
 }
