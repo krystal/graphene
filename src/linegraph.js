@@ -18,7 +18,6 @@ class GrapheneLinegraph extends GrapheneGraph {
     // TODO: investigate "Save Image As..." in browsers, it currently, understandably, saves only the foreground layer
 
     draw() {
-        console.clear();
         this.retrieveStyles();
         this.calculateParameters();
         this.redraw();
@@ -252,6 +251,18 @@ class GrapheneLinegraph extends GrapheneGraph {
             this.highLightEnabled = this.properties.flags.highlight_enabled ? true : false;
             this.scrollEnabled = this.properties.flags.scroll_enabled ? true : false;
             this.zoomEnabled = this.properties.flags.zoom_enabled ? true : false;
+
+            if (!this.foreground) {
+                if (this.highLightEnabled) {
+                    console.log("Highlight is disabled, the foreground layer is missing.");
+                }
+                if (this.scrollEnabled) {
+                    console.log("Scroll is disabled, the foreground layer is missing.");
+                }
+                if (this.zoomEnabled) {
+                    console.log("Zoom is disabled, the foreground layer is missing.");
+                }
+            }
         }
     }
 
