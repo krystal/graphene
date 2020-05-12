@@ -1,6 +1,6 @@
 .graphene {
   --alphas-information-panel: 0.75;
-  --alphas-under-graph: 0.1;
+  --alphas-under-graph: 0.25;
 
   --colours-axes-labels: #555555;
   --colours-background: #FFFFFF;

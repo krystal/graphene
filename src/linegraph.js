@@ -270,8 +270,7 @@ class GrapheneLinegraph extends GrapheneGraph {
         this.backgroundContext.beginPath();
 
         var yAxisTotalIntervals = (this.axisRangeY / this.labelIntervalY) + 1;
-        // skip drawing the first line (on the x-axis)
-        for (var i = 1; i < yAxisTotalIntervals; i++) {
+        for (var i = 0; i < yAxisTotalIntervals; i++) {
             this.backgroundContext.moveTo(0, i * this.labelIntervalY);
             this.backgroundContext.lineTo(this.calculateAxisRangeX(), i * this.labelIntervalY);
         }
@@ -281,7 +280,10 @@ class GrapheneLinegraph extends GrapheneGraph {
     }
 
     drawAreaUnderGraph(dataset, colour) {
-        this.backgroundContext.fillStyle = GrapheneHelper.hex2rgba(colour, this.alphasUnderGraph);
+        var gradient = this.backgroundContext.createLinearGradient(0, this.graphStartY, 0, this.graphEndY);
+        gradient.addColorStop(0, GrapheneHelper.hex2rgba(colour, this.alphasUnderGraph));
+        gradient.addColorStop(1, GrapheneHelper.hex2rgba(colour, 0));
+        this.backgroundContext.fillStyle = gradient;
         this.transformDrawingArea();
 
         this.backgroundContext.beginPath();
