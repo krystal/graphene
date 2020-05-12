@@ -29,7 +29,7 @@ Currently available graph types:
 
 ### Background layer
 
-This is the HTML element that the graph is drawn on.
+This is the HTML canvas element that the graph is drawn on.
 
 ### Data
 
@@ -45,7 +45,7 @@ The data string contains the raw data, in JSON format:
 
 ### Foreground layer
 
-This is the HTML element that facilitates user interaction with the graph.
+This is the HTML canvas element that facilitates user interaction with the graph.
 
 ### Properties
 
@@ -66,16 +66,25 @@ The properties string controls advanced features of the graph, in JSON format:
 
 ## Styling
 
-Colours, fonts, sizes, etc. can all be defined via CSS variables in a class named `graphene`:
+Colours, fonts, sizes, etc. can all be defined via CSS variables, graphene will look for styles that have been applied to the background layer element:
 
 ```
-.graphene {
+.graph_light_mode {
   --colours-background: #FFFFFF;
   ...
   --fonts-axes-labels-family: "Arial";
   ...
   --widths-data: 1;
 }
+```
+
+## Example HTML
+
+```
+<div>
+    <canvas class="graph_light_mode" width="960" height="320"></canvas>
+    <canvas width="960" height="320"></canvas>
+</div>
 ```
 
 Putting this all together, produces the following graph:
