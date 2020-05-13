@@ -1,3 +1,7 @@
+if (typeof module !== "undefined") {
+    const GrapheneHelper = require('./helper');
+}
+
 class GrapheneLinegraph {
     constructor(backgroundId, foregroundId, properties, data) {
         this.background = document.getElementById(backgroundId);
@@ -638,4 +642,8 @@ class GrapheneLinegraph {
         this.clearForeground();
         this.draw();
     }
+}
+
+if (typeof module !== "undefined") {
+    module.exports = GrapheneLinegraph
 }
