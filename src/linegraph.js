@@ -1,5 +1,5 @@
 if (typeof module !== "undefined") {
-    const GrapheneHelper = require('./helper');
+    const GrapheneHelper = require('./helper.js');
 }
 
 class GrapheneLinegraph {
@@ -645,5 +645,5 @@ class GrapheneLinegraph {
 }
 
 if (typeof module !== "undefined") {
-    module.exports = GrapheneLinegraph
+    module.exports = GrapheneLinegraph;
 }

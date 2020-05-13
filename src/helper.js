@@ -47,5 +47,5 @@ class GrapheneHelper {
 }
 
 if (typeof module !== "undefined") {
-  module.exports = GrapheneHelper
+  module.exports = GrapheneHelper;
 }

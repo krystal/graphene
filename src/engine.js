@@ -1,5 +1,5 @@
 if (typeof module !== "undefined") {
-    const GrapheneLinegraph = require('./linegraph');
+    const GrapheneLinegraph = require('./linegraph.js');
 }
 
 class GrapheneEngine {
@@ -28,5 +28,5 @@ class GrapheneEngine {
 }
 
 if (typeof module !== "undefined") {
-    module.exports = GrapheneEngine
+    module.exports = GrapheneEngine;
 }
