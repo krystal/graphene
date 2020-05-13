@@ -11,6 +11,6 @@ class GrapheneGraph {
       
       this.properties = properties ? JSON.parse(properties) : null;
       this.data = JSON.parse(data);
-      this.draw();
+      this.calculateParameters();
   }
 }
