@@ -45,7 +45,3 @@ class GrapheneHelper {
       return context;
   }
 }
-
-if (typeof module !== "undefined") {
-  module.exports = GrapheneHelper;
-}

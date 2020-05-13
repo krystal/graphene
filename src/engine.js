@@ -1,7 +1,3 @@
-if (typeof module !== "undefined") {
-    const GrapheneLinegraph = require('./linegraph.js');
-}
-
 class GrapheneEngine {
     constructor(graphComponentsArray) {
         this.graphs = new Array();
@@ -25,8 +21,4 @@ class GrapheneEngine {
             graph.draw();
         }
     }
-}
-
-if (typeof module !== "undefined") {
-    module.exports = GrapheneEngine;
 }
