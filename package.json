@@ -1,0 +1,22 @@
+{
+  "name": "graphene",
+  "version": "1.0.0",
+  "description": "JavaScript powered HTML5 Canvas based graphing library",
+  "main": "engine.js",
+  "directories": {
+    "example": "examples"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/krystal/graphene.git"
+  },
+  "author": "Krystal",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/krystal/graphene/issues"
+  },
+  "homepage": "https://github.com/krystal/graphene#readme"
+}
