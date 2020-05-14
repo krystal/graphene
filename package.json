@@ -2,11 +2,11 @@
   "name": "graphene",
   "version": "1.0.0",
   "description": "JavaScript powered HTML5 Canvas based graphing library",
-  "main": "src/engine.js",
+  "main": "index.js",
   "files": [
-    "helper.js",
-    "linegraph.js",
-    "engine.js"
+    "src/engine.js",
+    "src/linegraph.js",
+    "src/helper.js"
   ],
   "repository": {
     "type": "git",

@@ -1,17 +1,23 @@
 class GrapheneLinegraph {
     constructor(backgroundId, foregroundId, properties, data) {
+        if (typeof module !== "undefined") {
+            const GrapheneHelper = require('./helper');
+            this.grapheneHelper = new GrapheneHelper();
+        } else {
+            this.grapheneHelper = new GrapheneHelper();
+        }
         this.background = document.getElementById(backgroundId);
         this.foreground = document.getElementById(foregroundId);
         this.canvasWidth = this.background.width;
         this.canvasHeight = this.background.height;
-        this.backgroundContext = GrapheneHelper.getContext(this.background);
+        this.backgroundContext = this.grapheneHelper.getContext(this.background);
         if (this.foreground) {
-            this.foregroundContext = GrapheneHelper.getContext(this.foreground);
+            this.foregroundContext = this.grapheneHelper.getContext(this.foreground);
         }
       
-      this.properties = properties ? JSON.parse(properties) : null;
-      this.data = JSON.parse(data);
-      this.calculateParameters();
+        this.properties = properties ? JSON.parse(properties) : null;
+        this.data = JSON.parse(data);
+        this.calculateParameters();
 
         this.cancelMouseMove();
         this.cancelMouseDown();
@@ -116,7 +122,7 @@ class GrapheneLinegraph {
 
     calculateAxisMaxY() {
         var maxY = this.getMaxValueY();
-        var floorPowerOfTen = GrapheneHelper.calculateFloorPowerOfTen(maxY);
+        var floorPowerOfTen = this.grapheneHelper.calculateFloorPowerOfTen(maxY);
         var floorPowerOfTenOverTen = floorPowerOfTen / 10;
 
         var candidateMaxY = floorPowerOfTen;
@@ -219,7 +225,7 @@ class GrapheneLinegraph {
             this.graphHeight = this.graphEndY - this.graphStartY;
 
             var maxLabelsY = Math.round(this.graphHeight / (labelHeightApproximation * 4));
-            var factors = GrapheneHelper.calculateFactors(this.axisMaxY);
+            var factors = this.grapheneHelper.calculateFactors(this.axisMaxY);
 
             var factorIndex = 0;
             var workingInterval = factors[factorIndex];
@@ -236,7 +242,7 @@ class GrapheneLinegraph {
             maxLabelWidthX = this.caclulateMaxLabelWidthX();
             for (var i = this.axisMinY; i <= this.axisMaxY; i += this.labelIntervalY) {
                 var labelComponents = this.getLabelComponents(i);
-                var labelWidth = this.backgroundContext.measureText(GrapheneHelper.applyAffix(labelComponents.value, this.getLabelPrefix(), labelComponents.suffix)).width;
+                var labelWidth = this.backgroundContext.measureText(this.grapheneHelper.applyAffix(labelComponents.value, this.getLabelPrefix(), labelComponents.suffix)).width;
                 if (labelWidth > maxLabelWidthY) {
                     maxLabelWidthY = labelWidth;
                 }
@@ -302,8 +308,8 @@ class GrapheneLinegraph {
 
     drawAreaUnderGraph(dataset, colour) {
         var gradient = this.backgroundContext.createLinearGradient(0, this.graphStartY, 0, this.graphEndY);
-        gradient.addColorStop(0, GrapheneHelper.hex2rgba(colour, this.alphasUnderGraph));
-        gradient.addColorStop(1, GrapheneHelper.hex2rgba(colour, 0));
+        gradient.addColorStop(0, this.grapheneHelper.hex2rgba(colour, this.alphasUnderGraph));
+        gradient.addColorStop(1, this.grapheneHelper.hex2rgba(colour, 0));
         this.backgroundContext.fillStyle = gradient;
         this.transformDrawingArea();
 
@@ -392,7 +398,7 @@ class GrapheneLinegraph {
 
         for (var i = this.axisMinY; i <= this.axisMaxY; i += this.labelIntervalY) {
             var labelComponents = this.getLabelComponents(i);
-            this.backgroundContext.fillText(GrapheneHelper.applyAffix(labelComponents.value, this.getLabelPrefix(), labelComponents.suffix), (this.leftMargin / 2), this.graphEndY - ((i - this.axisMinY) * this.graphScaleY));
+            this.backgroundContext.fillText(this.grapheneHelper.applyAffix(labelComponents.value, this.getLabelPrefix(), labelComponents.suffix), (this.leftMargin / 2), this.graphEndY - ((i - this.axisMinY) * this.graphScaleY));
         }
     }
 
@@ -454,7 +460,7 @@ class GrapheneLinegraph {
         this.foregroundContext.font = this.fontsInformationSentencesWeight + " " + this.fontsInformationSentencesSize + "px " + this.fontsInformationSentencesFamily;
         for (var i = 0; i < this.data.y.length; i++) {
             var labelComponents = this.getLabelComponents(this.data.y[i][this.axisMinX + index]);
-            var formattedData = GrapheneHelper.applyAffix(labelComponents.value, this.getLabelPrefix(), labelComponents.suffix);
+            var formattedData = this.grapheneHelper.applyAffix(labelComponents.value, this.getLabelPrefix(), labelComponents.suffix);
             var sentence = this.data.names[i] + ": " + formattedData;
             // space + circle + space + sentence + space (space and cricle are as wide as a sentence is tall)
             var sentenceWidth = this.foregroundContext.measureText(sentence).width + (4 * sentenceHeightApproximation);
@@ -481,7 +487,7 @@ class GrapheneLinegraph {
             console.log("Information panel may be clipped vertically!");
         }
 
-        this.foregroundContext.fillStyle = GrapheneHelper.hex2rgba(this.coloursInformationPanel, this.alphasInformationPanel);
+        this.foregroundContext.fillStyle = this.grapheneHelper.hex2rgba(this.coloursInformationPanel, this.alphasInformationPanel);
         this.foregroundContext.fillRect(panelX, panelY, requiredWidth, requiredHeight);
 
         var circleOffsetY = panelY + (3 * sentenceHeightApproximation);
@@ -540,7 +546,7 @@ class GrapheneLinegraph {
         var boxX = this.graphStartX + (this.shiftMouseDownStartIndex * this.graphScaleX);
         var boxWidth = (this.shiftMouseDownEndIndex - this.shiftMouseDownStartIndex) * this.graphScaleX;
 
-        this.foregroundContext.fillStyle = GrapheneHelper.hex2rgba(this.coloursSelectionBox, this.alphasSelectionBox);
+        this.foregroundContext.fillStyle = this.grapheneHelper.hex2rgba(this.coloursSelectionBox, this.alphasSelectionBox);
         this.foregroundContext.fillRect(boxX, this.graphStartY, boxWidth, this.graphHeight);
     }
 
@@ -638,4 +644,8 @@ class GrapheneLinegraph {
         this.clearForeground();
         this.draw();
     }
+}
+
+if (typeof module !== "undefined") {
+    module.exports = GrapheneLinegraph;
 }

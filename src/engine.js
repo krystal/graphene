@@ -5,7 +5,13 @@ class GrapheneEngine {
         for (let graphComponents of graphComponentsArray) {
             switch (graphComponents.type) {
                 case "linegraph":
-                    var linegraph = new GrapheneLinegraph(graphComponents.backgroundId, graphComponents.foregroundId, graphComponents.properties, graphComponents.data);
+                    var linegraph = null;
+                    if (typeof module !== "undefined") {
+                        const GrapheneLinegraph = require('./linegraph.js');
+                        linegraph = new GrapheneLinegraph(graphComponents.backgroundId, graphComponents.foregroundId, graphComponents.properties, graphComponents.data);
+                    } else {
+                        linegraph = new GrapheneLinegraph(graphComponents.backgroundId, graphComponents.foregroundId, graphComponents.properties, graphComponents.data);
+                    }
                     this.graphs.push(linegraph);
                     break
                 default:
@@ -21,4 +27,8 @@ class GrapheneEngine {
             graph.draw();
         }
     }
+}
+
+if (typeof module !== "undefined") {
+    module.exports = GrapheneEngine;
 }

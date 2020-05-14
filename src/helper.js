@@ -1,5 +1,5 @@
 class GrapheneHelper {
-  static applyAffix(value, prefix = "", suffix = "") {
+  applyAffix(value, prefix = "", suffix = "") {
     var negative = value < 0;
     var absoluteValue = Math.abs(value);
 
@@ -9,17 +9,17 @@ class GrapheneHelper {
   // TODO: add a function for calculating max width
 
   //https://stackoverflow.com/questions/21646738/convert-hex-to-rgba
-  static hex2rgba(hex, alpha) {
+  hex2rgba(hex, alpha) {
     const [r, g, b] = hex.match(/\w\w/g).map(x => parseInt(x, 16));
     return `rgba(${r},${g},${b},${alpha})`;
   };
 
-  static calculateFloorPowerOfTen(number) {
+  calculateFloorPowerOfTen(number) {
     return Math.pow(10, Math.floor(Math.log10(number)));
   }
 
   // TODO: find a solution for numbers < 1
-  static calculateFactors(number) {
+  calculateFactors(number) {
     var factors = new Array();
     var limit = Math.round(number / 2);
 
@@ -32,7 +32,7 @@ class GrapheneHelper {
     return factors;
   }
 
-  static getContext(canvas) {
+  getContext(canvas) {
     var canvasWidth = canvas.width;
       var canvasHeight = canvas.height;
       var devicePixelRatio = window.devicePixelRatio;
@@ -44,4 +44,8 @@ class GrapheneHelper {
       context.scale(devicePixelRatio, devicePixelRatio);
       return context;
   }
+}
+
+if (typeof module !== "undefined") {
+  module.exports = GrapheneHelper;
 }
