@@ -1,13 +1,13 @@
 class GrapheneLinegraph {
-    constructor(background, foreground, properties, data) {
+    constructor(element, properties, data) {
         if (typeof module !== "undefined") {
             const GrapheneHelper = require('./helper');
             this.grapheneHelper = new GrapheneHelper();
         } else {
             this.grapheneHelper = new GrapheneHelper();
         }
-        this.background = background;
-        this.foreground = foreground;
+        this.element = element;
+        this.createLayers();
         this.canvasWidth = this.background.width;
         this.canvasHeight = this.background.height;
         this.backgroundContext = this.grapheneHelper.getContext(this.background);
@@ -29,6 +29,22 @@ class GrapheneLinegraph {
             this.foreground.addEventListener('mouseup', this.handleMouseUp.bind(this), false);
             this.foreground.addEventListener('dblclick', this.handleDoubleClick.bind(this), false);
         }
+    }
+
+    createLayers() {
+        this.background = document.createElement('CANVAS');
+        this.background.width = this.element.getAttribute('width');
+        this.background.height = this.element.getAttribute('height');
+        this.element.appendChild(this.background);
+
+        this.foreground = document.createElement("CANVAS");
+        this.foreground.width = this.element.getAttribute('width');
+        this.foreground.height = this.element.getAttribute('height');
+        this.foreground.style.position = 'absolute';
+        this.foreground.style.left = 0;
+        this.foreground.style.top = 0;
+        this.foreground.style.zIndex = 0;
+        this.element.appendChild(this.foreground);
     }
 
     // TODO: add more thorough documentation
@@ -142,7 +158,7 @@ class GrapheneLinegraph {
     }
 
     getStyle(name, defaultStyle) {
-        var style = getComputedStyle(this.background).getPropertyValue(name);
+        var style = getComputedStyle(this.element).getPropertyValue(name);
         if (style) {
             return style;
         }

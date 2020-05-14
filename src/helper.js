@@ -34,15 +34,15 @@ class GrapheneHelper {
 
   getContext(canvas) {
     var canvasWidth = canvas.width;
-      var canvasHeight = canvas.height;
-      var devicePixelRatio = window.devicePixelRatio;
-      canvas.width = canvasWidth * devicePixelRatio;
-      canvas.height = canvasHeight * devicePixelRatio;
-      canvas.style.width = canvasWidth + "px";
-      canvas.style.height = canvasHeight + "px";
-      var context = canvas.getContext('2d');
-      context.scale(devicePixelRatio, devicePixelRatio);
-      return context;
+    var canvasHeight = canvas.height;
+    var devicePixelRatio = window.devicePixelRatio;
+    canvas.width = canvasWidth * devicePixelRatio;
+    canvas.height = canvasHeight * devicePixelRatio;
+    canvas.style.width = canvasWidth + "px";
+    canvas.style.height = canvasHeight + "px";
+    var context = canvas.getContext('2d');
+    context.scale(devicePixelRatio, devicePixelRatio);
+    return context;
   }
 }
 
