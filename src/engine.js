@@ -1,6 +1,6 @@
 class GrapheneEngine {
     constructor(graphComponentsArray) {
-        this.graphs = new Array();
+        this.graphDictionary = new Object();
     
         window.addEventListener('resize', this.drawGraphs(), false);
     }
@@ -15,15 +15,19 @@ class GrapheneEngine {
             linegraph = new GrapheneLinegraph(element, properties, data);
         }
         linegraph.draw();
-        this.graphs.push(linegraph);
+        this.graphDictionary[element] = linegraph;
 
         return linegraph;
     }
     
     drawGraphs() {
-        for (let graph of this.graphs) {
-            graph.draw();
+        for (var element in this.graphDictionary) {
+            this.graphDictionary[element].draw;
         }
+    }
+
+    getGraph(element) {
+        return this.graphDictionary[element];
     }
 }
 
