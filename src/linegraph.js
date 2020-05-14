@@ -1,13 +1,13 @@
 class GrapheneLinegraph {
-    constructor(backgroundId, foregroundId, properties, data) {
+    constructor(background, foreground, properties, data) {
         if (typeof module !== "undefined") {
             const GrapheneHelper = require('./helper');
             this.grapheneHelper = new GrapheneHelper();
         } else {
             this.grapheneHelper = new GrapheneHelper();
         }
-        this.background = document.getElementById(backgroundId);
-        this.foreground = document.getElementById(foregroundId);
+        this.background = background;
+        this.foreground = foreground;
         this.canvasWidth = this.background.width;
         this.canvasHeight = this.background.height;
         this.backgroundContext = this.grapheneHelper.getContext(this.background);

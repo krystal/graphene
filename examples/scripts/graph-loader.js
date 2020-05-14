@@ -10,10 +10,10 @@ function loadGraphs() {
             var datasetProperties = divs[i].dataset.properties;
             var properties = (datasetProperties && datasetProperties != "") ? datasetProperties : null
             var data = divs[i].dataset.data;
-            var backgroundId = id + "-background";
-            var foregroundId = id + "-foreground";
+            var background = document.getElementById(id + "-background");
+            var foreground = document.getElementById(id + "-foreground");
 
-            graphComponentsArray.push({"type": type, "backgroundId": backgroundId, "foregroundId": foregroundId, "properties": properties, "data": data});
+            graphComponentsArray.push({"type": type, "background": background, "foreground": foreground, "properties": properties, "data": data});
         }
     }
 

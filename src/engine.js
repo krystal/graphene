@@ -8,9 +8,9 @@ class GrapheneEngine {
                     var linegraph = null;
                     if (typeof module !== "undefined") {
                         const GrapheneLinegraph = require('./linegraph.js');
-                        linegraph = new GrapheneLinegraph(graphComponents.backgroundId, graphComponents.foregroundId, graphComponents.properties, graphComponents.data);
+                        linegraph = new GrapheneLinegraph(graphComponents.background, graphComponents.foreground, graphComponents.properties, graphComponents.data);
                     } else {
-                        linegraph = new GrapheneLinegraph(graphComponents.backgroundId, graphComponents.foregroundId, graphComponents.properties, graphComponents.data);
+                        linegraph = new GrapheneLinegraph(graphComponents.background, graphComponents.foreground, graphComponents.properties, graphComponents.data);
                     }
                     this.graphs.push(linegraph);
                     break
