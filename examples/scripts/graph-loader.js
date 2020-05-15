@@ -13,6 +13,8 @@ function loadGraphs() {
             grapheneEngine.addLinegraph(divs[i], properties, data);
         }
     }
+
+    grapheneEngine.render();
 }
 
 window.addEventListener('load', loadGraphs, false);

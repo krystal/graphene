@@ -6,6 +6,7 @@ class GrapheneLinegraph {
         } else {
             this.grapheneHelper = new GrapheneHelper();
         }
+        this.drawn = false;
         this.element = element;
         this.createLayers();
         this.canvasWidth = this.background.width;
@@ -52,6 +53,7 @@ class GrapheneLinegraph {
     // TODO: investigate "Save Image As..." in browsers, it currently, understandably, saves only the foreground layer
 
     draw() {
+        this.drawn = true;
         this.retrieveStyles();
         this.calculateParameters();
         this.redraw();
@@ -567,6 +569,8 @@ class GrapheneLinegraph {
     }
 
     handleMouseMove(event) {
+        if (!this.drawn) { return; }
+
         var index = this.calculateIndex(event.offsetX);
         if (this.isMouseDown) {
             if (this.scrollEnabled) {
@@ -608,6 +612,8 @@ class GrapheneLinegraph {
     }
 
     handleMouseLeave(event) {
+        if (!this.drawn) { return; }
+
         this.clearForeground();
         this.cancelMouseMove();
         this.cancelMouseDown();
@@ -615,6 +621,8 @@ class GrapheneLinegraph {
     }
 
     handleMouseDown(event) {
+        if (!this.drawn) { return; }
+
         if (event.shiftKey) {
             if (this.zoomEnabled) {
                 this.isShiftMouseDown = true;
@@ -631,6 +639,8 @@ class GrapheneLinegraph {
     }
 
     handleMouseUp(event) {
+        if (!this.drawn) { return; }
+
         if (this.isShiftMouseDown) {
             if (this.zoomEnabled) {
                 if (this.shiftMouseDownStartIndex != this.shiftMouseDownEndIndex) {
@@ -656,6 +666,8 @@ class GrapheneLinegraph {
     }
 
     handleDoubleClick(event) {
+        if (!this.drawn) { return; }
+
         // reset
         this.clearForeground();
         this.draw();

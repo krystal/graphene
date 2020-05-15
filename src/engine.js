@@ -2,7 +2,7 @@ class GrapheneEngine {
     constructor(graphComponentsArray) {
         this.graphDictionary = new Object();
     
-        window.addEventListener('resize', this.drawGraphs(), false);
+        window.addEventListener('resize', this.rerender(), false);
     }
 
     addLinegraph(element, properties, data) {
@@ -14,20 +14,31 @@ class GrapheneEngine {
         } else {
             linegraph = new GrapheneLinegraph(element, properties, data);
         }
-        linegraph.draw();
-        this.graphDictionary[element] = linegraph;
+        this.graphDictionary[element.id] = linegraph;
 
         return linegraph;
     }
+
+    render() {
+        for (var elementId in this.graphDictionary) {
+            var graph = this.graphDictionary[elementId];
+            if (!this.graphDictionary.drawn) {
+                graph.draw();
+            }
+        }
+    }
     
-    drawGraphs() {
-        for (var element in this.graphDictionary) {
-            this.graphDictionary[element].draw;
+    rerender() {
+        for (var elementId in this.graphDictionary) {
+            var graph = this.graphDictionary[elementId];
+            if (this.graphDictionary.drawn) {
+                graph.draw();
+            }
         }
     }
 
     getGraph(element) {
-        return this.graphDictionary[element];
+        return this.graphDictionary[element.id];
     }
 }
 
