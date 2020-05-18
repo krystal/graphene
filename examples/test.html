@@ -1,10 +1,14 @@
 <html>
   <head>
+    <meta charset="utf-8">
     <link rel="stylesheet" type="text/css" href="stylesheets/test.css">
   </head>
   <body>
-    <div class="graph graph_light_mode" id="foo" width="960" height="320" data-type="linegraph" data-properties='{"flags":{"highlight_enabled":true},"y_axis":{"label_suffix":[[0,"%"]]}}' data-data='{"names": ["Dataset A","Dataset B","Dataset C"], "x":[["Q1","2020 Q1"],["Q2","2020 Q2"],["Q3","2020 Q3"],["Q4","2020 Q4"]],"y":[[33,66,95,50],[66,80,50,33],[80,50,16,66]]}'>
+    <div class="graph graph_light_mode" id="foo" width="960" height="320" data-type="linegraph" data-properties='{"flags":{"highlight_enabled":true,"scroll_enabled":true,"zoom_enabled":true},"y_axis":{"label_suffix":[[0,"%"]]}}' data-data='{"names": ["Dataset A","Dataset B","Dataset C"], "x":[["Q1","2020 Q1"],["Q2","2020 Q2"],["Q3","2020 Q3"],["Q4","2020 Q4"]],"y":[[33,66,95,50],[66,80,50,33],[80,50,16,66]]}'>
     </div>
+    <p><button id="prepareUpdateButton">Prepare</button><button id="updateButton">Update data</button></p>
+    <p><button id="prepareAddHorizontalButton">Prepare</button><button id="addHorizontalButton">Add horizontal data</button></p>
+    <p><button id="prepareAddVerticalButton">Prepare</button><button id="addVerticalButton">Add vertical data</button></p>
   </body>
   <script src="../src/helper.js"></script>
   <script src="../src/linegraph.js"></script>

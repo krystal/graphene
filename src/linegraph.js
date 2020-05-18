@@ -7,6 +7,7 @@ class GrapheneLinegraph {
             this.grapheneHelper = new GrapheneHelper();
         }
         this.drawn = false;
+        this.userDefinedViewPort = false;
         this.element = element;
         this.createLayers();
         this.canvasWidth = this.background.width;
@@ -177,6 +178,7 @@ class GrapheneLinegraph {
         this.alphasUnderGraph = this.getStyle('--alphas-under-graph', 0.1);
         this.coloursBackground = this.getStyle('--colours-background', '#FFFFFF');
         this.coloursData = new Array();
+        // TODO: alter this to continue looking until it can't find a contiguous number, for datasets that are not present at the start
         for (var i = 0; i < this.data.y.length; i++) {
             var colour = this.getStyle('--colours-data-' + i, false);
             if (colour && colour != false) { this.coloursData.push(colour); }
@@ -213,6 +215,69 @@ class GrapheneLinegraph {
             this.alphasSelectionBox = this.getStyle('--alphas-selection-box', 0.25);
             this.coloursSelectionBox = this.getStyle('--colours-selection-box', '#0000FF');
         }
+    }
+
+    updateData(data, properties) {
+        var cachedAxisMinX = this.axisMinX;
+        var cachedAxisMaxX = this.axisMaxX;
+        var cachedGraphScaleX = this.graphScaleX;
+
+        this.data = JSON.parse(data);
+        this.properties = properties ? JSON.parse(properties) : this.properties
+        this.calculateParameters();
+
+        if (this.userDefinedViewPort) {
+            this.axisMinX = cachedAxisMinX;
+            this.axisMaxX = cachedAxisMaxX;
+            this.graphScaleX = cachedGraphScaleX;
+        }
+        
+        this.clearForeground();
+        this.redraw();
+    }
+
+    addHorizontalData(data, properties) {
+        var cachedAxisMinX = this.axisMinX;
+        var cachedAxisMaxX = this.axisMaxX;
+        var cachedGraphScaleX = this.graphScaleX;
+
+        var parsedData = JSON.parse(data);
+        this.data.x = this.data.x.concat(parsedData.x);
+        for (var i = 0; i < this.data.y.length; i++) {
+            this.data.y[i] = this.data.y[i].concat(parsedData.y[i]);
+        }
+        this.properties = properties ? JSON.parse(properties) : this.properties
+        this.calculateParameters();
+
+        if (this.userDefinedViewPort) {
+            this.axisMinX = cachedAxisMinX;
+            this.axisMaxX = cachedAxisMaxX;
+            this.graphScaleX = cachedGraphScaleX;
+        }
+        
+        this.clearForeground();
+        this.redraw();
+    }
+
+    addVerticalData(data, properties) {
+        var cachedAxisMinX = this.axisMinX;
+        var cachedAxisMaxX = this.axisMaxX;
+        var cachedGraphScaleX = this.graphScaleX;
+
+        var parsedData = JSON.parse(data);
+        this.data.names = this.data.names.concat(parsedData.names);
+        this.data.y = this.data.y.concat(parsedData.y);
+        this.properties = properties ? JSON.parse(properties) : this.properties
+        this.calculateParameters();
+
+        if (this.userDefinedViewPort) {
+            this.axisMinX = cachedAxisMinX;
+            this.axisMaxX = cachedAxisMaxX;
+            this.graphScaleX = cachedGraphScaleX;
+        }
+        
+        this.clearForeground();
+        this.redraw();
     }
 
     // TODO: test this with data sets covering different ranges
@@ -427,6 +492,7 @@ class GrapheneLinegraph {
         var newAxisMaxX = this.mouseDownAxisMaxX - differenceIndex;
 
         if (newAxisMinX >= 0 && newAxisMaxX < this.data.x.length) {
+            this.userDefinedViewPort = true;
             this.axisMinX = this.mouseDownAxisMinX - differenceIndex;
             this.axisMaxX = this.mouseDownAxisMaxX - differenceIndex;
             this.redraw();
@@ -644,6 +710,7 @@ class GrapheneLinegraph {
         if (this.isShiftMouseDown) {
             if (this.zoomEnabled) {
                 if (this.shiftMouseDownStartIndex != this.shiftMouseDownEndIndex) {
+                    this.userDefinedViewPort = true;
                     var offsetAxisX = this.axisMinX;
                     if (this.shiftMouseDownStartIndex > this.shiftMouseDownEndIndex) {
                         this.axisMinX = offsetAxisX + this.shiftMouseDownEndIndex;
@@ -669,8 +736,10 @@ class GrapheneLinegraph {
         if (!this.drawn) { return; }
 
         // reset
+        this.userDefinedViewPort = false;
+        this.calculateParameters();
         this.clearForeground();
-        this.draw();
+        this.redraw();
     }
 }
 
