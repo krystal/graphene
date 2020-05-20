@@ -8,9 +8,11 @@ Install `graphene` via [NPM](https://www.npmjs.com):
 
 `npm install graphene`
 
-`import Graphene from 'graphene'`
-
 ## Usage
+
+Import the graphene library:
+
+`import Graphene from 'graphene'`
 
 Create a new instance of the graphene engine:
 
@@ -63,12 +65,20 @@ Colours, fonts, sizes, etc. can all be defined via CSS variables, graphene will 
 }
 ```
 
-## Example HTML
+## HTML
+
+Simply add a HTML element to your page, graphene will inherit the dimensions of this element.
+
+### Example HTML
 
 ```
 <div class="graph_light_mode" width="960" height="320"></div>
 ```
 
-Putting this all together, produces the following graph:
+When everything is in place, it is time to draw:
+
+`grapheneEngine.render()`
+
+Putting together all this example code produces the following graph:
 
 ![test.png](examples/images/test.png)
