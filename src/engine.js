@@ -1,5 +1,5 @@
 class GrapheneEngine {
-    constructor(graphComponentsArray) {
+    constructor() {
         this.graphDictionary = new Object();
     
         window.addEventListener('resize', this.rerender(), false);
