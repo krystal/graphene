@@ -2,54 +2,27 @@
 
 Graphene is a JavaScript powered HTML5 Canvas based graphing library.
 
+## Installation
+
+Install `graphene` via [NPM](https://www.npmjs.com):
+
+`npm install graphene`
+
+`import Graphene from 'graphene'`
+
 ## Usage
 
-In its simplest form, a graphene graph only requires three components, all of which are strings:
+Create a new instance of the graphene engine:
 
-- type
-- element id of the background layer
-- data
+`var grapheneEngine = new Graphene();`
 
-There are two additional, optional components, both of which are strings:
+Then add graphs to it:
 
-- element id of the foreground layer
-- properties
+`var linegraph = grapheneEngine.addLinegraph(element, properties, data);`
 
-```
-var graphComponentsArray = [{"type": "linegraph", "backgroundId": "foo-background", "foregroundId": "foo-foreground", "properties": "...", 'data': "..."}];
+Where `element` is the HTML element that the graph is to be positioned in and `properties` and `data` are JSON strings. Refer to the [properties](https://github.com/krystal/graphene/wiki/Properties) and [data](https://github.com/krystal/graphene/wiki/Data) documentation for more information.
 
-var grapheneEngine = new GrapheneEngine(graphComponentsArray);
-```
-
-### Type
-
-Currently available graph types:
-
-- linegraph
-
-### Background layer
-
-This is the HTML canvas element that the graph is drawn on.
-
-### Data
-
-The data string contains the raw data, in JSON format:
-
-```
-{
-    "names": ["Dataset A","Dataset B","Dataset C"],
-    "x":[["Q1", "2020 Q1"], ["Q2", "2020 Q2"], ["Q3", "2020 Q3"], ["Q4", "2020 Q4"]],
-    "y":[[33, 66, 95, 50], [66, 80, 50, 33], [80, 50, 16, 66]]
-}
-```
-
-### Foreground layer
-
-This is the HTML canvas element that facilitates user interaction with the graph.
-
-### Properties
-
-The properties string controls advanced features of the graph, in JSON format:
+### Example properties
 
 ```
 {
@@ -64,9 +37,21 @@ The properties string controls advanced features of the graph, in JSON format:
 }
 ```
 
-## Styling
+### Example data
 
-Colours, fonts, sizes, etc. can all be defined via CSS variables, graphene will look for styles that have been applied to the background layer element:
+```
+{
+    "names": ["Dataset A","Dataset B","Dataset C"],
+    "x":[["Q1", "2020 Q1"], ["Q2", "2020 Q2"], ["Q3", "2020 Q3"], ["Q4", "2020 Q4"]],
+    "y":[[33, 66, 95, 50], [66, 80, 50, 33], [80, 50, 16, 66]]
+}
+```
+
+## Styles
+
+Colours, fonts, sizes, etc. can all be defined via CSS variables, graphene will look for styles that have been applied to the supplied HTML element. Refer to the [styles](https://github.com/krystal/graphene/wiki/Styles) documentation for more information.
+
+### Example styles
 
 ```
 .graph_light_mode {
@@ -81,10 +66,7 @@ Colours, fonts, sizes, etc. can all be defined via CSS variables, graphene will 
 ## Example HTML
 
 ```
-<div>
-    <canvas class="graph_light_mode" width="960" height="320"></canvas>
-    <canvas width="960" height="320"></canvas>
-</div>
+<div class="graph_light_mode" width="960" height="320"></div>
 ```
 
 Putting this all together, produces the following graph:
