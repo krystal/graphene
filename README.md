@@ -72,7 +72,7 @@ Simply add a HTML element to your page, graphene will inherit the dimensions of 
 ### Example HTML
 
 ```
-<div class="graph_light_mode" width="960" height="320"></div>
+<div class="graph_light_mode" width="960" height="320" style="position:relative;"></div>
 ```
 
 When everything is in place, it is time to draw:
