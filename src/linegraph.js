@@ -35,12 +35,12 @@ class GrapheneLinegraph {
 
     createLayers() {
         this.background = document.createElement('CANVAS');
-        this.background.width = this.element.getAttribute('width');
+        this.background.width = this.element.getBoundingClientRect().width;
         this.background.height = this.element.getAttribute('height');
         this.element.appendChild(this.background);
 
         this.foreground = document.createElement("CANVAS");
-        this.foreground.width = this.element.getAttribute('width');
+        this.foreground.width = this.element.getBoundingClientRect().width
         this.foreground.height = this.element.getAttribute('height');
         this.foreground.style.position = 'absolute';
         this.foreground.style.left = 0;
