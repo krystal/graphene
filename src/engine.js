@@ -6,6 +6,13 @@ class GrapheneEngine {
     }
 
     addLinegraph(element, properties, data) {
+        if (typeof properties === "string") {
+            properties = JSON.parse(properties);
+        }
+        if (typeof data === "string") {
+            data = JSON.parse(data);
+        }
+
         var linegraph = null;
 
         if (typeof module !== "undefined") {

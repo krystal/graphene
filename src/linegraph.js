@@ -11,8 +11,8 @@ class GrapheneLinegraph {
         this.element = element;
         this.createLayers();
       
-        this.properties = properties ? JSON.parse(properties) : null;
-        this.data = JSON.parse(data);
+        this.properties = properties;
+        this.data = data;
         this.calculateParameters();
 
         this.addMouseEvents();

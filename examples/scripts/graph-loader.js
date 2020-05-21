@@ -11,6 +11,12 @@ function loadGraphs() {
             var properties = (datasetProperties && datasetProperties != "") ? datasetProperties : null
             var data = divs[i].dataset.data;
 
+            // used to test JSON objects work in addition to JSON strings
+            if (false) {
+                properties = properties ? JSON.parse(properties) : null;
+                data = data ? JSON.parse(data) : null;
+            }
+
             linegraph = grapheneEngine.addLinegraph(divs[i], properties, data);
         }
     }
