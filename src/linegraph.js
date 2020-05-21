@@ -10,17 +10,45 @@ class GrapheneLinegraph {
         this.userDefinedViewPort = false;
         this.element = element;
         this.createLayers();
-        this.canvasWidth = this.background.width;
-        this.canvasHeight = this.background.height;
-        this.backgroundContext = this.grapheneHelper.getContext(this.background);
-        if (this.foreground) {
-            this.foregroundContext = this.grapheneHelper.getContext(this.foreground);
-        }
       
         this.properties = properties ? JSON.parse(properties) : null;
         this.data = JSON.parse(data);
         this.calculateParameters();
 
+        this.addMouseEvents();
+    }
+
+    createLayers() {
+        if (this.background) {
+            this.element.removeChild(this.background);
+        }
+        this.background = document.createElement('CANVAS');
+        this.background.width = this.element.getBoundingClientRect().width;
+        this.background.height = this.element.getAttribute('height');
+        this.element.appendChild(this.background);
+
+        if (this.foreground) {
+            this.element.removeChild(this.foreground);
+        }
+        this.foreground = document.createElement("CANVAS");
+        this.foreground.width = this.element.getBoundingClientRect().width
+        this.foreground.height = this.element.getAttribute('height');
+        this.foreground.style.position = 'absolute';
+        this.foreground.style.left = 0;
+        this.foreground.style.top = 0;
+        this.foreground.style.zIndex = 0;
+        this.element.appendChild(this.foreground);
+
+        this.canvasWidth = this.background.width;
+        this.canvasHeight = this.background.height;
+
+        this.backgroundContext = this.grapheneHelper.getContext(this.background);
+        if (this.foreground) {
+            this.foregroundContext = this.grapheneHelper.getContext(this.foreground);
+        }
+    }
+
+    addMouseEvents() {
         this.cancelMouseMove();
         this.cancelMouseDown();
         this.cancelShiftMouseDown();
@@ -31,22 +59,6 @@ class GrapheneLinegraph {
             this.foreground.addEventListener('mouseup', this.handleMouseUp.bind(this), false);
             this.foreground.addEventListener('dblclick', this.handleDoubleClick.bind(this), false);
         }
-    }
-
-    createLayers() {
-        this.background = document.createElement('CANVAS');
-        this.background.width = this.element.getBoundingClientRect().width;
-        this.background.height = this.element.getAttribute('height');
-        this.element.appendChild(this.background);
-
-        this.foreground = document.createElement("CANVAS");
-        this.foreground.width = this.element.getBoundingClientRect().width
-        this.foreground.height = this.element.getAttribute('height');
-        this.foreground.style.position = 'absolute';
-        this.foreground.style.left = 0;
-        this.foreground.style.top = 0;
-        this.foreground.style.zIndex = 0;
-        this.element.appendChild(this.foreground);
     }
 
     // TODO: add more thorough documentation

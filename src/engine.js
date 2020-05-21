@@ -2,7 +2,7 @@ class GrapheneEngine {
     constructor() {
         this.graphDictionary = new Object();
     
-        window.addEventListener('resize', this.rerender(), false);
+        window.addEventListener('resize', this.rerender.bind(this));
     }
 
     addLinegraph(element, properties, data) {
@@ -22,7 +22,7 @@ class GrapheneEngine {
     render() {
         for (var elementId in this.graphDictionary) {
             var graph = this.graphDictionary[elementId];
-            if (!this.graphDictionary.drawn) {
+            if (!graph.drawn) {
                 graph.draw();
             }
         }
@@ -31,7 +31,9 @@ class GrapheneEngine {
     rerender() {
         for (var elementId in this.graphDictionary) {
             var graph = this.graphDictionary[elementId];
-            if (this.graphDictionary.drawn) {
+            graph.createLayers();
+            graph.addMouseEvents();
+            if (graph.drawn) {
                 graph.draw();
             }
         }
