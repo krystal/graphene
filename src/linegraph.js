@@ -81,8 +81,7 @@ class GrapheneLinegraph {
 
     redraw() {
         this.backgroundContext.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
-        // TODO: add an alpha style to the background (for the things like images that could be placed behind graphs)
-        this.backgroundContext.fillStyle = this.coloursBackground;
+        this.backgroundContext.fillStyle = this.grapheneHelper.hex2rgba(this.coloursBackground, this.alphasBackground);
         this.backgroundContext.fillRect(0, 0, this.canvasWidth, this.canvasHeight);
 
         if (this.fontsAxesLabelsSize > 0) {
@@ -187,6 +186,7 @@ class GrapheneLinegraph {
     retrieveStyles() {
         this.defaultDataColour = '#000000';
 
+        this.alphasBackground = this.getStyle('--alphas-background', 1);
         this.alphasUnderGraph = this.getStyle('--alphas-under-graph', 0.1);
         this.coloursBackground = this.getStyle('--colours-background', '#FFFFFF');
         this.coloursData = new Array();
