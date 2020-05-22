@@ -55,30 +55,30 @@ function loadGraphs() {
 }
 
 function prepareUpdate() {
-    var data = '{"names": ["Svalbard"], "x":[["Mon","Monday 18th"],["Tue","Tuesday 19th"],["Wed","Wednesday 20th"],["Thu","Thursday 21st"],["Fri","Friday 22nd"],["Sat","Saturday 23rd"],["Sun","Sunday 24th"]],"y":[[1,2,2,3,3,2,4]]}';
+    var data = '{"names": ["Svalbard"], "x":["Mon","Tue","Wed","Thu","Fri","Sat","Sun"],"y":[[1,2,2,3,3,2,4]]}';
     var properties = '{"flags":{"highlight_enabled":true,"scroll_enabled":true,"zoom_enabled":true},"y_axis":{"label_suffix":[[0,"°C"]], "max":30}}';
     linegraph.updateData(data, properties);
 }
 
 function prepareAddHorizontal() {
-    var data = '{"names": ["Svalbard", "Faro"], "x":[["Mon","Monday 18th"],["Tue","Tuesday 19th"],["Wed","Wednesday 20th"],["Thu","Thursday 21st"],["Fri","Friday 22nd"],["Sat","Saturday 23rd"],["Sun","Sunday 24th"]],"y":[[1,2,2,3,3,2,4],[23,26,25,26,27,27,27]]}';
+    var data = '{"names": ["Svalbard", "Faro"], "x":["Mon","Tue","Wed","Thu","Fri","Sat","Sun"],"y":[[1,2,2,3,3,2,4],[23,26,25,26,27,27,27]]}';
     var properties = '{"flags":{"highlight_enabled":true,"scroll_enabled":true,"zoom_enabled":true},"y_axis":{"label_suffix":[[0,"°C"]], "max":30}}';
     linegraph.updateData(data, properties);
 }
 
 function prepareAddVertical() {
-    var data = '{"names": ["Svalbard", "Faro"], "x":[["Mon","Monday 18th"],["Tue","Tuesday 19th"],["Wed","Wednesday 20th"],["Thu","Thursday 21st"],["Fri","Friday 22nd"],["Sat","Saturday 23rd"],["Sun","Sunday 24th"],["Mon","Monday 25th"],["Tue","Tuesday 26th"],["Wed","Wednesday 27th"],["Thu","Thursday 28th"],["Fri","Friday 29th"],["Sat","Saturday 30th"],["Sun","Sunday 31st"]],"y":[[1,2,2,3,3,2,4,4,4,5,5,5,5,5],[23,26,25,26,27,27,27,27,27,26,24,24,24,23]]}';
+    var data = '{"names": ["Svalbard", "Faro"], "x":["Mon","Tue","Wed","Thu","Fri","Sat","Sun","Mon","Tue","Wed","Thu","Fri","Sat","Sun"],"y":[[1,2,2,3,3,2,4,4,4,5,5,5,5,5],[23,26,25,26,27,27,27,27,27,26,24,24,24,23]]}';
     var properties = '{"flags":{"highlight_enabled":true,"scroll_enabled":true,"zoom_enabled":true},"y_axis":{"label_suffix":[[0,"°C"]], "max":30}}';
     linegraph.updateData(data, properties);
 }
 
 function updateData() {
-    var data = '{"names": ["Faro"], "x":[["Mon","Monday 18th"],["Tue","Tuesday 19th"],["Wed","Wednesday 20th"],["Thu","Thursday 21st"],["Fri","Friday 22nd"],["Sat","Saturday 23rd"],["Sun","Sunday 24th"]],"y":[[23,26,25,26,27,27,27]]}';
+    var data = '{"names": ["Faro"], "x":["Mon","Tue","Wed","Thu","Fri","Sat","Sun"],"y":[[23,26,25,26,27,27,27]]}';
     linegraph.updateData(data, null);
 }
 
 function addHorizontalData() {
-    var data = '{"x":[["Mon","Monday 25th"],["Tue","Tuesday 26th"],["Wed","Wednesday 27th"],["Thu","Thursday 28th"],["Fri","Friday 29th"],["Sat","Saturday 30th"],["Sun","Sunday 31st"]],"y":[[4,4,5,5,5,5,5],[27,27,26,24,24,24,23]]}';
+    var data = '{"x":["Mon","Tue","Wed","Thu","Fri","Sat","Sun"],"y":[[4,4,5,5,5,5,5],[27,27,26,24,24,24,23]]}';
     linegraph.addHorizontalData(data, null);
 }
 

@@ -1,5 +1,5 @@
 class GrapheneLinegraph {
-    constructor(element, properties, data) {
+    constructor(element, properties, data, axisFormatter, informationFormatter) {
         if (typeof module !== "undefined") {
             const GrapheneHelper = require('./helper');
             this.grapheneHelper = new GrapheneHelper();
@@ -14,6 +14,9 @@ class GrapheneLinegraph {
         this.properties = properties;
         this.data = data;
         this.calculateParameters();
+
+        this.axisFromatter = axisFormatter;
+        this.informationFormatter = informationFormatter;
 
         this.addMouseEvents();
     }
@@ -464,7 +467,9 @@ class GrapheneLinegraph {
     caclulateMaxLabelWidthX() {
         var maxLabelWidthX = 0;
         for (var i = this.axisMinX; i <= this.axisMaxX; i++) {
-            var labelWidth = this.backgroundContext.measureText(this.data.x[i][0]).width;
+            var labelValue = this.data.x[i];
+            var labelText = this.axisFormatter ? this.axisFormatter(labelValue, 0) : labelValue;
+            var labelWidth = this.backgroundContext.measureText(labelText).width;
             if (labelWidth > maxLabelWidthX) {
                 maxLabelWidthX = labelWidth;
             }
@@ -487,8 +492,9 @@ class GrapheneLinegraph {
         this.backgroundContext.textBaseline = "middle";
 
         for (var i = 0; i <= this.calculateAxisRangeX(); i += xAxisLabelInterval) {
-            var xValue = this.data.x[this.axisMinX + i][0];
-            this.backgroundContext.fillText(xValue, this.graphStartX + (i * this.graphScaleX), this.graphEndY + (this.bottomMargin / 2));
+            var xValue = this.data.x[this.axisMinX + i];
+            var xText = this.axisFormatter ? this.axisFormatter(xValue, xAxisLabelInterval) : xValue;
+            this.backgroundContext.fillText(xText, this.graphStartX + (i * this.graphScaleX), this.graphEndY + (this.bottomMargin / 2));
         }
 
         for (var i = this.axisMinY; i <= this.axisMaxY; i += this.labelIntervalY) {
@@ -549,10 +555,11 @@ class GrapheneLinegraph {
         this.foregroundContext.textAlign = "left";
         this.foregroundContext.font = this.fontsInformationHeadingWeight + " " + this.fontsInformationHeadingSize + "px " + this.fontsInformationHeadingFamily;
 
-        var heading = this.data.x[this.axisMinX + index][1];
+        var headingValue = this.data.x[this.axisMinX + index];
+        var headingText = this.informationFormatter ? this.informationFormatter(headingValue) : headingValue;
         var sentences = new Array();
         var sentenceHeightApproximation = this.foregroundContext.measureText("M").width;
-        var maxSentenceWidth = this.foregroundContext.measureText(heading).width + (2 * sentenceHeightApproximation);
+        var maxSentenceWidth = this.foregroundContext.measureText(headingText).width + (2 * sentenceHeightApproximation);
         this.foregroundContext.font = this.fontsInformationSentencesWeight + " " + this.fontsInformationSentencesSize + "px " + this.fontsInformationSentencesFamily;
         for (var i = 0; i < this.data.y.length; i++) {
             var labelComponents = this.getLabelComponents(this.data.y[i][this.axisMinX + index]);
@@ -591,7 +598,7 @@ class GrapheneLinegraph {
 
         this.foregroundContext.font = this.fontsInformationHeadingWeight + " " + this.fontsInformationHeadingSize + "px " + this.fontsInformationHeadingFamily;
         this.foregroundContext.fillStyle = this.coloursInformationHeading;
-        this.foregroundContext.fillText(heading, panelX + sentenceHeightApproximation, sentenceOffsetY);
+        this.foregroundContext.fillText(headingText, panelX + sentenceHeightApproximation, sentenceOffsetY);
         sentenceOffsetY += 2 * sentenceHeightApproximation;
 
         this.foregroundContext.font = this.fontsInformationSentencesWeight + " " + this.fontsInformationSentencesSize + "px " + this.fontsInformationSentencesFamily;

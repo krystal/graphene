@@ -5,7 +5,7 @@ class GrapheneEngine {
         window.addEventListener('resize', this.rerender.bind(this));
     }
 
-    addLinegraph(element, properties, data) {
+    addLinegraph(element, properties, data, axisFormatter, informationFormatter) {
         if (typeof properties === "string") {
             properties = JSON.parse(properties);
         }
@@ -17,9 +17,9 @@ class GrapheneEngine {
 
         if (typeof module !== "undefined") {
             const GrapheneLinegraph = require('./linegraph.js');
-            linegraph = new GrapheneLinegraph(element, properties, data);
+            linegraph = new GrapheneLinegraph(element, properties, data, axisFormatter, informationFormatter);
         } else {
-            linegraph = new GrapheneLinegraph(element, properties, data);
+            linegraph = new GrapheneLinegraph(element, properties, data, axisFormatter, informationFormatter);
         }
         this.graphDictionary[element.id] = linegraph;
 

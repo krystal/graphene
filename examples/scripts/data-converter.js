@@ -10,7 +10,7 @@ function convertArray(data) {
       if (i == 0) {
         var utcMilliseconds = data[i][j][0];
         var date = new Date(utcMilliseconds);
-        convertedData.x.push([shortFormat(date), longFormat(date)]);
+        convertedData.x.push(date);
       }
       yValues.push(data[i][j][1]);
     }
@@ -31,7 +31,7 @@ function convertObject(data) {
       if (firstIteration) {
         var utcMilliseconds = data[key][j][0];
         var date = new Date(utcMilliseconds);
-        convertedData.x.push([shortFormat(date), longFormat(date)]);
+        convertedData.x.push(date);
       }
       yValues.push(data[key][j][1]);
     }
