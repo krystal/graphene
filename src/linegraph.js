@@ -61,7 +61,6 @@ class GrapheneLinegraph {
         }
     }
 
-    // TODO: add more thorough documentation
     // TODO: do some refactoring
     // TODO: investigate "Save Image As..." in browsers, it currently, understandably, saves only the foreground layer
 
