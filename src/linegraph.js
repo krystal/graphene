@@ -189,6 +189,7 @@ class GrapheneLinegraph {
         this.alphasBackground = this.getStyle('--alphas-background', 1);
         this.alphasUnderGraph = this.getStyle('--alphas-under-graph', 0.1);
         this.coloursBackground = this.getStyle('--colours-background', '#FFFFFF');
+        this.coloursDataAxis = this.getStyle('--colours-data-axis', '#E0DEFF');
         this.coloursData = new Array();
         // TODO: alter this to continue looking until it can't find a contiguous number, for datasets that are not present at the start
         for (var i = 0; i < this.data.y.length; i++) {
@@ -207,7 +208,7 @@ class GrapheneLinegraph {
 
         if (this.highLightEnabled) {
             this.alphasInformationPanel = this.getStyle('--alphas-information-panel', 0.75);
-            this.coloursHighlightIndicator = this.getStyle('--colours-highlight-indicator', '#E0DEFF');
+            this.coloursHighlightIndicator = this.getStyle('--colours-highlight-indicator', '#FFFFFF');
             this.coloursInformationHeading = this.getStyle('--colours-information-heading', '#FFFFFF');
             this.coloursInformationPanel = this.getStyle('--colours-information-panel', '#333333');
             this.coloursInformationSentences = this.getStyle('--colours-information-sentences', '#FFFFFF');
@@ -514,16 +515,16 @@ class GrapheneLinegraph {
     }
 
     drawHighlight(axisHighlight, yValueMax, dataHighlights) {
-        this.foregroundContext.strokeStyle = this.coloursBackground;
+        this.foregroundContext.strokeStyle = this.coloursHighlightIndicator;
         this.foregroundContext.lineWidth = this.widthsHighlightIndicator;
         this.foregroundContext.beginPath();
         this.foregroundContext.moveTo(axisHighlight.x, axisHighlight.y);
         this.foregroundContext.lineTo(axisHighlight.x, yValueMax);
         this.foregroundContext.stroke();
 
-        this.foregroundContext.strokeStyle = this.coloursHighlightIndicator;
+        this.foregroundContext.strokeStyle = this.coloursDataAxis;
         this.foregroundContext.lineWidth = this.widthsHighlightIndicator;
-        this.foregroundContext.fillStyle = this.coloursBackground;
+        this.foregroundContext.fillStyle = this.coloursHighlightIndicator;
 
         this.foregroundContext.beginPath();
         this.foregroundContext.arc(axisHighlight.x, axisHighlight.y, this.radiiHighlightIndicator, 0, 2 * Math.PI);
@@ -534,7 +535,7 @@ class GrapheneLinegraph {
         for (var i = 0; i < dataHighlights.length; i++) {
             this.foregroundContext.strokeStyle = this.getDataColour(i);
             this.foregroundContext.lineWidth = this.widthsDataHighlightIndicator;
-            this.foregroundContext.fillStyle = this.coloursBackground;
+            this.foregroundContext.fillStyle = this.coloursHighlightIndicator;
 
             this.foregroundContext.beginPath();
             this.foregroundContext.arc(dataHighlights[i].x, dataHighlights[i].y, this.radiiDataHighlightIndicator, 0, 2 * Math.PI);
