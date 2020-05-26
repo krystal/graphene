@@ -15,7 +15,7 @@ class GrapheneLinegraph {
         this.data = data;
         this.calculateParameters();
 
-        this.axisFromatter = axisFormatter;
+        this.axisFormatter = axisFormatter;
         this.informationFormatter = informationFormatter;
 
         this.addMouseEvents();
@@ -478,8 +478,8 @@ class GrapheneLinegraph {
     }
 
     calculateAxisInterval(axisLabelInterval) {
-        var firstValue = this.data.x[0];
-        var secondValue = this.data.x[axisLabelInterval];
+        var firstValue = this.data.x[this.axisMinX];
+        var secondValue = this.data.x[this.axisMinX + axisLabelInterval];
         return secondValue - firstValue;
     }
 

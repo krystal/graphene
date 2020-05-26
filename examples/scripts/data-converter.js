@@ -8,9 +8,7 @@ function convertArray(data) {
     var yValues = [];
     for (var j = 0; j < data[i].length; j++) {
       if (i == 0) {
-        var utcMilliseconds = data[i][j][0];
-        var date = new Date(utcMilliseconds);
-        convertedData.x.push(date);
+        convertedData.x.push(data[i][j][0]);
       }
       yValues.push(data[i][j][1]);
     }
@@ -29,9 +27,7 @@ function convertObject(data) {
     var yValues = [];
     for (var j = 0; j < data[key].length; j++) {
       if (firstIteration) {
-        var utcMilliseconds = data[key][j][0];
-        var date = new Date(utcMilliseconds);
-        convertedData.x.push(date);
+        convertedData.x.push(data[key][j][0]);
       }
       yValues.push(data[key][j][1]);
     }
