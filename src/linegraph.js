@@ -477,6 +477,12 @@ class GrapheneLinegraph {
         return maxLabelWidthX;
     }
 
+    calculateAxisInterval(axisLabelInterval) {
+        var firstValue = this.data.x[0];
+        var secondValue = this.data.x[axisLabelInterval];
+        return secondValue - firstValue;
+    }
+
     drawAxisLabels() {
         var xAxisLabelInterval = 1;
         var availableWidthPerLabel = this.graphWidth / ((this.calculateAxisRangeX() + 1) / xAxisLabelInterval);
@@ -493,7 +499,7 @@ class GrapheneLinegraph {
 
         for (var i = 0; i <= this.calculateAxisRangeX(); i += xAxisLabelInterval) {
             var xValue = this.data.x[this.axisMinX + i];
-            var xText = this.axisFormatter ? this.axisFormatter(xValue, xAxisLabelInterval) : xValue;
+            var xText = this.axisFormatter ? this.axisFormatter(xValue, this.calculateAxisInterval(xAxisLabelInterval)) : xValue;
             this.backgroundContext.fillText(xText, this.graphStartX + (i * this.graphScaleX), this.graphEndY + (this.bottomMargin / 2));
         }
 
