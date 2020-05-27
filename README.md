@@ -20,7 +20,7 @@ Create a new instance of the graphene engine:
 
 Then add graphs to it:
 
-`var linegraph = grapheneEngine.addLinegraph(element, properties, data);`
+`var linegraph = grapheneEngine.addLinegraph(element, properties, data, axisFormatter, informationFormatter);`
 
 Where `element` is the HTML element that the graph is to be positioned in and `properties` and `data` are JSON strings. Refer to the [properties](https://github.com/krystal/graphene/wiki/Properties) and [data](https://github.com/krystal/graphene/wiki/Data) documentation for more information.
 
@@ -43,9 +43,31 @@ Where `element` is the HTML element that the graph is to be positioned in and `p
 
 ```
 {
-    "names": ["Dataset A","Dataset B","Dataset C"],
-    "x":[["Q1", "2020 Q1"], ["Q2", "2020 Q2"], ["Q3", "2020 Q3"], ["Q4", "2020 Q4"]],
+    "names": ["Dataset A", "Dataset B", "Dataset C"],
+    "x":[1577836800000, 1580515200000, 1583020800000, 1585695600000],
     "y":[[33, 66, 95, 50], [66, 80, 50, 33], [80, 50, 16, 66]]
+}
+```
+
+### Example axisFormatter
+
+```
+function axisFormatter(value, interval) {
+    const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    var date = new Date(value);
+    return months[date.getUTCMonth()];
+}
+```
+
+### Example informationFormatter
+
+```
+function informationFormatter(value, interval) {
+    const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    var date = new Date(value);
+    var month = months[date.getUTCMonth()];
+    var year = date.getUTCFullYear();
+    return month + " " + year;
 }
 ```
 
