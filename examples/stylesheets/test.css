@@ -1,15 +1,17 @@
 .graph_light_mode {
+  --alphas-background: 0;
   --alphas-information-panel: 0.75;
   --alphas-under-graph: 0.25;
 
   --colours-axes-labels: #555555;
   --colours-background: #FFFFFF;
-  --colours-highlight-indicator: #E0DEFF;
+  --colours-highlight-indicator: #FFFFFF;
   --colours-horizontal-lines: #EEEEEE;
   --colours-information-heading: #FFFFFF;
   --colours-information-panel: #333333;
   --colours-information-sentences: #FFFFFF;
 
+  --colours-data-axis: #E0DEFF;
   --colours-data-0: #FF4560;
   --colours-data-1: #04E395;
   --colours-data-2: #038FFB;

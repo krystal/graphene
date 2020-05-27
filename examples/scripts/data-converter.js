@@ -1,5 +1,3 @@
-const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-
 function convertArray(data) {
   var convertedData = {"names": [], "x": [], "y": []};
 
@@ -36,21 +34,4 @@ function convertObject(data) {
   }
 
   return convertedData;
-}
-
-function shortFormat(date) {
-  var hours = date.getUTCHours();
-  var minutes = date.getUTCMinutes();
-
-  return hours.toString().padStart(2, "0") + ":" + minutes.toString().padStart(2, "0");
-}
-
-function longFormat(date) {
-  var hours = date.getUTCHours();
-  var minutes = date.getUTCMinutes();
-  var day = date.getUTCDate();
-  var month = months[date.getUTCMonth()];
-  var year = date.getUTCFullYear();
-
-  return hours.toString().padStart(2, "0") + ":" + minutes.toString().padStart(2, "0") + " " + day + " " + month + " " + year;
 }
