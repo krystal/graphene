@@ -487,7 +487,7 @@ class GrapheneLinegraph {
         var xAxisLabelInterval = 1;
         var availableWidthPerLabel = this.graphWidth / ((this.calculateAxisRangeX() + 1) / xAxisLabelInterval);
         var maxLabelWidthX = this.caclulateMaxLabelWidthX();
-        while ((availableWidthPerLabel / maxLabelWidthX) < 1.5) {
+        while ((availableWidthPerLabel / maxLabelWidthX) < 2) {
             xAxisLabelInterval++;
             availableWidthPerLabel = this.graphWidth / ((this.calculateAxisRangeX() + 1) / xAxisLabelInterval);
         }
