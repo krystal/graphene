@@ -1,5 +1,6 @@
 var DISKS_PROPERTIES = {
     "y_axis": {
-        "label_suffix": [[1000, " B/s"], [1000000, " kB/s"]]
+        "base": 2,
+        "label_suffix": [[1024, " B/s"], [1048576, " kB/s"], [1073741824, " mB/s"]]
     }
 };

@@ -14,8 +14,12 @@ class GrapheneHelper {
     return `rgba(${r},${g},${b},${alpha})`;
   };
 
-  calculateFloorPowerOfTen(number) {
-    return Math.pow(10, Math.floor(Math.log10(number)));
+  getBaseLog(x, y) {
+    return Math.log(y) / Math.log(x);
+  }
+
+  calculateFloorPowerOfBase(base, number) {
+    return Math.pow(base, Math.floor(this.getBaseLog(base, number)));
   }
 
   // TODO: find a solution for numbers < 1

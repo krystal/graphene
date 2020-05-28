@@ -153,20 +153,25 @@ class GrapheneLinegraph {
     }
 
     calculateAxisMaxY() {
+        var base = 10;
+        if (this.properties && this.properties.y_axis && this.properties.y_axis.base) {
+            base = this.properties.y_axis.base;
+        }
+    
         var maxY = this.getMaxValueY();
-        var floorPowerOfTen = this.grapheneHelper.calculateFloorPowerOfTen(maxY);
-        var floorPowerOfTenOverTen = floorPowerOfTen / 10;
+        var floorPowerOfBase = this.grapheneHelper.calculateFloorPowerOfBase(base, maxY);
+        var floorPowerOfBaseOverBase = floorPowerOfBase / base;
 
-        var candidateMaxY = floorPowerOfTen;
+        var candidateMaxY = floorPowerOfBase;
         while (maxY > candidateMaxY) {
-            candidateMaxY += floorPowerOfTen;
+            candidateMaxY += floorPowerOfBase;
         }
 
         // in an effort to keep the graph aesthetically pleasing, limit potential blank space at the top to 20%
         if (maxY / candidateMaxY < 0.8) {
-            candidateMaxY = floorPowerOfTen;
+            candidateMaxY = floorPowerOfBase;
             while (maxY > candidateMaxY) {
-                candidateMaxY += floorPowerOfTenOverTen;
+                candidateMaxY += floorPowerOfBaseOverBase;
             }
         }
 
