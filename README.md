@@ -6,17 +6,17 @@ Graphene is a JavaScript powered HTML5 Canvas based graphing library.
 
 Install `graphene` via [NPM](https://www.npmjs.com):
 
-`npm install graphene`
+`npm install krystal-graphene`
 
 ## Usage
 
 Import the graphene library:
 
-`import Graphene from 'graphene'`
+`import GrapheneEngine from 'krystal-graphene'`
 
 Create a new instance of the graphene engine:
 
-`var grapheneEngine = new Graphene();`
+`var grapheneEngine = new GrapheneEngine();`
 
 Then add graphs to it:
 
