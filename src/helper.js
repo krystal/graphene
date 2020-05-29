@@ -24,16 +24,24 @@ class GrapheneHelper {
 
   // TODO: find a solution for numbers < 1
   calculateFactors(number) {
-    var factors = new Array();
-    var limit = Math.round(number / 2);
-
-    for (var i = 1; i <= limit; i++) {
+    var lowerDivisors = new Array();
+    for (var i = 1; i * i <= number; i++) {
       if (number % i == 0) {
-        factors.push(i);
+        lowerDivisors.push(i);
       }
     }
 
-    return factors;
+    var startIndex = lowerDivisors.length - 1;
+    if (lowerDivisors[startIndex] * lowerDivisors[startIndex] == number) {
+      startIndex -= 1;
+    }
+
+    var upperDivisors = new Array();
+    for (var i = startIndex; i >= 0; i--) {
+      upperDivisors.push(number / lowerDivisors[i]);
+    }
+
+    return lowerDivisors.concat(upperDivisors);
   }
 
   getContext(canvas) {
