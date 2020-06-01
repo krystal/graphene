@@ -227,6 +227,7 @@ class GrapheneLinegraph {
             this.fontsInformationSentencesWeight = this.getStyle('--fonts-information-sentences-weight', 'normal');
             this.radiiDataHighlightIndicator = this.getStyle('--radii-data-highlight-indicator', 4);
             this.radiiHighlightIndicator = this.getStyle('--radii-highlight-indicator', 2);
+            this.radiiInformationPanelBorder = this.getStyle('--radii-information-panel-border', 10);
             this.widthsDataHighlightIndicator = this.getStyle('--widths-data-highlight-indicator', 4);
             this.widthsHighlightIndicator = this.getStyle('--widths-highlight-indicator', 2);
         }
@@ -602,7 +603,7 @@ class GrapheneLinegraph {
         }
 
         this.foregroundContext.fillStyle = this.grapheneHelper.hex2rgba(this.coloursInformationPanel, this.alphasInformationPanel);
-        this.foregroundContext.fillRect(panelX, panelY, requiredWidth, requiredHeight);
+        this.grapheneHelper.fillRoundedRect(this.foregroundContext, panelX, panelY, requiredWidth, requiredHeight, parseInt(this.radiiInformationPanelBorder));
 
         var circleOffsetY = panelY + (3 * sentenceHeightApproximation);
         var sentenceOffsetY = panelY + (2 * sentenceHeightApproximation);

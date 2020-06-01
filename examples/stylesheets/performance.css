@@ -32,6 +32,7 @@
 
   --radii-data-highlight-indicator: 4;
   --radii-highlight-indicator: 2;
+  --radii-information-panel-border: 10;
 
   --widths-data: 1.5;
   --widths-data-highlight-indicator: 4;
@@ -70,6 +71,7 @@
 
   --radii-data-highlight-indicator: 4;
   --radii-highlight-indicator: 2;
+  --radii-information-panel-border: 10;
 
   --widths-data: 1;
   --widths-data-highlight-indicator: 4;

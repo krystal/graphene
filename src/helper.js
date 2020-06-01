@@ -56,6 +56,21 @@ class GrapheneHelper {
     context.scale(devicePixelRatio, devicePixelRatio);
     return context;
   }
+
+  fillRoundedRect(context, x, y, w, h, borderRadius) {
+    context.beginPath();
+    context.moveTo(x + borderRadius, y);
+    context.lineTo(x + w - borderRadius, y);
+    context.quadraticCurveTo(x + w, y, x + w, y + borderRadius);
+    context.lineTo(x + w, y + h - borderRadius);
+    context.quadraticCurveTo(x + w, y + h, x + w - borderRadius, y + h);
+    context.lineTo(x + borderRadius, y + h);
+    context.quadraticCurveTo(x, y + h, x, y + h - borderRadius);
+    context.lineTo(x, y + borderRadius);
+    context.quadraticCurveTo(x, y, x + borderRadius, y);
+    context.closePath();
+    context.fill();
+  }
 }
 
 if (typeof module !== "undefined") {
