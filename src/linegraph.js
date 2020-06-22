@@ -369,8 +369,8 @@ class GrapheneLinegraph {
             this.graphHeight = this.graphEndY - this.graphStartY;
         }
 
-        this.leftMargin = maxLabelWidthY * 2;
-        var rightMargin = maxLabelWidthX / 2;
+        var rightMargin = maxLabelWidthX / 1.5;
+        this.leftMargin = Math.max(maxLabelWidthY * 2, rightMargin);
         this.graphStartX = this.leftMargin;
         var graphEndX = this.canvasWidth - rightMargin;
         this.graphWidth = graphEndX - this.graphStartX;
