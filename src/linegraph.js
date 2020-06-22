@@ -243,7 +243,11 @@ class GrapheneLinegraph {
         var cachedAxisMaxX = this.axisMaxX;
         var cachedGraphScaleX = this.graphScaleX;
 
-        this.data = JSON.parse(data);
+        if (typeof data === "string") {
+            this.data = JSON.parse(data);
+        } else {
+            this.data = data;
+        }
         this.properties = properties ? JSON.parse(properties) : this.properties
         this.calculateParameters();
 
@@ -262,7 +266,10 @@ class GrapheneLinegraph {
         var cachedAxisMaxX = this.axisMaxX;
         var cachedGraphScaleX = this.graphScaleX;
 
-        var parsedData = JSON.parse(data);
+        var parsedData = data;
+        if (typeof data === "string") {
+            parsedData = JSON.parse(data);
+        }
         this.data.x = this.data.x.concat(parsedData.x);
         for (var i = 0; i < this.data.y.length; i++) {
             this.data.y[i] = this.data.y[i].concat(parsedData.y[i]);
@@ -285,7 +292,10 @@ class GrapheneLinegraph {
         var cachedAxisMaxX = this.axisMaxX;
         var cachedGraphScaleX = this.graphScaleX;
 
-        var parsedData = JSON.parse(data);
+        var parsedData = data;
+        if (typeof data === "string") {
+            parsedData = JSON.parse(data);
+        }
         this.data.names = this.data.names.concat(parsedData.names);
         this.data.y = this.data.y.concat(parsedData.y);
         this.properties = properties ? JSON.parse(properties) : this.properties
