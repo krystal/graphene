@@ -10,7 +10,7 @@ class GrapheneLinegraph {
         this.userDefinedViewPort = false;
         this.element = element;
         this.createLayers();
-      
+
         this.properties = properties;
         this.data = data;
         this.calculateParameters();
@@ -81,6 +81,13 @@ class GrapheneLinegraph {
         return this.defaultDataColour;
     }
 
+    getDataColourStop(i) {
+        if (this.coloursDataStop && this.coloursDataStop.length > 0) {
+            return this.coloursDataStop[i % this.coloursDataStop.length];
+        }
+        return this.defaultDataColour;
+    }
+
     redraw() {
         this.backgroundContext.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
         this.backgroundContext.fillStyle = this.grapheneHelper.hex2rgba(this.coloursBackground, this.alphasBackground);
@@ -90,8 +97,8 @@ class GrapheneLinegraph {
             this.drawHorizontalLines();
         }
         for (var i = 0; i < this.data.y.length; i++) {
-            this.drawAreaUnderGraph(this.data.y[i], this.getDataColour(i));
-            this.drawGraph(this.data.y[i], this.getDataColour(i));
+            this.drawAreaUnderGraph(this.data.y[i], this.getDataColour(i), this.getDataColourStop(i));
+            this.drawGraph(this.data.y[i], this.getDataColour(i), this.getDataColourStop(i));
         }
         if (this.fontsAxesLabelsSize > 0) {
             this.drawAxisLabels();
@@ -157,7 +164,7 @@ class GrapheneLinegraph {
         if (this.properties && this.properties.y_axis && this.properties.y_axis.base) {
             base = this.properties.y_axis.base;
         }
-    
+
         var maxY = this.getMaxValueY();
         var floorPowerOfBase = this.grapheneHelper.calculateFloorPowerOfBase(base, maxY);
         var floorPowerOfBaseOverBase = floorPowerOfBase / base;
@@ -198,10 +205,16 @@ class GrapheneLinegraph {
         this.coloursBackground = this.getStyle('--colours-background', '#FFFFFF');
         this.coloursDataAxis = this.getStyle('--colours-data-axis', '#E0DEFF');
         this.coloursData = new Array();
+        this.coloursDataStop = new Array();
         // TODO: alter this to continue looking until it can't find a contiguous number, for datasets that are not present at the start
         for (var i = 0; i < this.data.y.length; i++) {
             var colour = this.getStyle('--colours-data-' + i, false);
             if (colour && colour != false) { this.coloursData.push(colour); }
+
+            if (this.graphGradientColour) {
+                var stopColour = this.getStyle('--colours-data-stop-' + i, false);
+                if (stopColour && stopColour != false) { this.coloursDataStop.push(stopColour); }
+            }
         }
         this.fontsAxesLabelsSize = this.getStyle('--fonts-axes-labels-size', 0);
         this.widthsData = this.getStyle('--widths-data', 1);
@@ -256,7 +269,7 @@ class GrapheneLinegraph {
             this.axisMaxX = cachedAxisMaxX;
             this.graphScaleX = cachedGraphScaleX;
         }
-        
+
         this.clearForeground();
         this.redraw();
     }
@@ -282,7 +295,7 @@ class GrapheneLinegraph {
             this.axisMaxX = cachedAxisMaxX;
             this.graphScaleX = cachedGraphScaleX;
         }
-        
+
         this.clearForeground();
         this.redraw();
     }
@@ -306,7 +319,7 @@ class GrapheneLinegraph {
             this.axisMaxX = cachedAxisMaxX;
             this.graphScaleX = cachedGraphScaleX;
         }
-        
+
         this.clearForeground();
         this.redraw();
     }
@@ -372,8 +385,8 @@ class GrapheneLinegraph {
         var rightMargin = maxLabelWidthX / 1.5;
         this.leftMargin = Math.max(maxLabelWidthY * 2, rightMargin);
         this.graphStartX = this.leftMargin;
-        var graphEndX = this.canvasWidth - rightMargin;
-        this.graphWidth = graphEndX - this.graphStartX;
+        this.graphEndX = this.canvasWidth - rightMargin;
+        this.graphWidth = this.graphEndX - this.graphStartX;
         this.graphScaleX = this.calculateGraphScaleX();
         this.graphScaleY = this.graphHeight / this.axisRangeY;
 
@@ -381,7 +394,10 @@ class GrapheneLinegraph {
             this.highLightEnabled = this.properties.flags.highlight_enabled ? true : false;
             this.scrollEnabled = this.properties.flags.scroll_enabled ? true : false;
             this.zoomEnabled = this.properties.flags.zoom_enabled ? true : false;
+            this.graphGradientColour = this.properties.flags.graph_gradient_colour ? true : false;
+            this.graphGradientHorizontal = this.properties.flags.graph_gradient_horizontal ? true : false;
 
+            // TODO: remove this and other foreground checks (graphene adds a foreground layer itself)
             if (!this.foreground) {
                 if (this.highLightEnabled) {
                     console.log("Highlight is disabled, the foreground layer is missing.");
@@ -420,11 +436,40 @@ class GrapheneLinegraph {
         this.backgroundContext.stroke();
     }
 
-    drawAreaUnderGraph(dataset, colour) {
-        var gradient = this.backgroundContext.createLinearGradient(0, this.graphStartY, 0, this.graphEndY);
-        gradient.addColorStop(0, this.grapheneHelper.hex2rgba(colour, this.alphasUnderGraph));
-        gradient.addColorStop(1, this.grapheneHelper.hex2rgba(colour, 0));
-        this.backgroundContext.fillStyle = gradient;
+    createGraphStroke(colour, colourStop, alpha) {
+        var graphStroke = null;
+        if (this.graphGradientHorizontal) {
+            graphStroke = this.backgroundContext.createLinearGradient(this.graphStartX, 0, this.graphEndX, 0);
+            graphStroke.addColorStop(0, this.grapheneHelper.hex2rgba(colour, alpha));
+            if (this.graphGradientColour) {
+                graphStroke.addColorStop(1, this.grapheneHelper.hex2rgba(colourStop, alpha));
+            } else {
+                graphStroke.addColorStop(1, this.grapheneHelper.hex2rgba(colour, 0));
+            }
+        } else {
+            graphStroke = colour;
+        }
+        return graphStroke;
+    }
+
+    createGraphFill(colour, colourStop, alpha) {
+        var graphFill = null;
+        if (this.graphGradientHorizontal) {
+            graphFill = this.backgroundContext.createLinearGradient(this.graphStartX, 0, this.graphEndX, 0);
+        } else {
+            graphFill = this.backgroundContext.createLinearGradient(0, this.graphStartY, 0, this.graphEndY);
+        }
+        graphFill.addColorStop(0, this.grapheneHelper.hex2rgba(colour, alpha));
+        if (this.graphGradientColour) {
+            graphFill.addColorStop(1, this.grapheneHelper.hex2rgba(colourStop, alpha));
+        } else {
+            graphFill.addColorStop(1, this.grapheneHelper.hex2rgba(colour, 0));
+        }
+        return graphFill;
+    }
+
+    drawAreaUnderGraph(dataset, colour, colourStop) {
+        this.backgroundContext.fillStyle = this.createGraphFill(colour, colourStop, this.alphasUnderGraph);
         this.transformDrawingArea();
 
         this.backgroundContext.beginPath();
@@ -453,8 +498,8 @@ class GrapheneLinegraph {
         this.backgroundContext.fill();
     }
 
-    drawGraph(dataset, colour) {
-        this.backgroundContext.strokeStyle = colour;
+    drawGraph(dataset, colour, colourStop) {
+        this.backgroundContext.strokeStyle = this.createGraphStroke(colour, colourStop, 1);
         this.backgroundContext.lineWidth = this.widthsData;
         this.transformDrawingArea();
 
