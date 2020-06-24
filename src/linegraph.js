@@ -704,12 +704,6 @@ class GrapheneLinegraph {
 
     // TODO: consider moving the calculation code in highlight(index) and reserve this method for actual drawing
     drawInformationPanel(index) {
-        // UTODO: make this take in to account u prefixes, suffixes etc
-        var verticalData = this.data.y;
-        if (this.data.u) {
-            verticalData = verticalData.concat(this.data.u);
-        }
-
         this.foregroundContext.textAlign = "left";
         this.foregroundContext.font = this.fontsInformationHeadingWeight + " " + this.fontsInformationHeadingSize + "px " + this.fontsInformationHeadingFamily;
 
@@ -719,8 +713,8 @@ class GrapheneLinegraph {
         var sentenceHeightApproximation = this.foregroundContext.measureText("M").width;
         var maxSentenceWidth = this.foregroundContext.measureText(headingText).width + (2 * sentenceHeightApproximation);
         this.foregroundContext.font = this.fontsInformationSentencesWeight + " " + this.fontsInformationSentencesSize + "px " + this.fontsInformationSentencesFamily;
-        for (var i = 0; i < verticalData.length; i++) {
-            var labelComponents = this.getLabelComponentsY(verticalData[i][this.axisMinX + index]);
+        for (var i = 0; i < this.data.y.length; i++) {
+            var labelComponents = this.getLabelComponentsY(this.data.y[i][this.axisMinX + index]);
             var formattedData = this.grapheneHelper.applyAffix(labelComponents.value, this.getLabelPrefixY(), labelComponents.suffix);
             var sentence = this.data.names[i] + ": " + formattedData;
             // space + circle + space + sentence + space (space and cricle are as wide as a sentence is tall)
@@ -731,9 +725,23 @@ class GrapheneLinegraph {
             sentences.push(sentence);
         }
 
+        if (this.data.u) {
+            for (var i = 0; i < this.data.u.length; i++) {
+                var labelComponents = this.getLabelComponentsU(this.data.u[i][this.axisMinX + index]);
+                var formattedData = this.grapheneHelper.applyAffix(labelComponents.value, this.getLabelPrefixU(), labelComponents.suffix);
+                var sentence = this.data.names[this.data.y.length + i] + ": " + formattedData;
+                // space + circle + space + sentence + space (space and cricle are as wide as a sentence is tall)
+                var sentenceWidth = this.foregroundContext.measureText(sentence).width + (4 * sentenceHeightApproximation);
+                if (sentenceWidth > maxSentenceWidth) {
+                    maxSentenceWidth = sentenceWidth;
+                }
+                sentences.push(sentence);
+            }
+        }
+
         var requiredWidth = maxSentenceWidth;
         // space + sentence + space + sentence + space + ... + sentence + space
-        var requiredHeight = (((verticalData.length + 1) * 2) + 1) * sentenceHeightApproximation;
+        var requiredHeight = (((this.data.y.concat(this.data.u).length + 1) * 2) + 1) * sentenceHeightApproximation;
         var panelX = this.graphStartX + (index * this.graphScaleX) + (2 * sentenceHeightApproximation);
         var panelY = this.graphStartY + (this.graphHeight / 2) - (requiredHeight / 2);
 
@@ -791,7 +799,6 @@ class GrapheneLinegraph {
             for (var i = 0; i < this.data.u.length; i++) {
                 var u = this.data.u[i][this.axisMinX + index];
                 var uValue = this.graphStartY + (-((u * this.graphScaleU) - this.axisMaxY) * this.graphScaleY);
-                console.log(uValue);
                 dataHighlights.push({ x: this.graphStartX + (index * this.graphScaleX), y: uValue });
                 if (uValue < verticalValueMax) {
                     verticalValueMax = uValue;
