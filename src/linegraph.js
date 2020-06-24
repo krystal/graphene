@@ -704,6 +704,11 @@ class GrapheneLinegraph {
 
     // TODO: consider moving the calculation code in highlight(index) and reserve this method for actual drawing
     drawInformationPanel(index) {
+        var verticalData = this.data.y;
+        if (this.data.u) {
+            verticalData = verticalData.concat(this.data.u);
+        }
+
         this.foregroundContext.textAlign = "left";
         this.foregroundContext.font = this.fontsInformationHeadingWeight + " " + this.fontsInformationHeadingSize + "px " + this.fontsInformationHeadingFamily;
 
@@ -741,7 +746,7 @@ class GrapheneLinegraph {
 
         var requiredWidth = maxSentenceWidth;
         // space + sentence + space + sentence + space + ... + sentence + space
-        var requiredHeight = (((this.data.y.concat(this.data.u).length + 1) * 2) + 1) * sentenceHeightApproximation;
+        var requiredHeight = (((verticalData.length + 1) * 2) + 1) * sentenceHeightApproximation;
         var panelX = this.graphStartX + (index * this.graphScaleX) + (2 * sentenceHeightApproximation);
         var panelY = this.graphStartY + (this.graphHeight / 2) - (requiredHeight / 2);
 
