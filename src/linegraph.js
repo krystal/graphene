@@ -771,29 +771,35 @@ class GrapheneLinegraph {
     }
 
     highlight(index) {
-        // UTODO: make this take into account u scale
-        var verticalData = this.data.y;
-        if (this.data.u) {
-            verticalData = verticalData.concat(this.data.u);
-        }
-
         this.clearForeground();
         if (index == -1) { return false; }
 
         var axisHighlight = { x: this.graphStartX + (index * this.graphScaleX), y: this.graphEndY };
         var dataHighlights = new Array();
 
-        var yValueMax = Infinity;
-        for (var i = 0; i < verticalData.length; i++) {
-            var y = verticalData[i][this.axisMinX + index];
+        var verticalValueMax = Infinity;
+        for (var i = 0; i < this.data.y.length; i++) {
+            var y = this.data.y[i][this.axisMinX + index];
             var yValue = this.graphStartY + (-(y - this.axisMaxY) * this.graphScaleY);
             dataHighlights.push({ x: this.graphStartX + (index * this.graphScaleX), y: yValue });
-            if (yValue < yValueMax) {
-                yValueMax = yValue;
+            if (yValue < verticalValueMax) {
+                verticalValueMax = yValue;
             }
         }
 
-        this.drawHighlight(axisHighlight, yValueMax, dataHighlights);
+        if (this.data.u) {
+            for (var i = 0; i < this.data.u.length; i++) {
+                var u = this.data.u[i][this.axisMinX + index];
+                var uValue = this.graphStartY + (-((u * this.graphScaleU) - this.axisMaxY) * this.graphScaleY);
+                console.log(uValue);
+                dataHighlights.push({ x: this.graphStartX + (index * this.graphScaleX), y: uValue });
+                if (uValue < verticalValueMax) {
+                    verticalValueMax = uValue;
+                }
+            }
+        }
+
+        this.drawHighlight(axisHighlight, verticalValueMax, dataHighlights);
         this.drawInformationPanel(index);
         this.mouseMoveIndex = index;
     }
