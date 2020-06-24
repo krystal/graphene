@@ -115,20 +115,21 @@ class GrapheneLinegraph {
         }
     }
 
-    getLabelPrefix() {
+    getLabelPrefixY() {
         if (this.properties && this.properties.y_axis && this.properties.y_axis.label_prefix) {
             return this.properties.y_axis.label_prefix;
         }
         return "";
     }
 
-    getLabelComponents(value) {
-        if (!this.properties || !this.properties.y_axis || !this.properties.y_axis.label_suffix) {
-            return { "value": value, "suffix": "" };
+    getLabelPrefixU() {
+        if (this.properties && this.properties.u_axis && this.properties.u_axis.label_prefix) {
+            return this.properties.u_axis.label_prefix;
         }
+        return "";
+    }
 
-        var labelSuffixArray = this.properties.y_axis.label_suffix;
-
+    getLabelComponents(value, labelSuffixArray) {
         if (labelSuffixArray.length == 1) {
             return { "value": value, "suffix": labelSuffixArray[0][1] };
         }
@@ -148,6 +149,22 @@ class GrapheneLinegraph {
         }
 
         return { "value": value / (lastLimit / lastButOneLimit), "suffix": lastSuffix };
+    }
+
+    getLabelComponentsY(value) {
+        if (!this.properties || !this.properties.y_axis || !this.properties.y_axis.label_suffix) {
+            return { "value": value, "suffix": "" };
+        }
+
+        return this.getLabelComponents(value, this.properties.y_axis.label_suffix);
+    }
+
+    getLabelComponentsU(value) {
+        if (!this.properties || !this.properties.u_axis || !this.properties.u_axis.label_suffix) {
+            return { "value": value, "suffix": "" };
+        }
+
+        return this.getLabelComponents(value, this.properties.u_axis.label_suffix);
     }
 
     calculateAxisRangeX() {
@@ -190,6 +207,7 @@ class GrapheneLinegraph {
 
         var maxY = this.getMaxValueY();
         var maxU = this.getMaxValueU();
+        // UTODO: start calculating an axis max for U too
         this.graphScaleU = maxU != 0 ? maxY / maxU : 1;
         var floorPowerOfBase = this.grapheneHelper.calculateFloorPowerOfBase(base, maxY);
         var floorPowerOfBaseOverBase = floorPowerOfBase / base;
@@ -380,6 +398,7 @@ class GrapheneLinegraph {
 
         var maxLabelWidthX = 0;
         var maxLabelWidthY = 0;
+        var maxLabelWidthU = 0;
         if (this.fontsAxesLabelsSize > 0) {
             this.backgroundContext.font = this.fontsAxesLabelsWeight + " " + this.fontsAxesLabelsSize + "px " + this.fontsAxesLabelsFamily;
             var labelHeightApproximation = this.backgroundContext.measureText("M").width;
@@ -406,10 +425,18 @@ class GrapheneLinegraph {
 
             maxLabelWidthX = this.caclulateMaxLabelWidthX();
             for (var i = this.axisMinY; i <= this.axisMaxY; i += this.labelIntervalY) {
-                var labelComponents = this.getLabelComponents(i);
-                var labelWidth = this.backgroundContext.measureText(this.grapheneHelper.applyAffix(labelComponents.value, this.getLabelPrefix(), labelComponents.suffix)).width;
-                if (labelWidth > maxLabelWidthY) {
-                    maxLabelWidthY = labelWidth;
+                var labelComponentsY = this.getLabelComponentsY(i);
+                var labelWidthY = this.backgroundContext.measureText(this.grapheneHelper.applyAffix(labelComponentsY.value, this.getLabelPrefixY(), labelComponentsY.suffix)).width;
+                if (labelWidthY > maxLabelWidthY) {
+                    maxLabelWidthY = labelWidthY;
+                }
+                
+                if (this.data.u) {
+                    var labelComponentsU = this.getLabelComponentsU(i / this.graphScaleU);
+                    var labelWidthU = this.backgroundContext.measureText(this.grapheneHelper.applyAffix(labelComponentsU.value, this.getLabelPrefixU(), labelComponentsU.suffix)).width;
+                    if (labelWidthU > maxLabelWidthU) {
+                        maxLabelWidthU = labelWidthU;
+                    }
                 }
             }
         } else {
@@ -420,10 +447,11 @@ class GrapheneLinegraph {
             this.graphHeight = this.graphEndY - this.graphStartY;
         }
 
-        var rightMargin = maxLabelWidthX / 1.5;
-        this.leftMargin = Math.max(maxLabelWidthY * 2, rightMargin);
+        var minMargin = maxLabelWidthX / 1.5;
+        this.leftMargin = Math.max(maxLabelWidthY * 2, minMargin);
+        this.rightMargin = Math.max(maxLabelWidthU * 2, minMargin);
         this.graphStartX = this.leftMargin;
-        this.graphEndX = this.canvasWidth - rightMargin;
+        this.graphEndX = this.canvasWidth - this.rightMargin;
         this.graphWidth = this.graphEndX - this.graphStartX;
         this.graphScaleX = this.calculateGraphScaleX();
         this.graphScaleY = this.graphHeight / this.axisRangeY;
@@ -582,7 +610,6 @@ class GrapheneLinegraph {
         return secondValue - firstValue;
     }
 
-    // UTODO: start drawing u axis labels (and making space for them)
     drawAxisLabels() {
         var xAxisLabelInterval = 1;
         var availableWidthPerLabel = this.graphWidth / ((this.calculateAxisRangeX() + 1) / xAxisLabelInterval);
@@ -604,8 +631,13 @@ class GrapheneLinegraph {
         }
 
         for (var i = this.axisMinY; i <= this.axisMaxY; i += this.labelIntervalY) {
-            var labelComponents = this.getLabelComponents(i);
-            this.backgroundContext.fillText(this.grapheneHelper.applyAffix(labelComponents.value, this.getLabelPrefix(), labelComponents.suffix), (this.leftMargin / 2), this.graphEndY - ((i - this.axisMinY) * this.graphScaleY));
+            var labelComponentsY = this.getLabelComponentsY(i);
+            this.backgroundContext.fillText(this.grapheneHelper.applyAffix(labelComponentsY.value, this.getLabelPrefixY(), labelComponentsY.suffix), (this.leftMargin / 2), this.graphEndY - ((i - this.axisMinY) * this.graphScaleY));
+
+            if (this.data.u) {
+                var labelComponentsU = this.getLabelComponentsU(i / this.graphScaleU);
+                this.backgroundContext.fillText(this.grapheneHelper.applyAffix(labelComponentsU.value, this.getLabelPrefixU(), labelComponentsU.suffix), this.graphEndX + (this.rightMargin / 2), this.graphEndY - ((i - this.axisMinY) * this.graphScaleY));
+            }
         }
     }
 
@@ -674,8 +706,8 @@ class GrapheneLinegraph {
         var maxSentenceWidth = this.foregroundContext.measureText(headingText).width + (2 * sentenceHeightApproximation);
         this.foregroundContext.font = this.fontsInformationSentencesWeight + " " + this.fontsInformationSentencesSize + "px " + this.fontsInformationSentencesFamily;
         for (var i = 0; i < verticalData.length; i++) {
-            var labelComponents = this.getLabelComponents(verticalData[i][this.axisMinX + index]);
-            var formattedData = this.grapheneHelper.applyAffix(labelComponents.value, this.getLabelPrefix(), labelComponents.suffix);
+            var labelComponents = this.getLabelComponentsY(verticalData[i][this.axisMinX + index]);
+            var formattedData = this.grapheneHelper.applyAffix(labelComponents.value, this.getLabelPrefixY(), labelComponents.suffix);
             var sentence = this.data.names[i] + ": " + formattedData;
             // space + circle + space + sentence + space (space and cricle are as wide as a sentence is tall)
             var sentenceWidth = this.foregroundContext.measureText(sentence).width + (4 * sentenceHeightApproximation);
