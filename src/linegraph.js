@@ -410,14 +410,22 @@ class GrapheneLinegraph {
             this.graphScaleU = axisMaxU != 0 ? this.axisMaxY / axisMaxU : 1;
         }
         
+        var greatestRadius = 0;
+        if (this.highLightEnabled) {
+            var dataHighlightIndicatorRadius = (parseFloat(this.radiiDataHighlightIndicator) / 2) + parseFloat(this.widthsDataHighlightIndicator);
+            var highlightIndicatorRadius = (parseFloat(this.radiiHighlightIndicator) / 2) + parseFloat(this.widthsHighlightIndicator);
+            greatestRadius = Math.max(dataHighlightIndicatorRadius, highlightIndicatorRadius);
+        }
+        var greatestExtent = Math.max(parseFloat(this.widthsData) / 2, greatestRadius);
+        
         var maxLabelWidthX = 0;
         var maxLabelWidthY = 0;
         var maxLabelWidthU = 0;
         if (this.fontsAxesLabelsSize > 0) {
             this.backgroundContext.font = this.fontsAxesLabelsWeight + " " + this.fontsAxesLabelsSize + "px " + this.fontsAxesLabelsFamily;
             var labelHeightApproximation = this.backgroundContext.measureText("M").width;
-            var topMargin = labelHeightApproximation;
-            this.bottomMargin = labelHeightApproximation * 3;
+            var topMargin = Math.max(labelHeightApproximation, greatestExtent);
+            this.bottomMargin = Math.max(labelHeightApproximation * 3, greatestExtent);
             this.graphStartY = topMargin;
             this.graphEndY = this.canvasHeight - this.bottomMargin;
             this.graphHeight = this.graphEndY - this.graphStartY;
@@ -454,14 +462,14 @@ class GrapheneLinegraph {
                 }
             }
         } else {
-            var topMargin = 0;
-            this.bottomMargin = 0;
+            var topMargin = greatestExtent;
+            this.bottomMargin = greatestExtent;
             this.graphStartY = topMargin;
             this.graphEndY = this.canvasHeight - this.bottomMargin;
             this.graphHeight = this.graphEndY - this.graphStartY;
         }
 
-        var minMargin = maxLabelWidthX / 1.5;
+        var minMargin = Math.max(maxLabelWidthX / 1.5, greatestExtent);
         this.leftMargin = Math.max(maxLabelWidthY * 2, minMargin);
         this.rightMargin = Math.max(maxLabelWidthU * 2, minMargin);
         this.graphStartX = this.leftMargin;
@@ -762,7 +770,7 @@ class GrapheneLinegraph {
         }
 
         this.foregroundContext.fillStyle = this.grapheneHelper.hex2rgba(this.coloursInformationPanel, this.alphasInformationPanel);
-        this.grapheneHelper.fillRoundedRect(this.foregroundContext, panelX, panelY, requiredWidth, requiredHeight, parseInt(this.radiiInformationPanelBorder));
+        this.grapheneHelper.fillRoundedRect(this.foregroundContext, panelX, panelY, requiredWidth, requiredHeight, parseFloat(this.radiiInformationPanelBorder));
 
         var circleOffsetY = panelY + (3 * sentenceHeightApproximation);
         var sentenceOffsetY = panelY + (2 * sentenceHeightApproximation);
