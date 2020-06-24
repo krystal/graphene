@@ -199,33 +199,42 @@ class GrapheneLinegraph {
         return maxU;
     }
 
+    calculateAxisMax(base, max) {
+        var floorPowerOfBase = this.grapheneHelper.calculateFloorPowerOfBase(base, max);
+        var floorPowerOfBaseOverBase = floorPowerOfBase / base;
+
+        var candidateMax = floorPowerOfBase;
+        while (max > candidateMax) {
+            candidateMax += floorPowerOfBase;
+        }
+
+        // in an effort to keep the graph aesthetically pleasing, limit potential blank space at the top to 20%
+        if (max / candidateMax < 0.8) {
+            candidateMax = floorPowerOfBase;
+            while (max > candidateMax) {
+                candidateMax += floorPowerOfBaseOverBase;
+            }
+        }
+
+        return candidateMax;
+    }
+
     calculateAxisMaxY() {
         var base = 10;
         if (this.properties && this.properties.y_axis && this.properties.y_axis.base) {
             base = this.properties.y_axis.base;
         }
 
-        var maxY = this.getMaxValueY();
-        var maxU = this.getMaxValueU();
-        // UTODO: start calculating an axis max for U too
-        this.graphScaleU = maxU != 0 ? maxY / maxU : 1;
-        var floorPowerOfBase = this.grapheneHelper.calculateFloorPowerOfBase(base, maxY);
-        var floorPowerOfBaseOverBase = floorPowerOfBase / base;
+        return this.calculateAxisMax(base, this.getMaxValueY());
+    }
 
-        var candidateMaxY = floorPowerOfBase;
-        while (maxY > candidateMaxY) {
-            candidateMaxY += floorPowerOfBase;
+    calculateAxisMaxU() {
+        var base = 10;
+        if (this.properties && this.properties.u_axis && this.properties.u_axis.base) {
+            base = this.properties.u_axis.base;
         }
-
-        // in an effort to keep the graph aesthetically pleasing, limit potential blank space at the top to 20%
-        if (maxY / candidateMaxY < 0.8) {
-            candidateMaxY = floorPowerOfBase;
-            while (maxY > candidateMaxY) {
-                candidateMaxY += floorPowerOfBaseOverBase;
-            }
-        }
-
-        return candidateMaxY;
+        
+        return this.calculateAxisMax(base, this.getMaxValueU());
     }
 
     getStyle(name, defaultStyle) {
@@ -396,6 +405,11 @@ class GrapheneLinegraph {
         }
         this.axisRangeY = this.axisMaxY - this.axisMinY;
 
+        if (this.data.u) {
+            var axisMaxU = this.calculateAxisMaxU();
+            this.graphScaleU = axisMaxU != 0 ? this.axisMaxY / axisMaxU : 1;
+        }
+        
         var maxLabelWidthX = 0;
         var maxLabelWidthY = 0;
         var maxLabelWidthU = 0;
