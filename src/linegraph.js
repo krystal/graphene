@@ -46,22 +46,18 @@ class GrapheneLinegraph {
         this.canvasHeight = this.background.height;
 
         this.backgroundContext = this.grapheneHelper.getContext(this.background);
-        if (this.foreground) {
-            this.foregroundContext = this.grapheneHelper.getContext(this.foreground);
-        }
+        this.foregroundContext = this.grapheneHelper.getContext(this.foreground);
     }
 
     addMouseEvents() {
         this.cancelMouseMove();
         this.cancelMouseDown();
         this.cancelShiftMouseDown();
-        if (this.foreground) {
-            this.foreground.addEventListener('mousemove', this.handleMouseMove.bind(this), false);
-            this.foreground.addEventListener('mouseleave', this.handleMouseLeave.bind(this), false);
-            this.foreground.addEventListener('mousedown', this.handleMouseDown.bind(this), false);
-            this.foreground.addEventListener('mouseup', this.handleMouseUp.bind(this), false);
-            this.foreground.addEventListener('dblclick', this.handleDoubleClick.bind(this), false);
-        }
+        this.foreground.addEventListener('mousemove', this.handleMouseMove.bind(this), false);
+        this.foreground.addEventListener('mouseleave', this.handleMouseLeave.bind(this), false);
+        this.foreground.addEventListener('mousedown', this.handleMouseDown.bind(this), false);
+        this.foreground.addEventListener('mouseup', this.handleMouseUp.bind(this), false);
+        this.foreground.addEventListener('dblclick', this.handleDoubleClick.bind(this), false);
     }
 
     // TODO: do some refactoring
@@ -420,7 +416,7 @@ class GrapheneLinegraph {
             greatestRadius = Math.max(dataHighlightIndicatorRadius, highlightIndicatorRadius);
         }
         var greatestExtent = Math.max(parseFloat(this.widthsData) / 2, greatestRadius);
-        
+
         this.bottomMargin = greatestExtent;
         this.graphStartY = greatestExtent;
         var maxLabelWidthX = 0;
@@ -450,26 +446,26 @@ class GrapheneLinegraph {
             if (!this.hideVerticalAxes) {
                 var maxLabelsY = Math.round(this.graphHeight / (labelHeightApproximation * 4));
                 var factors = this.grapheneHelper.calculateFactors(this.axisMaxY);
-    
+
                 var factorIndex = 0;
                 var workingInterval = factors[factorIndex];
                 var proposedLabelsY = this.axisRangeY / workingInterval;
-    
+
                 while (proposedLabelsY > maxLabelsY) {
                     factorIndex++;
                     workingInterval = factors[factorIndex];
                     proposedLabelsY = this.axisRangeY / workingInterval;
                 }
-    
+
                 this.labelIntervalY = workingInterval;
-    
+
                 for (var i = this.axisMinY; i <= this.axisMaxY; i += this.labelIntervalY) {
                     var labelComponentsY = this.getLabelComponentsY(i);
                     var labelWidthY = this.backgroundContext.measureText(this.grapheneHelper.applyAffix(labelComponentsY.value, this.getLabelPrefixY(), labelComponentsY.suffix)).width;
                     if (labelWidthY > maxLabelWidthY) {
                         maxLabelWidthY = labelWidthY;
                     }
-    
+
                     if (this.data.u) {
                         var labelComponentsU = this.getLabelComponentsU(i / this.graphScaleU);
                         var labelWidthU = this.backgroundContext.measureText(this.grapheneHelper.applyAffix(labelComponentsU.value, this.getLabelPrefixU(), labelComponentsU.suffix)).width;
@@ -498,19 +494,6 @@ class GrapheneLinegraph {
             this.graphGradientHorizontal = this.properties.flags.graph_gradient_horizontal ? true : false;
             this.hideHorizontalAxis = this.properties.flags.hide_horizontal_axis ? true : false;
             this.hideVerticalAxes = this.properties.flags.hide_vertical_axes ? true : false;
-
-            // TODO: remove this and other foreground checks (graphene adds a foreground layer itself)
-            if (!this.foreground) {
-                if (this.highLightEnabled) {
-                    console.log("Highlight is disabled, the foreground layer is missing.");
-                }
-                if (this.scrollEnabled) {
-                    console.log("Scroll is disabled, the foreground layer is missing.");
-                }
-                if (this.zoomEnabled) {
-                    console.log("Zoom is disabled, the foreground layer is missing.");
-                }
-            }
         } else {
             this.highLightEnabled = false;
             this.scrollEnabled = false;
