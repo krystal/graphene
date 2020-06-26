@@ -73,7 +73,7 @@ class GrapheneHelper {
   }
 
   drawLines(type, context, points) {
-    if (type == 'straight') {
+    if (type == 'lines') {
       for (var i = 0; i < points.length; i += 2) {
         context.lineTo(points[i], points[i + 1]);
       }

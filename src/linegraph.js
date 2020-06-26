@@ -250,15 +250,19 @@ class GrapheneLinegraph {
     }
 
     retrievePropertiesAndStyles() {
-        if (this.properties && this.properties.flags) {
-            this.highLightEnabled = this.properties.flags.highlight_enabled ? true : false;
-            this.scrollEnabled = this.properties.flags.scroll_enabled ? true : false;
-            this.zoomEnabled = this.properties.flags.zoom_enabled ? true : false;
-            this.graphGradientColour = this.properties.flags.graph_gradient_colour ? true : false;
-            this.graphGradientHorizontal = this.properties.flags.graph_gradient_horizontal ? true : false;
-            this.hideHorizontalAxis = this.properties.flags.hide_horizontal_axis ? true : false;
-            this.hideVerticalAxes = this.properties.flags.hide_vertical_axes ? true : false;
+        if (this.properties) {
+            this.graphDrawingMethod = this.properties.graph_drawing_method ? this.properties.graph_drawing_method : 'splines'
+            if (this.properties.flags) {
+                this.highLightEnabled = this.properties.flags.highlight_enabled ? true : false;
+                this.scrollEnabled = this.properties.flags.scroll_enabled ? true : false;
+                this.zoomEnabled = this.properties.flags.zoom_enabled ? true : false;
+                this.graphGradientColour = this.properties.flags.graph_gradient_colour ? true : false;
+                this.graphGradientHorizontal = this.properties.flags.graph_gradient_horizontal ? true : false;
+                this.hideHorizontalAxis = this.properties.flags.hide_horizontal_axis ? true : false;
+                this.hideVerticalAxes = this.properties.flags.hide_vertical_axes ? true : false;
+            }
         } else {
+            this.graphDrawingMethod = 'splines';
             this.highLightEnabled = false;
             this.scrollEnabled = false;
             this.zoomEnabled = false;
@@ -577,7 +581,7 @@ class GrapheneLinegraph {
             points.push(i);
             points.push(dataset[this.axisMinX + i] * scale);
         }
-        this.grapheneHelper.drawLines("splines", this.backgroundContext, points);
+        this.grapheneHelper.drawLines(this.graphDrawingMethod, this.backgroundContext, points);
         this.backgroundContext.lineTo(axisRangeX, this.axisMinY);
 
         this.backgroundContext.restore();
@@ -598,7 +602,7 @@ class GrapheneLinegraph {
             points.push(i);
             points.push(dataset[this.axisMinX + i] * scale);
         }
-        this.grapheneHelper.drawLines("splines", this.backgroundContext, points);
+        this.grapheneHelper.drawLines(this.graphDrawingMethod, this.backgroundContext, points);
 
         this.backgroundContext.restore();
         this.backgroundContext.stroke();
