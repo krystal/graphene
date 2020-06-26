@@ -49,6 +49,10 @@ class GrapheneEngine {
     getGraph(element) {
         return this.graphDictionary[element.id];
     }
+
+    removeGraph(element) {
+        delete this.graphDictionary[element.id];
+    }
 }
 
 if (typeof module !== "undefined") {
