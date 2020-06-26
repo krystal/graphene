@@ -188,7 +188,7 @@ class GrapheneLinegraph {
                 if (y > maxY) { maxY = y; }
             }
         }
-        return maxY;
+        return maxY != 0 ? maxY : 1;
     }
 
     getMaxValueU() {
@@ -201,7 +201,7 @@ class GrapheneLinegraph {
                 }
             }
         }
-        return maxU;
+        return maxU != 0 ? maxU : 1;
     }
 
     calculateAxisMax(base, max) {
