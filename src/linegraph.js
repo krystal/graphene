@@ -13,6 +13,7 @@ class GrapheneLinegraph {
 
         this.properties = properties;
         this.data = data;
+        this.retrievePropertiesAndStyles();
         this.calculateParameters();
 
         this.axisFormatter = axisFormatter;
@@ -65,7 +66,7 @@ class GrapheneLinegraph {
 
     draw() {
         this.drawn = true;
-        this.retrieveStyles();
+        this.retrievePropertiesAndStyles();
         this.calculateParameters();
         this.redraw();
     }
@@ -248,7 +249,25 @@ class GrapheneLinegraph {
         return defaultStyle;
     }
 
-    retrieveStyles() {
+    retrievePropertiesAndStyles() {
+        if (this.properties && this.properties.flags) {
+            this.highLightEnabled = this.properties.flags.highlight_enabled ? true : false;
+            this.scrollEnabled = this.properties.flags.scroll_enabled ? true : false;
+            this.zoomEnabled = this.properties.flags.zoom_enabled ? true : false;
+            this.graphGradientColour = this.properties.flags.graph_gradient_colour ? true : false;
+            this.graphGradientHorizontal = this.properties.flags.graph_gradient_horizontal ? true : false;
+            this.hideHorizontalAxis = this.properties.flags.hide_horizontal_axis ? true : false;
+            this.hideVerticalAxes = this.properties.flags.hide_vertical_axes ? true : false;
+        } else {
+            this.highLightEnabled = false;
+            this.scrollEnabled = false;
+            this.zoomEnabled = false;
+            this.graphGradientColour = false;
+            this.graphGradientHorizontal = false;
+            this.hideHorizontalAxis = false;
+            this.hideVerticalAxes = false;
+        }
+
         var verticalData = this.data.y;
         if (this.data.u) {
             verticalData = verticalData.concat(this.data.u);
@@ -485,24 +504,6 @@ class GrapheneLinegraph {
         this.graphWidth = this.graphEndX - this.graphStartX;
         this.graphScaleX = this.calculateGraphScaleX();
         this.graphScaleY = this.graphHeight / this.axisRangeY;
-
-        if (this.properties && this.properties.flags) {
-            this.highLightEnabled = this.properties.flags.highlight_enabled ? true : false;
-            this.scrollEnabled = this.properties.flags.scroll_enabled ? true : false;
-            this.zoomEnabled = this.properties.flags.zoom_enabled ? true : false;
-            this.graphGradientColour = this.properties.flags.graph_gradient_colour ? true : false;
-            this.graphGradientHorizontal = this.properties.flags.graph_gradient_horizontal ? true : false;
-            this.hideHorizontalAxis = this.properties.flags.hide_horizontal_axis ? true : false;
-            this.hideVerticalAxes = this.properties.flags.hide_vertical_axes ? true : false;
-        } else {
-            this.highLightEnabled = false;
-            this.scrollEnabled = false;
-            this.zoomEnabled = false;
-            this.graphGradientColour = false;
-            this.graphGradientHorizontal = false;
-            this.hideHorizontalAxis = false;
-            this.hideVerticalAxes = false;
-        }
     }
 
     transformDrawingArea() {
