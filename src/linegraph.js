@@ -572,20 +572,12 @@ class GrapheneLinegraph {
 
         var axisRangeX = this.calculateAxisRangeX();
         if (axisRangeX > 0) { this.backgroundContext.lineTo(0, dataset[this.axisMinX] * scale); }
-        for (var i = 0; i < axisRangeX; i++) {
-            var x0 = i;
-            var x1 = i + 1;
-            var y0 = dataset[this.axisMinX + i] * scale;
-            var y1 = dataset[this.axisMinX + i + 1] * scale;
-            var midPointX = (x0 + x1) / 2;
-            var midPointY = (y0 + y1) / 2;
-            var controlPointX1 = (midPointX + x0) / 2;
-            var controlPointX2 = (midPointX + x1) / 2;
-
-            this.backgroundContext.quadraticCurveTo(controlPointX1, y0, midPointX, midPointY);
-            this.backgroundContext.quadraticCurveTo(controlPointX2, y1, x1, y1);
+        var points = new Array();
+        for (var i = 0; i <= axisRangeX; i++) {
+            points.push(i);
+            points.push(dataset[this.axisMinX + i] * scale);
         }
-
+        this.grapheneHelper.drawLines("splines", this.backgroundContext, points);
         this.backgroundContext.lineTo(axisRangeX, this.axisMinY);
 
         this.backgroundContext.restore();
@@ -601,19 +593,12 @@ class GrapheneLinegraph {
 
         var axisRangeX = this.calculateAxisRangeX();
         if (axisRangeX > 0) { this.backgroundContext.moveTo(0, dataset[this.axisMinX] * scale); }
-        for (var i = 0; i < axisRangeX; i++) {
-            var x0 = i;
-            var x1 = i + 1;
-            var y0 = dataset[this.axisMinX + i] * scale;
-            var y1 = dataset[this.axisMinX + i + 1] * scale;
-            var midPointX = (x0 + x1) / 2;
-            var midPointY = (y0 + y1) / 2;
-            var controlPointX1 = (midPointX + x0) / 2;
-            var controlPointX2 = (midPointX + x1) / 2;
-
-            this.backgroundContext.quadraticCurveTo(controlPointX1, y0, midPointX, midPointY);
-            this.backgroundContext.quadraticCurveTo(controlPointX2, y1, x1, y1);
+        var points = new Array();
+        for (var i = 0; i <= axisRangeX; i++) {
+            points.push(i);
+            points.push(dataset[this.axisMinX + i] * scale);
         }
+        this.grapheneHelper.drawLines("splines", this.backgroundContext, points);
 
         this.backgroundContext.restore();
         this.backgroundContext.stroke();
