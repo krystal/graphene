@@ -23,17 +23,13 @@ class GrapheneLinegraph {
     }
 
     createLayers() {
-        if (this.background) {
-            this.element.removeChild(this.background);
-        }
+        this.removeLayers();
+        
         this.background = document.createElement('CANVAS');
         this.background.width = this.element.getBoundingClientRect().width;
         this.background.height = this.element.getAttribute('height');
         this.element.appendChild(this.background);
 
-        if (this.foreground) {
-            this.element.removeChild(this.foreground);
-        }
         this.foreground = document.createElement("CANVAS");
         this.foreground.width = this.element.getBoundingClientRect().width
         this.foreground.height = this.element.getAttribute('height');
@@ -48,6 +44,15 @@ class GrapheneLinegraph {
 
         this.backgroundContext = this.grapheneHelper.getContext(this.background);
         this.foregroundContext = this.grapheneHelper.getContext(this.foreground);
+    }
+
+    removeLayers() {
+        if (this.background) {
+            this.element.removeChild(this.background);
+        }
+        if (this.foreground) {
+            this.element.removeChild(this.foreground);
+        }
     }
 
     addMouseEvents() {

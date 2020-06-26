@@ -51,6 +51,8 @@ class GrapheneEngine {
     }
 
     removeGraph(element) {
+        var graph = this.getGraph(element);
+        graph.removeLayers();
         delete this.graphDictionary[element.id];
     }
 }
