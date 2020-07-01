@@ -103,6 +103,9 @@ class GrapheneLinegraph {
             var dataColourStop = this.getDataColourStop(i);
             this.drawAreaUnderGraph(this.data.y[i], dataColour, dataColourStop, 1);
             this.drawGraph(this.data.y[i], dataColour, dataColourStop, 1);
+            if (this.showDataPoints) {
+                this.drawDataPoints(this.data.y[i], 1);
+            }
         }
         if (this.data.u) {
             for (var i = 0; i < this.data.u.length; i++) {
@@ -110,6 +113,9 @@ class GrapheneLinegraph {
                 var dataColourStop = this.getDataColourStop(this.data.y.length + i);
                 this.drawAreaUnderGraph(this.data.u[i], dataColour, dataColourStop, this.graphScaleU);
                 this.drawGraph(this.data.u[i], dataColour, dataColourStop, this.graphScaleU);
+                if (this.showDataPoints) {
+                    this.drawDataPoints(this.data.y[i], this.graphScaleU);
+                }
             }
         }
         if (!this.hideHorizontalAxis) {
@@ -254,6 +260,7 @@ class GrapheneLinegraph {
         return defaultStyle;
     }
 
+    // TODO: review the default values so that a graph with no styles looks OKish
     retrievePropertiesAndStyles() {
         if (this.properties) {
             this.graphDrawingMethod = this.properties.graph_drawing_method ? this.properties.graph_drawing_method : 'splines'
@@ -265,6 +272,7 @@ class GrapheneLinegraph {
                 this.graphGradientHorizontal = this.properties.flags.graph_gradient_horizontal ? true : false;
                 this.hideHorizontalAxis = this.properties.flags.hide_horizontal_axis ? true : false;
                 this.hideVerticalAxes = this.properties.flags.hide_vertical_axes ? true : false;
+                this.showDataPoints = this.properties.flags.show_data_points ? true : false;
             }
         } else {
             this.graphDrawingMethod = 'splines';
@@ -332,6 +340,14 @@ class GrapheneLinegraph {
         if (this.zoomEnabled) {
             this.alphasSelectionBox = this.getStyle('--alphas-selection-box', 0.25);
             this.coloursSelectionBox = this.getStyle('--colours-selection-box', '#0000FF');
+        }
+
+        if (this.showDataPoints) {
+            this.alphasDataPoint = this.getStyle('--alphas-data-point', 0.25);
+            this.coloursDataPointInner = this.getStyle('--colours-data-point-inner', '#FF0000');
+            this.coloursDataPointOuter = this.getStyle('--colours-data-point-outer', '#0000FF');
+            this.radiiDataPoint = this.getStyle('--radii-data-point', 2);
+            this.widthsDataPoint = this.getStyle('--widths-data-point', 4);
         }
     }
 
@@ -442,6 +458,10 @@ class GrapheneLinegraph {
             var dataHighlightIndicatorRadius = (parseFloat(this.radiiDataHighlightIndicator) / 2) + parseFloat(this.widthsDataHighlightIndicator);
             var highlightIndicatorRadius = (parseFloat(this.radiiHighlightIndicator) / 2) + parseFloat(this.widthsHighlightIndicator);
             greatestRadius = Math.max(dataHighlightIndicatorRadius, highlightIndicatorRadius);
+        }
+        if (this.showDataPoints) {
+            var dataPointRadius = parseFloat(this.radiiDataPoint) + (parseFloat(this.widthsDataPoint) / 2);
+            greatestRadius = Math.max(dataPointRadius, greatestRadius);
         }
         var greatestExtent = Math.max(parseFloat(this.widthsData) / 2, greatestRadius);
 
@@ -611,6 +631,30 @@ class GrapheneLinegraph {
 
         this.backgroundContext.restore();
         this.backgroundContext.stroke();
+    }
+
+    drawDataPoints(dataset, scale) {
+        this.backgroundContext.strokeStyle = this.grapheneHelper.hex2rgba(this.coloursDataPointOuter, this.alphasDataPoint);
+        this.backgroundContext.lineWidth = this.widthsDataPoint;
+        this.backgroundContext.fillStyle = this.coloursDataPointInner;
+
+        var axisRangeX = this.calculateAxisRangeX();
+        var points = new Array();
+        for (var i = 0; i <= axisRangeX; i++) {
+            points.push(i);
+            points.push(dataset[this.axisMinX + i] * scale);
+        }
+
+        for (var i = 0; i < points.length; i += 2) {
+            var xValue = this.graphStartX + (points[i] * this.graphScaleX)
+            var yValue = this.graphStartY + (-(points[i + 1] - this.axisMaxY) * this.graphScaleY);
+
+            this.backgroundContext.beginPath();
+            this.backgroundContext.arc(xValue, yValue, this.radiiDataPoint, 0, 2 * Math.PI);
+            this.backgroundContext.closePath();
+            this.backgroundContext.stroke();
+            this.backgroundContext.fill();
+        }
     }
 
     caclulateMaxLabelWidthX() {
