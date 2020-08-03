@@ -1,3 +1,5 @@
+const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
 var grapheneEngine = null;
 var linegraph = null;
 
@@ -55,9 +57,22 @@ function loadGraphs() {
 }
 
 function axisFormatter(value, interval) {
-    const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
     var date = new Date(value);
-    return months[date.getUTCMonth()];
+    var hours = date.getUTCHours();
+    var minutes = date.getUTCMinutes();
+    var day = date.getUTCDate();
+    var month = months[date.getUTCMonth()];
+    var year = date.getUTCFullYear();
+
+    if (interval < 86400000) { // 24 hours
+        return hours.toString().padStart(2, "0") + ":" + minutes.toString().padStart(2, "0");
+    } else if (interval < 2678400000) { // 31 days
+        return day + " " + month;
+    } else if (interval < 31536000000) { // 365 days
+        return month + " " + year;
+    } else {
+        return year;
+    }
 }
 
 function informationFormatter(value, interval) {
