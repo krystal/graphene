@@ -24,7 +24,7 @@ class GrapheneLinegraph {
 
     createLayers() {
         this.removeLayers();
-        
+
         this.background = document.createElement('CANVAS');
         this.background.width = this.element.getBoundingClientRect().width;
         this.background.height = this.element.getAttribute('height');
@@ -526,8 +526,8 @@ class GrapheneLinegraph {
         }
 
         var minMargin = Math.max(maxLabelWidthX / 1.5, greatestExtent);
-        this.leftMargin = Math.max(maxLabelWidthY * 2, minMargin);
-        this.rightMargin = Math.max(maxLabelWidthU * 2, minMargin);
+        this.leftMargin = Math.max(maxLabelWidthY + (2 * this.fontsAxesLabelsSize), minMargin);
+        this.rightMargin = Math.max(maxLabelWidthU + (2 * this.fontsAxesLabelsSize), minMargin);
         this.graphStartX = this.leftMargin;
         this.graphEndX = this.canvasWidth - this.rightMargin;
         this.graphWidth = this.graphEndX - this.graphStartX;
