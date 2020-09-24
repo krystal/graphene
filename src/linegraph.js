@@ -13,7 +13,7 @@ class GrapheneLinegraph {
 
         this.properties = properties;
         this.data = data;
-        this.retrievePropertiesAndStyles();
+        this.retrieveSettings();
         this.calculateParameters();
 
         this.axisFormatter = axisFormatter;
@@ -71,7 +71,7 @@ class GrapheneLinegraph {
 
     draw() {
         this.drawn = true;
-        this.retrievePropertiesAndStyles();
+        this.retrieveSettings();
         this.calculateParameters();
         this.redraw();
     }
@@ -261,7 +261,7 @@ class GrapheneLinegraph {
     }
 
     // TODO: review the default values so that a graph with no styles looks OKish
-    retrievePropertiesAndStyles() {
+    retrieveSettings() {
         if (this.properties) {
             this.graphDrawingMethod = this.properties.graph_drawing_method ? this.properties.graph_drawing_method : 'splines'
             if (this.properties.flags) {
@@ -283,6 +283,12 @@ class GrapheneLinegraph {
             this.graphGradientHorizontal = false;
             this.hideHorizontalAxis = false;
             this.hideVerticalAxes = false;
+        }
+
+        if (Array.isArray(this.data.names)) {
+            this.dataNames = this.data.names;
+        } else {
+            this.dataNames = this.data.names.y.concat(this.data.names.u);
         }
 
         var verticalData = this.data.y;
@@ -414,10 +420,28 @@ class GrapheneLinegraph {
         if (typeof data === "string") {
             parsedData = JSON.parse(data);
         }
-        this.data.names = this.data.names.concat(parsedData.names);
-        this.data.y = this.data.y.concat(parsedData.y);
+        if (Array.isArray(this.data.names)) {
+            this.data.names = this.data.names.concat(parsedData.names);
+            this.dataNames = this.data.names;
+        } else {
+            this.data.names.y = this.data.names.y.concat(parsedData.names.y);
+            if (this.data.names.u) {
+                this.data.names.u = this.data.names.u.concat(parsedData.names.u);
+            } else {
+                this.data.names.u = parsedData.names.u;
+            }
+            this.dataNames = this.data.names.y.concat(this.data.names.u);
+        }
+        if (parsedData.y) {
+            this.data.y = this.data.y.concat(parsedData.y);
+        }
         if (parsedData.u) {
-            this.data.u = this.data.u.concat(parsedData.u);
+            if (this.data.u) {
+                this.data.u = this.data.u.concat(parsedData.u);
+            } else {
+                this.data.u = parsedData.u;
+            }
+            this.retrieveSettings();
         }
         this.properties = properties ? JSON.parse(properties) : this.properties
         this.calculateParameters();
@@ -780,7 +804,7 @@ class GrapheneLinegraph {
         for (var i = 0; i < this.data.y.length; i++) {
             var labelComponents = this.getLabelComponentsY(this.data.y[i][this.axisMinX + index]);
             var formattedData = this.grapheneHelper.applyAffix(labelComponents.value, this.getLabelPrefixY(), labelComponents.suffix);
-            var sentence = this.data.names[i] + ": " + formattedData;
+            var sentence = this.dataNames[i] + ": " + formattedData;
             // space + circle + space + sentence + space (space and cricle are as wide as a sentence is tall)
             var sentenceWidth = this.foregroundContext.measureText(sentence).width + (4 * sentenceHeightApproximation);
             if (sentenceWidth > maxSentenceWidth) {
@@ -793,7 +817,7 @@ class GrapheneLinegraph {
             for (var i = 0; i < this.data.u.length; i++) {
                 var labelComponents = this.getLabelComponentsU(this.data.u[i][this.axisMinX + index]);
                 var formattedData = this.grapheneHelper.applyAffix(labelComponents.value, this.getLabelPrefixU(), labelComponents.suffix);
-                var sentence = this.data.names[this.data.y.length + i] + ": " + formattedData;
+                var sentence = this.dataNames[this.data.y.length + i] + ": " + formattedData;
                 // space + circle + space + sentence + space (space and cricle are as wide as a sentence is tall)
                 var sentenceWidth = this.foregroundContext.measureText(sentence).width + (4 * sentenceHeightApproximation);
                 if (sentenceWidth > maxSentenceWidth) {
