@@ -140,6 +140,13 @@ class GrapheneLinegraph {
         return "";
     }
 
+    getDecimalPlacesU() {
+        if (this.properties && this.properties.u_axis && this.properties.u_axis.decimal_places) {
+            return this.properties.u_axis.decimal_places;
+        }
+        return 0;
+    }
+
     getLabelComponents(value, labelSuffixArray) {
         if (labelSuffixArray.length == 1) {
             return { "value": value, "suffix": labelSuffixArray[0][1] };
@@ -732,7 +739,8 @@ class GrapheneLinegraph {
             this.backgroundContext.fillText(this.grapheneHelper.applyAffix(labelComponentsY.value, this.getLabelPrefixY(), labelComponentsY.suffix), (this.leftMargin / 2), this.graphEndY - ((i - this.axisMinY) * this.graphScaleY));
 
             if (this.data.u) {
-                var labelComponentsU = this.getLabelComponentsU(i / this.graphScaleU);
+                var labelValueU = +(i / this.graphScaleU).toFixed(this.getDecimalPlacesU());
+                var labelComponentsU = this.getLabelComponentsU(labelValueU);
                 this.backgroundContext.fillText(this.grapheneHelper.applyAffix(labelComponentsU.value, this.getLabelPrefixU(), labelComponentsU.suffix), this.graphEndX + (this.rightMargin / 2), this.graphEndY - ((i - this.axisMinY) * this.graphScaleY));
             }
         }
