@@ -734,14 +734,40 @@ class GrapheneLinegraph {
         this.backgroundContext.textAlign = "center";
         this.backgroundContext.textBaseline = "middle";
 
+        let labelValueIndexMap = new Map();
+        let indexLabelMap = new Map();
+
+        if (this.data.u) {
+            for (var i = this.axisMinY; i <= this.axisMaxY; i += this.labelIntervalY) {
+                var valueU = i / this.graphScaleU;
+                var labelValueU = +valueU.toFixed(this.getDecimalPlacesU());
+
+                if (!labelValueIndexMap.has(labelValueU)) {
+                    labelValueIndexMap.set(labelValueU, new Array());
+                }
+                labelValueIndexMap.get(labelValueU).push({ value: Math.abs(labelValueU - valueU), index: i });
+            }
+
+            for (let key of labelValueIndexMap.keys()) {
+                let array = labelValueIndexMap.get(key);
+
+                array.sort(function (a, b) {
+                    return a.value - b.value;
+                });
+
+                indexLabelMap.set(array[0].index, key);
+            }
+        }
+
         for (var i = this.axisMinY; i <= this.axisMaxY; i += this.labelIntervalY) {
             var labelComponentsY = this.getLabelComponentsY(i);
             this.backgroundContext.fillText(this.grapheneHelper.applyAffix(labelComponentsY.value, this.getLabelPrefixY(), labelComponentsY.suffix), (this.leftMargin / 2), this.graphEndY - ((i - this.axisMinY) * this.graphScaleY));
 
             if (this.data.u) {
-                var labelValueU = +(i / this.graphScaleU).toFixed(this.getDecimalPlacesU());
-                var labelComponentsU = this.getLabelComponentsU(labelValueU);
-                this.backgroundContext.fillText(this.grapheneHelper.applyAffix(labelComponentsU.value, this.getLabelPrefixU(), labelComponentsU.suffix), this.graphEndX + (this.rightMargin / 2), this.graphEndY - ((i - this.axisMinY) * this.graphScaleY));
+                if (indexLabelMap.has(i)) {
+                    var labelComponentsU = this.getLabelComponentsU(indexLabelMap.get(i));
+                    this.backgroundContext.fillText(this.grapheneHelper.applyAffix(labelComponentsU.value, this.getLabelPrefixU(), labelComponentsU.suffix), this.graphEndX + (this.rightMargin / 2), this.graphEndY - ((i - this.axisMinY) * this.graphScaleY));
+                }
             }
         }
     }
