@@ -723,7 +723,11 @@ class GrapheneLinegraph {
 
         for (var i = 0; i <= this.calculateAxisRangeX(); i += xAxisLabelInterval) {
             var xValue = this.data.x[this.axisMinX + i];
-            var xText = this.axisFormatter ? this.axisFormatter(xValue, this.calculateAxisInterval(xAxisLabelInterval)) : xValue;
+            var xText = xValue;
+            if (this.axisFormatter) {
+                xValue = isNaN(xValue) ? 0 : xValue;
+                xText = this.axisFormatter(xValue, this.calculateAxisInterval(xAxisLabelInterval));
+            }
             this.backgroundContext.fillText(xText, this.graphStartX + (i * this.graphScaleX), this.graphEndY + (this.bottomMargin / 2));
         }
     }
@@ -740,6 +744,7 @@ class GrapheneLinegraph {
         if (this.data.u) {
             for (var i = this.axisMinY; i <= this.axisMaxY; i += this.labelIntervalY) {
                 var valueU = i / this.graphScaleU;
+                valueU = isNaN(valueU) ? 0 : valueU;
                 var labelValueU = +valueU.toFixed(this.getDecimalPlacesU());
 
                 if (!labelValueIndexMap.has(labelValueU)) {
@@ -830,13 +835,19 @@ class GrapheneLinegraph {
         this.foregroundContext.font = this.fontsInformationHeadingWeight + " " + this.fontsInformationHeadingSize + "px " + this.fontsInformationHeadingFamily;
 
         var headingValue = this.data.x[this.axisMinX + index];
-        var headingText = this.informationFormatter ? this.informationFormatter(headingValue) : headingValue;
+        var headingText = headingValue;
+        if (this.informationFormatter) {
+            headingValue = isNaN(headingValue) ? 0 : headingValue;
+            headingText = this.informationFormatter(headingValue);
+        }
         var sentences = new Array();
         var sentenceHeightApproximation = this.foregroundContext.measureText("M").width;
         var maxSentenceWidth = this.foregroundContext.measureText(headingText).width + (2 * sentenceHeightApproximation);
         this.foregroundContext.font = this.fontsInformationSentencesWeight + " " + this.fontsInformationSentencesSize + "px " + this.fontsInformationSentencesFamily;
         for (var i = 0; i < this.data.y.length; i++) {
-            var labelComponents = this.getLabelComponentsY(this.data.y[i][this.axisMinX + index]);
+            var yValue = this.data.y[i][this.axisMinX + index];
+            yValue = isNaN(yValue) ? 0 : yValue;
+            var labelComponents = this.getLabelComponentsY(yValue);
             var formattedData = this.grapheneHelper.applyAffix(labelComponents.value, this.getLabelPrefixY(), labelComponents.suffix);
             var sentence = this.dataNames[i] + ": " + formattedData;
             // space + circle + space + sentence + space (space and cricle are as wide as a sentence is tall)
@@ -849,7 +860,9 @@ class GrapheneLinegraph {
 
         if (this.data.u) {
             for (var i = 0; i < this.data.u.length; i++) {
-                var labelComponents = this.getLabelComponentsU(this.data.u[i][this.axisMinX + index]);
+                var uValue = this.data.u[i][this.axisMinX + index];
+                uValue = isNaN(uValue) ? 0 : uValue;
+                var labelComponents = this.getLabelComponentsU(uValue);
                 var formattedData = this.grapheneHelper.applyAffix(labelComponents.value, this.getLabelPrefixU(), labelComponents.suffix);
                 var sentence = this.dataNames[this.data.y.length + i] + ": " + formattedData;
                 // space + circle + space + sentence + space (space and cricle are as wide as a sentence is tall)
