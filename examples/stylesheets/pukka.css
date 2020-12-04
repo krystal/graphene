@@ -18,7 +18,9 @@
   --fonts-key-labels-size: 18;
   --fonts-key-labels-weight: normal;
 
-  --widths-border: 12;
+  --radii-segment-centre-multiplier: 0.33;
+
+  --widths-segment-border-multiplier: 0.005;
 }
 
 .graph {

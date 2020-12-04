@@ -18,6 +18,7 @@ class GraphenePiegraph {
     this.addMouseEvents();
   }
 
+  // TODO: remove the hard coded placement (from the centre) of graph labels
   // TODO: investigate pies getting larger than smaller when resizing (it may be a quirk of the way that the space for the key is allocated)
   // TODO: review the implementation of the horizontal margin
   // TODO: when available graph width > height centre the graph horizontally
@@ -155,7 +156,8 @@ class GraphenePiegraph {
     this.fontsKeyLabelsSize = this.getStyle('--fonts-key-labels-size', 18);
     this.fontsKeyLabelsWeight = this.getStyle('--fonts-key-labels-weight', 'normal');
 
-    this.widthsBorder = this.getStyle('--widths-border', 12);
+    this.radiiSegmentCentreMultiplier = this.getStyle('--radii-segment-centre-multiplier', 1 / Number.MAX_SAFE_INTEGER);
+    this.widthsSegmentBorderMultiplier = this.getStyle('--widths-segment-border-multiplier', 1 / Number.MAX_SAFE_INTEGER);
   }
 
   calculateParameters() {
@@ -195,9 +197,11 @@ class GraphenePiegraph {
     // start at up rather than right
     var angleOffset = -0.5 * Math.PI;
     var cumulativeAngle = 0;
+    var graphCircumference = 2 * Math.PI * this.graphWidth;
+    var graphRadius = this.graphWidth / 2;
 
     this.backgroundContext.strokeStyle = this.coloursBackground;
-    this.backgroundContext.lineWidth = this.widthsBorder;
+    this.backgroundContext.lineWidth = graphCircumference * this.widthsSegmentBorderMultiplier;
 
     var total = this.data.values.reduce((a, b) => a + b, 0);
     for (var i = 0; i < this.data.values.length; i++) {
@@ -211,12 +215,12 @@ class GraphenePiegraph {
       this.backgroundContext.translate(this.graphCentreX, this.graphCentreY);
       this.backgroundContext.rotate(angleOffset);
       this.backgroundContext.rotate(cumulativeAngle);
-      this.backgroundContext.moveTo(this.graphWidth / 2 / 3, 0);
-      this.backgroundContext.lineTo(this.graphWidth / 2, 0);
-      this.backgroundContext.arc(0, 0, this.graphWidth / 2, 0, segmentAngle);
+      this.backgroundContext.moveTo(graphRadius * this.radiiSegmentCentreMultiplier, 0);
+      this.backgroundContext.lineTo(graphRadius, 0);
+      this.backgroundContext.arc(0, 0, graphRadius, 0, segmentAngle);
       this.backgroundContext.rotate(segmentAngle);
-      this.backgroundContext.lineTo(this.graphWidth / 2, 0);
-      this.backgroundContext.arc(0, 0, this.graphWidth / 2 / 3, 0, -segmentAngle, true);
+      this.backgroundContext.lineTo(graphRadius, 0);
+      this.backgroundContext.arc(0, 0, graphRadius * this.radiiSegmentCentreMultiplier, 0, -segmentAngle, true);
 
       this.backgroundContext.closePath();
 
