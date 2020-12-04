@@ -21,10 +21,7 @@ class GraphenePiegraph {
   // TODO: investigate pies getting larger than smaller when resizing (it may be a quirk of the way that the space for the key is allocated)
   // TODO: review the implementation of the horizontal margin
   // TODO: when available graph width > height centre the graph horizontally
-  // TODO: add property parsing
-  // TODO: add a flag in properties for displaying the percentage rather than the value
-  // TODO: add a property for decimal places in percentages
-  // TODO: allow the key to be placed at the top, left, right or bottom of the graph
+  // TODO: allow the key to be placed at the top, left, right or bottom of the graph (for now, at least turn it off by default)
   // TODO: parameterise more things in properties
   // TODO: warn about key clipping
   // TODO: stop drawing graph labels when there isn't enough space
@@ -87,6 +84,42 @@ class GraphenePiegraph {
     this.drawGraph();
     this.drawGraphLabels();
     this.drawKey();
+  }
+
+  getSegmentsLabelFormatIsPercentage() {
+    if (this.properties && this.properties.segments && this.properties.segments.label && this.properties.segments.label.format) {
+      return this.properties.segments.label.format == 'percentage';
+    }
+    return false;
+  }
+
+  getSegmentsLabelDecimalPlaces() {
+    if (this.properties && this.properties.segments && this.properties.segments.label && this.properties.segments.label.decimal_places) {
+      return this.properties.segments.label.decimal_places;
+    }
+    return 0;
+  }
+
+  getSegmentsLabelPrefix() {
+    if (this.properties && this.properties.segments && this.properties.segments.label) {
+      if (this.properties.segments.label.format && this.properties.segments.label.format == 'percentage') {
+        return "";
+      } else if (this.properties.segments.label.prefix) {
+        return this.properties.segments.label.prefix;
+      }
+    }
+    return "";
+  }
+
+  getSegmentsLabelSuffix() {
+    if (this.properties && this.properties.segments && this.properties.segments.label) {
+      if (this.properties.segments.label.format && this.properties.segments.label.format == 'percentage') {
+        return "%";
+      } else if (this.properties.segments.label.suffix) {
+        return this.properties.segments.label.suffix;
+      }
+    }
+    return "";
   }
 
   getStyle(name, defaultStyle) {
@@ -210,14 +243,19 @@ class GraphenePiegraph {
 
     var total = this.data.values.reduce((a, b) => a + b, 0);
     for (var i = 0; i < this.data.values.length; i++) {
-      var segmentRatio = this.data.values[i] / total;
+      var segmentValue = this.data.values[i];
+      var segmentRatio = segmentValue / total;
       var segmentAngle = (segmentRatio) * 2 * Math.PI;
-      var segmentPercentage = segmentAngle * 100;
+      var segmentPercentage = segmentRatio * 100;
+
+      var value = this.getSegmentsLabelFormatIsPercentage() ? segmentPercentage : segmentValue;
+      var labelValue = +value.toFixed(this.getSegmentsLabelDecimalPlaces());
+      var labelText = this.grapheneHelper.applyAffix(labelValue, this.getSegmentsLabelPrefix(), this.getSegmentsLabelSuffix());
 
       var segmentCentreAngle = angleOffset + cumulativeAngle + (segmentAngle / 2);
       var labelX = (this.graphWidth / 3) * Math.cos(segmentCentreAngle);
       var labelY = (this.graphWidth / 3) * Math.sin(segmentCentreAngle);
-      this.backgroundContext.fillText(segmentPercentage, labelX, labelY);
+      this.backgroundContext.fillText(labelText, labelX, labelY);
 
       cumulativeAngle += segmentAngle;
     }

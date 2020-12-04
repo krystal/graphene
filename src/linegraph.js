@@ -31,7 +31,7 @@ class GrapheneLinegraph {
         this.element.appendChild(this.background);
 
         this.foreground = document.createElement("CANVAS");
-        this.foreground.width = this.element.getBoundingClientRect().width
+        this.foreground.width = this.element.getBoundingClientRect().width;
         this.foreground.height = this.element.getAttribute('height');
         this.foreground.style.position = 'absolute';
         this.foreground.style.left = 0;
@@ -270,7 +270,7 @@ class GrapheneLinegraph {
     // TODO: review the default values so that a graph with no styles looks OKish
     retrieveSettings() {
         if (this.properties) {
-            this.graphDrawingMethod = this.properties.graph_drawing_method ? this.properties.graph_drawing_method : 'splines'
+            this.graphDrawingMethod = this.properties.graph_drawing_method ? this.properties.graph_drawing_method : 'splines';
             if (this.properties.flags) {
                 this.highLightEnabled = this.properties.flags.highlight_enabled ? true : false;
                 this.scrollEnabled = this.properties.flags.scroll_enabled ? true : false;
@@ -374,7 +374,7 @@ class GrapheneLinegraph {
         } else {
             this.data = data;
         }
-        this.properties = properties ? JSON.parse(properties) : this.properties
+        this.properties = properties ? JSON.parse(properties) : this.properties;
         this.calculateParameters();
 
         if (this.userDefinedViewPort) {
@@ -405,7 +405,7 @@ class GrapheneLinegraph {
                 this.data.u[i] = this.data.u[i].concat(parsedData.u[i]);
             }
         }
-        this.properties = properties ? JSON.parse(properties) : this.properties
+        this.properties = properties ? JSON.parse(properties) : this.properties;
         this.calculateParameters();
 
         if (this.userDefinedViewPort) {
@@ -450,7 +450,7 @@ class GrapheneLinegraph {
             }
             this.retrieveSettings();
         }
-        this.properties = properties ? JSON.parse(properties) : this.properties
+        this.properties = properties ? JSON.parse(properties) : this.properties;
         this.calculateParameters();
 
         if (this.userDefinedViewPort) {
@@ -468,14 +468,14 @@ class GrapheneLinegraph {
         this.axisMinX = 0;
         this.axisMaxX = this.data.x.length - 1;
         if (this.properties && this.properties.x_axis) {
-            if (this.properties.x_axis.min) { this.axisMinX = this.properties.x_axis.min; };
-            if (this.properties.x_axis.max) { this.axisMaxX = this.properties.x_axis.max; };
+            if (this.properties.x_axis.min) { this.axisMinX = this.properties.x_axis.min; }
+            if (this.properties.x_axis.max) { this.axisMaxX = this.properties.x_axis.max; }
         }
         this.axisMinY = 0;
         this.axisMaxY = this.calculateAxisMaxY();
         if (this.properties && this.properties.y_axis) {
-            if (this.properties.y_axis.min) { this.axisMinY = this.properties.y_axis.min; };
-            if (this.properties.y_axis.max) { this.axisMaxY = this.properties.y_axis.max; };
+            if (this.properties.y_axis.min) { this.axisMinY = this.properties.y_axis.min; }
+            if (this.properties.y_axis.max) { this.axisMaxY = this.properties.y_axis.max; }
         }
         this.axisRangeY = this.axisMaxY - this.axisMinY;
 
@@ -677,7 +677,7 @@ class GrapheneLinegraph {
         }
 
         for (var i = 0; i < points.length; i += 2) {
-            var xValue = this.graphStartX + (points[i] * this.graphScaleX)
+            var xValue = this.graphStartX + (points[i] * this.graphScaleX);
             var yValue = this.graphStartY + (-(points[i + 1] - this.axisMaxY) * this.graphScaleY);
 
             this.backgroundContext.beginPath();
