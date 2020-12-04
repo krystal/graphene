@@ -6,6 +6,7 @@
   "files": [
     "src/engine.js",
     "src/linegraph.js",
+    "src/piegraph.js",
     "src/helper.js"
   ],
   "repository": {

@@ -1,7 +1,7 @@
 class GrapheneEngine {
     constructor() {
         this.graphDictionary = new Object();
-    
+
         window.addEventListener('resize', this.rerender.bind(this));
     }
 
@@ -26,6 +26,27 @@ class GrapheneEngine {
         return linegraph;
     }
 
+    addPiegraph(element, properties, data) {
+        if (typeof properties === "string") {
+            properties = JSON.parse(properties);
+        }
+        if (typeof data === "string") {
+            data = JSON.parse(data);
+        }
+
+        var piegraph = null;
+
+        if (typeof module !== "undefined") {
+            const GraphenePiegraph = require('./piegraph.js');
+            piegraph = new GraphenePiegraph(element, properties, data);
+        } else {
+            piegraph = new GraphenePiegraph(element, properties, data);
+        }
+        this.graphDictionary[element.id] = piegraph;
+
+        return piegraph;
+    }
+
     render() {
         for (var elementId in this.graphDictionary) {
             var graph = this.graphDictionary[elementId];
@@ -34,7 +55,7 @@ class GrapheneEngine {
             }
         }
     }
-    
+
     rerender() {
         for (var elementId in this.graphDictionary) {
             var graph = this.graphDictionary[elementId];

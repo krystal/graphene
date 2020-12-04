@@ -1,0 +1,27 @@
+.graph_light_mode {
+  --alphas-background: 1;
+
+  --colours-background: #FFFFFF;
+  --colours-segment-labels: #FFFFFF;
+  --colours-key-labels: #555555;
+
+  --colours-data-0: #1DBC46;
+  --colours-data-1: #6938F3;
+  --colours-data-2: #DB57FA;
+  --colours-data-3: #FEB639;
+  --colours-data-4: #2FB1D7;
+
+  --fonts-segment-labels-family: "Arial";
+  --fonts-segment-labels-size: 24;
+  --fonts-segment-labels-weight: normal;
+  --fonts-key-labels-family: "Arial";
+  --fonts-key-labels-size: 18;
+  --fonts-key-labels-weight: normal;
+
+  --widths-border: 12;
+}
+
+.graph {
+  position: relative;
+  margin: 0;
+}
