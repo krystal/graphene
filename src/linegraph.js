@@ -255,13 +255,14 @@ class GrapheneLinegraph {
         return this.calculateAxisMax(base, this.getMaxValueU());
     }
 
-    getStyle(name, defaultStyle) {
+    // TODO: check if any existing callers need to set this optional parameter
+    getStyle(name, defaultStyle, logToConsole = true) {
         var style = getComputedStyle(this.element).getPropertyValue(name);
         if (style) {
             return style;
         }
 
-        if (defaultStyle != false) {
+        if (logToConsole) {
             console.log(name + " style was not present in CSS, reverting to default of " + defaultStyle);
         }
         return defaultStyle;

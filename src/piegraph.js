@@ -74,7 +74,7 @@ class GraphenePiegraph {
         return this.coloursData[i % this.coloursData.length];
     }
     return this.defaultDataColour;
-}
+  }
 
   redraw() {
     this.backgroundContext.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
@@ -122,17 +122,17 @@ class GraphenePiegraph {
     return "";
   }
 
-  getStyle(name, defaultStyle) {
+  getStyle(name, defaultStyle, logToConsole = true) {
     var style = getComputedStyle(this.element).getPropertyValue(name);
     if (style) {
         return style;
     }
 
-    if (defaultStyle != false) {
+    if (logToConsole) {
         console.log(name + " style was not present in CSS, reverting to default of " + defaultStyle);
     }
     return defaultStyle;
-}
+  }
 
   retrieveSettings() {
     this.defaultDataColour = '#000000';
@@ -148,6 +148,8 @@ class GraphenePiegraph {
       if (colour && colour != false) { this.coloursData.push(colour); }
     }
 
+    this.degreesSegmentBorder = this.getStyle('--degrees-segment-border', 1 / Number.MAX_SAFE_INTEGER, false);
+
     this.fontsSegmentLabelsFamily = this.getStyle('--fonts-segment-labels-family', 'Arial');
     this.fontsSegmentLabelsSize = this.getStyle('--fonts-segment-labels-size', 24);
     this.fontsSegmentLabelsWeight = this.getStyle('--fonts-segment-labels-weight', 'normal');
@@ -155,8 +157,7 @@ class GraphenePiegraph {
     this.fontsKeyLabelsSize = this.getStyle('--fonts-key-labels-size', 18);
     this.fontsKeyLabelsWeight = this.getStyle('--fonts-key-labels-weight', 'normal');
 
-    this.radiiSegmentCentreMultiplier = this.getStyle('--radii-segment-centre-multiplier', 1 / Number.MAX_SAFE_INTEGER);
-    this.widthsSegmentBorderMultiplier = this.getStyle('--widths-segment-border-multiplier', 1 / Number.MAX_SAFE_INTEGER);
+    this.radiiSegmentCentreMultiplier = this.getStyle('--radii-segment-centre-multiplier', 0, false);
   }
 
   calculateParameters() {
@@ -200,7 +201,7 @@ class GraphenePiegraph {
     var graphRadius = this.graphWidth / 2;
 
     this.backgroundContext.strokeStyle = this.coloursBackground;
-    this.backgroundContext.lineWidth = graphCircumference * this.widthsSegmentBorderMultiplier;
+    this.backgroundContext.lineWidth = graphCircumference * (this.degreesSegmentBorder / 360);
 
     var total = this.data.values.reduce((a, b) => a + b, 0);
     for (var i = 0; i < this.data.values.length; i++) {
