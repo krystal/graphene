@@ -148,7 +148,7 @@ class GraphenePiegraph {
       if (colour && colour != false) { this.coloursData.push(colour); }
     }
 
-    this.degreesSegmentBorder = this.getStyle('--degrees-segment-border', 1 / Number.MAX_SAFE_INTEGER, false);
+    this.degreesSegmentBorder = this.getStyle('--degrees-segment-border', 0, false);
 
     this.fontsSegmentLabelsFamily = this.getStyle('--fonts-segment-labels-family', 'Arial');
     this.fontsSegmentLabelsSize = this.getStyle('--fonts-segment-labels-size', 24);
@@ -197,11 +197,11 @@ class GraphenePiegraph {
     // start at up rather than right
     var angleOffset = -0.5 * Math.PI;
     var cumulativeAngle = 0;
-    var graphCircumference = 2 * Math.PI * this.graphWidth;
+    var borderWidthRadians = this.degreesSegmentBorder * (Math.PI / 180);
     var graphRadius = this.graphWidth / 2;
 
     this.backgroundContext.strokeStyle = this.coloursBackground;
-    this.backgroundContext.lineWidth = graphCircumference * (this.degreesSegmentBorder / 360);
+    this.backgroundContext.lineWidth = 1 / Number.MAX_SAFE_INTEGER;
 
     var total = this.data.values.reduce((a, b) => a + b, 0);
     for (var i = 0; i < this.data.values.length; i++) {
@@ -215,12 +215,13 @@ class GraphenePiegraph {
       this.backgroundContext.translate(this.graphCentreX, this.graphCentreY);
       this.backgroundContext.rotate(angleOffset);
       this.backgroundContext.rotate(cumulativeAngle);
+      this.backgroundContext.rotate(borderWidthRadians / 2);
       this.backgroundContext.moveTo(graphRadius * this.radiiSegmentCentreMultiplier, 0);
       this.backgroundContext.lineTo(graphRadius, 0);
-      this.backgroundContext.arc(0, 0, graphRadius, 0, segmentAngle);
-      this.backgroundContext.rotate(segmentAngle);
+      this.backgroundContext.arc(0, 0, graphRadius, 0, segmentAngle - borderWidthRadians);
+      this.backgroundContext.rotate(segmentAngle - borderWidthRadians);
       this.backgroundContext.lineTo(graphRadius, 0);
-      this.backgroundContext.arc(0, 0, graphRadius * this.radiiSegmentCentreMultiplier, 0, -segmentAngle, true);
+      this.backgroundContext.arc(0, 0, graphRadius * this.radiiSegmentCentreMultiplier, 0, -(segmentAngle - borderWidthRadians), true);
 
       this.backgroundContext.closePath();
 
