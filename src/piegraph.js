@@ -18,7 +18,6 @@ class GraphenePiegraph {
     this.addMouseEvents();
   }
 
-  // TODO: remove the hard coded placement (from the centre) of graph labels
   // TODO: investigate pies getting larger than smaller when resizing (it may be a quirk of the way that the space for the key is allocated)
   // TODO: review the implementation of the horizontal margin
   // TODO: when available graph width > height centre the graph horizontally
@@ -236,6 +235,8 @@ class GraphenePiegraph {
     // start at up rather than right
     var angleOffset = -0.5 * Math.PI;
     var cumulativeAngle = 0;
+    var graphRadius = this.graphWidth / 2;
+    var distanceFromCentre = (parseFloat(this.radiiSegmentCentreMultiplier) + parseFloat((1 - this.radiiSegmentCentreMultiplier) / 2)) * graphRadius;
 
     this.backgroundContext.font = this.fontsSegmentLabelsWeight + " " + this.fontsSegmentLabelsSize + "px " + this.fontsSegmentLabelsFamily;
     this.backgroundContext.fillStyle = this.coloursSegmentLabels;
@@ -257,8 +258,8 @@ class GraphenePiegraph {
       var labelText = this.grapheneHelper.applyAffix(labelValue, this.getSegmentsLabelPrefix(), this.getSegmentsLabelSuffix());
 
       var segmentCentreAngle = angleOffset + cumulativeAngle + (segmentAngle / 2);
-      var labelX = (this.graphWidth / 3) * Math.cos(segmentCentreAngle);
-      var labelY = (this.graphWidth / 3) * Math.sin(segmentCentreAngle);
+      var labelX = distanceFromCentre * Math.cos(segmentCentreAngle);
+      var labelY = distanceFromCentre * Math.sin(segmentCentreAngle);
       this.backgroundContext.fillText(labelText, labelX, labelY);
 
       cumulativeAngle += segmentAngle;
