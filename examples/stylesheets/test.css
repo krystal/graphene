@@ -10,6 +10,7 @@
   --colours-information-heading: #FFFFFF;
   --colours-information-panel: #333333;
   --colours-information-sentences: #FFFFFF;
+  --colours-marker: #FF0000;
 
   --colours-data-axis: #E0DEFF;
   --colours-data-0: #FF4560;
@@ -17,7 +18,7 @@
   --colours-data-2: #038FFB;
   --colours-data-3: #FFFF00;
   --colours-data-4: #FF00FF;
-  
+
   --fonts-axes-labels-family: "Arial";
   --fonts-axes-labels-size: 13;
   --fonts-axes-labels-weight: normal;
@@ -35,6 +36,7 @@
   --widths-data: 1;
   --widths-data-highlight-indicator: 4;
   --widths-highlight-indicator: 2;
+  --widths-marker: 2;
 }
 
 .graph {

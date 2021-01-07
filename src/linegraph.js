@@ -121,6 +121,9 @@ class GrapheneLinegraph {
         if (!this.hideHorizontalAxis) {
             this.drawHorizontalAxisLabels();
         }
+        if (this.properties.x_axis.markers) {
+            this.drawMarkers();
+        }
         if (!this.hideVerticalAxes) {
             this.drawVerticalAxesLabels();
         }
@@ -332,6 +335,11 @@ class GrapheneLinegraph {
             this.fontsAxesLabelsWeight = this.getStyle('--fonts-axes-labels-weight', 'normal');
         }
 
+        if (this.properties.x_axis.markers) {
+            this.coloursMarker = this.getStyle('--colours-marker', '#000000');
+            this.widthsMarker = this.getStyle('--widths-marker', 2);
+        }
+
         if (this.highLightEnabled) {
             this.alphasInformationPanel = this.getStyle('--alphas-information-panel', 0.75);
             this.coloursHighlightIndicator = this.getStyle('--colours-highlight-indicator', '#FFFFFF');
@@ -514,7 +522,8 @@ class GrapheneLinegraph {
             }
             if (!this.hideVerticalAxes) {
                 this.bottomMargin = Math.max(labelHeightApproximation, this.bottomMargin);
-                this.graphStartY = Math.max(labelHeightApproximation, this.graphStartY);
+                var labelHeightMultiplier = this.properties.x_axis.markers ? 3 : 1;
+                this.graphStartY = Math.max(labelHeightApproximation * labelHeightMultiplier, this.graphStartY);
             }
 
             this.graphEndY = this.canvasHeight - this.bottomMargin;
@@ -730,6 +739,28 @@ class GrapheneLinegraph {
                 xText = this.axisFormatter(xValue, this.calculateAxisInterval(xAxisLabelInterval));
             }
             this.backgroundContext.fillText(xText, this.graphStartX + (i * this.graphScaleX), this.graphEndY + (this.bottomMargin / 2));
+        }
+    }
+
+    drawMarkers() {
+        for (var i = 0; i < this.properties.x_axis.markers.length; i++) {
+            var marker = this.properties.x_axis.markers[i];
+
+            var axisPosition = { x: this.graphStartX + (marker[0] * this.graphScaleX), y: this.graphEndY };
+
+            this.backgroundContext.strokeStyle = this.coloursMarker;
+            this.backgroundContext.lineWidth = this.widthsMarker;
+            this.backgroundContext.beginPath();
+            this.backgroundContext.moveTo(axisPosition.x, axisPosition.y);
+            this.backgroundContext.lineTo(axisPosition.x, this.graphStartY);
+            this.backgroundContext.stroke();
+
+            this.backgroundContext.font = this.fontsAxesLabelsWeight + " " + this.fontsAxesLabelsSize + "px " + this.fontsAxesLabelsFamily;
+            this.backgroundContext.fillStyle = this.coloursAxesLabels;
+            this.backgroundContext.textAlign = "center";
+            this.backgroundContext.textBaseline = "middle";
+
+            this.backgroundContext.fillText(marker[1], this.graphStartX + (marker[0] * this.graphScaleX), this.graphStartY / 2);
         }
     }
 
