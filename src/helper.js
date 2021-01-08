@@ -101,7 +101,7 @@ class GrapheneHelper {
     //  x0,y0,x1,y1 are the coordinates of the end (knot) pts of this segment
     //  x2,y2 is the next knot -- not connected here but needed to calculate p2
     //  p1 is the control point calculated here, from x1 back toward x0.
-    //  p2 is the next control point, calculated here and returned to become the 
+    //  p2 is the next control point, calculated here and returned to become the
     //  next segment's p1.
     //  t is the 'tension' which controls how far the control points spread.
 
@@ -140,6 +140,41 @@ class GrapheneHelper {
 
     //  For open curves the first and last arcs are simple quadratics.
     ctx.quadraticCurveTo(cp[2 * n - 10], cp[2 * n - 9], pts[n - 2], pts[n - 1]);
+  }
+
+  calculateAverage(numbers) {
+    var sum = 0;
+    for (var i = 0; i < numbers.length; i++) {
+      sum += numbers[i];
+    }
+    return sum / numbers.length;
+  }
+
+  // TODO: rename this to something more fitting
+  calculateChange(numbersX, numbersY, meanX, meanY) {
+    var sum = 0;
+    for (var i = 0; i < numbersX.length; i++) {
+      sum += (numbersX[i] - meanX) * (numbersY[i] - meanY);
+    }
+    return sum;
+  }
+
+  calculateLineOfBestFit(valuesX, valuesY) {
+    var meanX = this.calculateAverage(valuesX);
+    var meanY = this.calculateAverage(valuesY);
+
+    var changeXY = this.calculateChange(valuesX, valuesY, meanX, meanY);
+    var changeXX = this.calculateChange(valuesX, valuesX, meanX, meanX);
+
+    var slope = changeXY / changeXX;
+    var intercept = meanY - (slope * meanX)
+
+    return {"slope": slope, "intercept": intercept};
+  }
+
+  // TODO: rename this to something more fitting
+  getPointOnLine(x, slope, intercept) {
+    return (slope * x) + intercept;
   }
 }
 

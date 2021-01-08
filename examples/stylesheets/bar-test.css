@@ -1,0 +1,27 @@
+.graph_light_mode {
+  --alphas-background: 0;
+
+  --colours-axes-labels: #555555;
+  --colours-background: #FFFFFF;
+  --colours-horizontal-lines: #EEEEEE;
+  --colours-marker: #000000;
+
+  --colours-data-axis: #E0DEFF;
+  --colours-data-0: #FFD8DD;
+  --colours-data-1: #CAF9E9;
+
+  --colours-best-fit-0: #FF4560;
+  --colours-best-fit-1: #04E395;
+
+  --fonts-axes-labels-family: "Arial";
+  --fonts-axes-labels-size: 13;
+  --fonts-axes-labels-weight: normal;
+
+  --widths-marker: 2;
+  --widths-best-fit: 4;
+}
+
+.graph {
+  position: relative;
+  margin: 48px;
+}

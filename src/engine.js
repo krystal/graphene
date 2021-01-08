@@ -47,6 +47,27 @@ class GrapheneEngine {
         return piegraph;
     }
 
+    addBargraph(element, properties, data, axisFormatter, informationFormatter) {
+        if (typeof properties === "string") {
+            properties = JSON.parse(properties);
+        }
+        if (typeof data === "string") {
+            data = JSON.parse(data);
+        }
+
+        var bargraph = null;
+
+        if (typeof module !== "undefined") {
+            const GrapheneBargraph = require('./bargraph.js');
+            bargraph = new GrapheneBargraph(element, properties, data, axisFormatter, informationFormatter);
+        } else {
+            bargraph = new GrapheneBargraph(element, properties, data, axisFormatter, informationFormatter);
+        }
+        this.graphDictionary[element.id] = bargraph;
+
+        return bargraph;
+    }
+
     render() {
         for (var elementId in this.graphDictionary) {
             var graph = this.graphDictionary[elementId];
