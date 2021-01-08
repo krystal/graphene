@@ -82,7 +82,7 @@ class GrapheneBargraph {
 
   redraw() {
       this.backgroundContext.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
-      this.backgroundContext.fillStyle = this.grapheneHelper.hex2rgba(this.coloursBackground, this.alphasBackground);
+      this.backgroundContext.fillStyle = this.coloursBackground;
       this.backgroundContext.fillRect(0, 0, this.canvasWidth, this.canvasHeight);
 
       if (!this.hideVerticalAxes) {
