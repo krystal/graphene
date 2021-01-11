@@ -10,9 +10,23 @@ class GrapheneHelper {
 
   //https://stackoverflow.com/questions/21646738/convert-hex-to-rgba
   hex2rgba(hex, alpha) {
+    var hexTrimmed = hex.trim();
+    var hexSansHash = hexTrimmed.substring(1);
+    hex = '#' + this.ensureHexLength(hexSansHash);
+
     const [r, g, b] = hex.match(/\w\w/g).map(x => parseInt(x, 16));
     return `rgba(${r},${g},${b},${alpha})`;
   };
+
+  //https://gomakethings.com/converting-a-color-from-a-three-digit-hexcolor-to-a-six-digit-hexcolor-with-vanilla-js/
+  ensureHexLength(hexcolor) {
+    if (hexcolor.length === 3) {
+      hexcolor = hexcolor.split('').map(function (hex) {
+        return hex + hex;
+      }).join('');
+    }
+    return hexcolor;
+  }
 
   getBaseLog(x, y) {
     return Math.log(y) / Math.log(x);
