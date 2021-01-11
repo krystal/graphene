@@ -89,7 +89,12 @@ class GrapheneBargraph {
           this.drawHorizontalLines();
       }
       for (var i = 0; i < this.data.y.length; i++) {
-          this.drawGraph(i);
+          this.drawBarGraph(i);
+      }
+      if (this.data.u) {
+        for (var i = 0; i < this.data.u.length; i++) {
+            this.drawLineGraph(i, this.graphScaleU);
+        }
       }
       if (!this.hideHorizontalAxis) {
           this.drawHorizontalAxisLabels();
@@ -112,6 +117,20 @@ class GrapheneBargraph {
           return this.properties.y_axis.label_prefix;
       }
       return "";
+  }
+
+  getLabelPrefixU() {
+      if (this.properties && this.properties.u_axis && this.properties.u_axis.label_prefix) {
+          return this.properties.u_axis.label_prefix;
+      }
+      return "";
+  }
+
+  getDecimalPlacesU() {
+      if (this.properties && this.properties.u_axis && this.properties.u_axis.decimal_places) {
+          return this.properties.u_axis.decimal_places;
+      }
+      return 0;
   }
 
   getLabelComponents(value, labelSuffixArray) {
@@ -144,6 +163,14 @@ class GrapheneBargraph {
       return this.getLabelComponents(value, this.properties.y_axis.label_suffix);
   }
 
+  getLabelComponentsU(value) {
+      if (!this.properties || !this.properties.u_axis || !this.properties.u_axis.label_suffix) {
+          return { "value": value, "suffix": "" };
+      }
+
+      return this.getLabelComponents(value, this.properties.u_axis.label_suffix);
+  }
+
   calculateAxisRangeX() {
       return this.axisMaxX - this.axisMinX;
   }
@@ -161,6 +188,19 @@ class GrapheneBargraph {
           }
       }
       return maxY != 0 ? maxY : 1;
+  }
+
+  getMaxValueU() {
+      var maxU = 0;
+      if (this.data.u) {
+          for (var i = 0; i < this.data.u.length; i++) {
+              for (var j = 0; j < this.data.u[i].length; j++) {
+                  var u = this.data.u[i][j];
+                  if (u > maxU) { maxU = u; }
+              }
+          }
+      }
+      return maxU != 0 ? maxU : 1;
   }
 
   calculateAxisMax(base, max) {
@@ -190,6 +230,15 @@ class GrapheneBargraph {
       }
 
       return this.calculateAxisMax(base, this.getMaxValueY());
+  }
+
+  calculateAxisMaxU() {
+      var base = 10;
+      if (this.properties && this.properties.u_axis && this.properties.u_axis.base) {
+          base = this.properties.u_axis.base;
+      }
+
+      return this.calculateAxisMax(base, this.getMaxValueU());
   }
 
   // TODO: check if any existing callers need to set this optional parameter
@@ -222,6 +271,9 @@ class GrapheneBargraph {
       this.dataNames = this.data.names;
 
       var verticalData = this.data.y;
+      if (this.data.u) {
+          verticalData = verticalData.concat(this.data.u);
+      }
 
       this.defaultDataColour = '#999999';
       this.defaultBestFitColour = '#000000';
@@ -239,12 +291,13 @@ class GrapheneBargraph {
       if (this.drawLinesOfBestFit) {
         this.coloursBestFit = new Array();
         // TODO: alter this to continue looking until it can't find a contiguous number, for datasets that are not present at the start
-        for (var i = 0; i < verticalData.length; i++) {
+        for (var i = 0; i < this.data.y.length; i++) {
             var colour = this.getStyle('--colours-best-fit-' + i, false);
             if (colour && colour != false) { this.coloursBestFit.push(colour); }
         }
         this.widthsBestFit = this.getStyle('--widths-best-fit', 4);
       }
+      this.widthsData = this.getStyle('--widths-data', 1);
 
       if (!this.hideHorizontalAxis || !this.hideVerticalAxes) {
           this.coloursAxesLabels = this.getStyle('--colours-axes-labels', '#555555');
@@ -276,8 +329,13 @@ class GrapheneBargraph {
       }
       this.axisRangeY = this.axisMaxY - this.axisMinY;
 
+      if (this.data.u) {
+          var axisMaxU = this.calculateAxisMaxU();
+          this.graphScaleU = axisMaxU != 0 ? this.axisMaxY / axisMaxU : 1;
+      }
+
       var greatestRadius = 0;
-      var greatestExtent = Math.max(parseFloat(1) / 2, greatestRadius);
+      var greatestExtent = Math.max(parseFloat(this.widthsData) / 2, greatestRadius);
 
       this.bottomMargin = greatestExtent;
       this.graphStartY = greatestExtent;
@@ -328,6 +386,14 @@ class GrapheneBargraph {
                   if (labelWidthY > maxLabelWidthY) {
                       maxLabelWidthY = labelWidthY;
                   }
+
+                  if (this.data.u) {
+                      var labelComponentsU = this.getLabelComponentsU(i / this.graphScaleU);
+                      var labelWidthU = this.backgroundContext.measureText(this.grapheneHelper.applyAffix(labelComponentsU.value, this.getLabelPrefixU(), labelComponentsU.suffix)).width;
+                      if (labelWidthU > maxLabelWidthU) {
+                          maxLabelWidthU = labelWidthU;
+                      }
+                  }
               }
           }
       }
@@ -366,7 +432,7 @@ class GrapheneBargraph {
       this.backgroundContext.stroke();
   }
 
-  drawGraph(index) {
+  drawBarGraph(index) {
       var dataset = this.data.y[index];
       var datasetWidth = 1 / (this.data.y.length + 1);
       this.backgroundContext.fillStyle = this.getDataColour(index);
@@ -382,6 +448,27 @@ class GrapheneBargraph {
 
       this.backgroundContext.restore();
       this.backgroundContext.fill();
+  }
+
+  drawLineGraph(index, scale) {
+    var dataset = this.data.u[index];
+    this.backgroundContext.strokeStyle = this.getDataColour(this.data.y.length + index);
+    this.backgroundContext.lineWidth = this.widthsData;
+    this.transformDrawingArea();
+
+    this.backgroundContext.beginPath();
+
+    var axisRangeX = this.calculateAxisRangeX();
+    if (axisRangeX > 0) { this.backgroundContext.moveTo(0.5, dataset[this.axisMinX] * scale); }
+    var points = new Array();
+    for (var i = 0; i <= axisRangeX; i++) {
+        points.push(i + 0.5);
+        points.push(dataset[this.axisMinX + i] * scale);
+    }
+    this.grapheneHelper.drawLines('lines', this.backgroundContext, points);
+
+    this.backgroundContext.restore();
+    this.backgroundContext.stroke();
   }
 
   caclulateMaxLabelWidthX() {
@@ -456,9 +543,42 @@ class GrapheneBargraph {
       this.backgroundContext.textAlign = "center";
       this.backgroundContext.textBaseline = "middle";
 
+      let labelValueIndexMap = new Map();
+      let indexLabelMap = new Map();
+
+      if (this.data.u) {
+        for (var i = this.axisMinY; i <= this.axisMaxY; i += this.labelIntervalY) {
+            var valueU = i / this.graphScaleU;
+            valueU = isNaN(valueU) ? 0 : valueU;
+            var labelValueU = +valueU.toFixed(this.getDecimalPlacesU());
+
+            if (!labelValueIndexMap.has(labelValueU)) {
+                labelValueIndexMap.set(labelValueU, new Array());
+            }
+            labelValueIndexMap.get(labelValueU).push({ value: Math.abs(labelValueU - valueU), index: i });
+        }
+
+        for (let key of labelValueIndexMap.keys()) {
+            let array = labelValueIndexMap.get(key);
+
+            array.sort(function (a, b) {
+                return a.value - b.value;
+            });
+
+            indexLabelMap.set(array[0].index, key);
+        }
+    }
+
       for (var i = this.axisMinY; i <= this.axisMaxY; i += this.labelIntervalY) {
           var labelComponentsY = this.getLabelComponentsY(i);
           this.backgroundContext.fillText(this.grapheneHelper.applyAffix(labelComponentsY.value, this.getLabelPrefixY(), labelComponentsY.suffix), (this.leftMargin / 2), this.graphEndY - ((i - this.axisMinY) * this.graphScaleY));
+
+          if (this.data.u) {
+            if (indexLabelMap.has(i)) {
+                var labelComponentsU = this.getLabelComponentsU(indexLabelMap.get(i));
+                this.backgroundContext.fillText(this.grapheneHelper.applyAffix(labelComponentsU.value, this.getLabelPrefixU(), labelComponentsU.suffix), this.graphEndX + (this.rightMargin / 2), this.graphEndY - ((i - this.axisMinY) * this.graphScaleY));
+            }
+        }
       }
   }
 
