@@ -82,7 +82,7 @@ class GrapheneBargraph {
 
   redraw() {
       this.backgroundContext.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
-      this.backgroundContext.fillStyle = this.coloursBackground;
+      this.backgroundContext.fillStyle = this.grapheneHelper.hex2rgba(this.coloursBackground, this.alphasBackground);
       this.backgroundContext.fillRect(0, 0, this.canvasWidth, this.canvasHeight);
 
       if (!this.hideVerticalAxes) {
@@ -433,6 +433,7 @@ class GrapheneBargraph {
   }
 
   drawBarGraph(index) {
+      var projectedIndex = this.properties.x_axis.projected_index ? this.properties.x_axis.projected_index : this.axisMaxX;
       var dataset = this.data.y[index];
       var datasetWidth = 1 / (this.data.y.length + 1);
       this.backgroundContext.fillStyle = this.getDataColour(index);
@@ -440,9 +441,19 @@ class GrapheneBargraph {
 
       this.backgroundContext.beginPath();
 
-      var axisRangeX = this.calculateAxisRangeX();
-      if (axisRangeX > 0) { this.backgroundContext.moveTo(0.5, dataset[this.axisMinX]); }
-      for (var i = 0; i <= axisRangeX; i++) {
+      for (var i = 0; i <= projectedIndex; i++) {
+          this.backgroundContext.fillRect((i + (datasetWidth / 2)) + (index * datasetWidth), this.graphStartY, datasetWidth, dataset[this.axisMinX + i]);
+      }
+
+      this.backgroundContext.restore();
+      this.backgroundContext.fill();
+
+      this.backgroundContext.fillStyle = this.grapheneHelper.hex2rgba(this.getDataColour(index), 0.5);
+      this.transformDrawingArea();
+
+      this.backgroundContext.beginPath();
+
+      for (var i = projectedIndex + 1; i <= this.axisMaxX; i++) {
           this.backgroundContext.fillRect((i + (datasetWidth / 2)) + (index * datasetWidth), this.graphStartY, datasetWidth, dataset[this.axisMinX + i]);
       }
 
