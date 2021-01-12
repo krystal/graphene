@@ -1,9 +1,14 @@
 .graph_light_mode {
   --alphas-background: 0;
+  --alphas-information-panel: 0.75;
 
   --colours-axes-labels: #555555;
   --colours-background: #FFFFFF;
+  --colours-highlight-indicator: #FFFFFF;
   --colours-horizontal-lines: #EEEEEE;
+  --colours-information-heading: #FFFFFF;
+  --colours-information-panel: #333333;
+  --colours-information-sentences: #FFFFFF;
   --colours-marker: #000000;
 
   --colours-data-axis: #E0DEFF;
@@ -17,10 +22,22 @@
   --fonts-axes-labels-family: "Arial";
   --fonts-axes-labels-size: 13;
   --fonts-axes-labels-weight: normal;
+  --fonts-information-heading-family: "Arial";
+  --fonts-information-heading-size: 13;
+  --fonts-information-heading-weight: bold;
+  --fonts-information-sentences-family: "Arial";
+  --fonts-information-sentences-size: 13;
+  --fonts-information-sentences-weight: normal;
 
+  --radii-data-highlight-indicator: 4;
+  --radii-highlight-indicator: 2;
+  --radii-information-panel-border: 10;
+
+  --widths-data: 4;
+  --widths-data-highlight-indicator: 4;
+  --widths-highlight-indicator: 2;
   --widths-marker: 2;
   --widths-best-fit: 4;
-  --widths-data: 4;
 }
 
 .graph {
