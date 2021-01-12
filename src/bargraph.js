@@ -710,11 +710,11 @@ class GrapheneBargraph {
     var requiredWidth = maxSentenceWidth;
     // space + sentence + space + sentence + space + ... + sentence + space
     var requiredHeight = (((verticalData.length + 1) * 2) + 1) * sentenceHeightApproximation;
-    var panelX = this.graphStartX + (index * this.graphScaleX) + (2 * sentenceHeightApproximation);
+    var panelX = this.graphStartX + ((index + 0.5) * this.graphScaleX) + (2 * sentenceHeightApproximation);
     var panelY = this.graphStartY + (this.graphHeight / 2) - (requiredHeight / 2);
 
     if ((panelX + requiredWidth) > (this.graphStartX + this.graphWidth)) {
-        panelX = this.graphStartX + (index * this.graphScaleX) - (2 * sentenceHeightApproximation) - requiredWidth;
+        panelX = this.graphStartX + ((index + 0.5) * this.graphScaleX) - (2 * sentenceHeightApproximation) - requiredWidth;
         if (panelX < this.graphStartX) {
             console.log("Information panel may be clipped horizontally!");
         }
