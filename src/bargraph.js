@@ -18,6 +18,8 @@ class GrapheneBargraph {
 
       this.axisFormatter = axisFormatter;
       this.informationFormatter = informationFormatter;
+
+      this.addMouseEvents();
   }
 
   createLayers() {
@@ -54,6 +56,9 @@ class GrapheneBargraph {
   }
 
   addMouseEvents() {
+    this.cancelMouseMove();
+    this.foreground.addEventListener('mousemove', this.handleMouseMove.bind(this), false);
+    this.foreground.addEventListener('mouseleave', this.handleMouseLeave.bind(this), false);
   }
 
   // TODO: do some refactoring
@@ -258,11 +263,13 @@ class GrapheneBargraph {
   retrieveSettings() {
       if (this.properties) {
           if (this.properties.flags) {
+              this.highLightEnabled = this.properties.flags.highlight_enabled ? true : false;
               this.hideHorizontalAxis = this.properties.flags.hide_horizontal_axis ? true : false;
               this.hideVerticalAxes = this.properties.flags.hide_vertical_axes ? true : false;
               this.drawLinesOfBestFit = this.properties.flags.draw_lines_of_best_fit ? true : false;
           }
       } else {
+          this.highLightEnabled = false;
           this.hideHorizontalAxis = false;
           this.hideVerticalAxes = false;
           this.drawLinesOfBestFit = false;
@@ -311,6 +318,25 @@ class GrapheneBargraph {
           this.coloursMarker = this.getStyle('--colours-marker', '#000000');
           this.widthsMarker = this.getStyle('--widths-marker', 2);
       }
+
+      if (this.highLightEnabled) {
+        this.alphasInformationPanel = this.getStyle('--alphas-information-panel', 0.75);
+        this.coloursHighlightIndicator = this.getStyle('--colours-highlight-indicator', '#FFFFFF');
+        this.coloursInformationHeading = this.getStyle('--colours-information-heading', '#FFFFFF');
+        this.coloursInformationPanel = this.getStyle('--colours-information-panel', '#333333');
+        this.coloursInformationSentences = this.getStyle('--colours-information-sentences', '#FFFFFF');
+        this.fontsInformationHeadingFamily = this.getStyle('--fonts-information-heading-family', 'Arial');
+        this.fontsInformationHeadingSize = this.getStyle('--fonts-information-heading-size', 13);
+        this.fontsInformationHeadingWeight = this.getStyle('--fonts-information-heading-weight', 'normal');
+        this.fontsInformationSentencesFamily = this.getStyle('--fonts-information-sentences-family', 'Arial');
+        this.fontsInformationSentencesSize = this.getStyle('--fonts-information-sentences-size', 13);
+        this.fontsInformationSentencesWeight = this.getStyle('--fonts-information-sentences-weight', 'normal');
+        this.radiiDataHighlightIndicator = this.getStyle('--radii-data-highlight-indicator', 4);
+        this.radiiHighlightIndicator = this.getStyle('--radii-highlight-indicator', 2);
+        this.radiiInformationPanelBorder = this.getStyle('--radii-information-panel-border', 10);
+        this.widthsDataHighlightIndicator = this.getStyle('--widths-data-highlight-indicator', 4);
+        this.widthsHighlightIndicator = this.getStyle('--widths-highlight-indicator', 2);
+      }
   }
 
   // TODO: test this with data sets covering different ranges
@@ -335,6 +361,11 @@ class GrapheneBargraph {
       }
 
       var greatestRadius = 0;
+      if (this.highLightEnabled) {
+        var dataHighlightIndicatorRadius = (parseFloat(this.radiiDataHighlightIndicator) / 2) + parseFloat(this.widthsDataHighlightIndicator);
+        var highlightIndicatorRadius = (parseFloat(this.radiiHighlightIndicator) / 2) + parseFloat(this.widthsHighlightIndicator);
+        greatestRadius = Math.max(dataHighlightIndicatorRadius, highlightIndicatorRadius);
+      }
       var greatestExtent = Math.max(parseFloat(this.widthsData) / 2, greatestRadius);
 
       this.bottomMargin = greatestExtent;
@@ -592,6 +623,192 @@ class GrapheneBargraph {
             }
         }
       }
+  }
+
+  drawHighlight(axisHighlight, yValueMax, dataHighlights) {
+    this.foregroundContext.strokeStyle = this.coloursHighlightIndicator;
+    this.foregroundContext.lineWidth = this.widthsHighlightIndicator;
+    this.foregroundContext.beginPath();
+    this.foregroundContext.moveTo(axisHighlight.x, axisHighlight.y);
+    this.foregroundContext.lineTo(axisHighlight.x, yValueMax);
+    this.foregroundContext.stroke();
+
+    this.foregroundContext.strokeStyle = this.coloursDataAxis;
+    this.foregroundContext.lineWidth = this.widthsHighlightIndicator;
+    this.foregroundContext.fillStyle = this.coloursHighlightIndicator;
+
+    this.foregroundContext.beginPath();
+    this.foregroundContext.arc(axisHighlight.x, axisHighlight.y, this.radiiHighlightIndicator, 0, 2 * Math.PI);
+    this.foregroundContext.closePath();
+    this.foregroundContext.stroke();
+    this.foregroundContext.fill();
+
+    for (var i = 0; i < dataHighlights.length; i++) {
+        this.foregroundContext.strokeStyle = this.getDataColour(i);
+        this.foregroundContext.lineWidth = this.widthsDataHighlightIndicator;
+        this.foregroundContext.fillStyle = this.coloursHighlightIndicator;
+
+        this.foregroundContext.beginPath();
+        this.foregroundContext.arc(dataHighlights[i].x, dataHighlights[i].y, this.radiiDataHighlightIndicator, 0, 2 * Math.PI);
+        this.foregroundContext.closePath();
+        this.foregroundContext.stroke();
+        this.foregroundContext.fill();
+    }
+  }
+
+  // TODO: consider moving the calculation code in highlight(index) and reserve this method for actual drawing
+  drawInformationPanel(index) {
+    var verticalData = this.data.y;
+    if (this.data.u) {
+        verticalData = verticalData.concat(this.data.u);
+    }
+
+    this.foregroundContext.textAlign = "left";
+    this.foregroundContext.font = this.fontsInformationHeadingWeight + " " + this.fontsInformationHeadingSize + "px " + this.fontsInformationHeadingFamily;
+
+    var headingValue = this.data.x[this.axisMinX + index];
+    var headingText = headingValue;
+    if (this.informationFormatter) {
+        headingValue = isNaN(headingValue) ? 0 : headingValue;
+        headingText = this.informationFormatter(headingValue);
+    }
+    var sentences = new Array();
+    var sentenceHeightApproximation = this.foregroundContext.measureText("M").width;
+    var maxSentenceWidth = this.foregroundContext.measureText(headingText).width + (2 * sentenceHeightApproximation);
+    this.foregroundContext.font = this.fontsInformationSentencesWeight + " " + this.fontsInformationSentencesSize + "px " + this.fontsInformationSentencesFamily;
+    for (var i = 0; i < this.data.y.length; i++) {
+        var yValue = this.data.y[i][this.axisMinX + index];
+        yValue = isNaN(yValue) ? 0 : yValue;
+        var labelComponents = this.getLabelComponentsY(yValue);
+        var formattedData = this.grapheneHelper.applyAffix(labelComponents.value, this.getLabelPrefixY(), labelComponents.suffix);
+        var sentence = this.dataNames[i] + ": " + formattedData;
+        // space + circle + space + sentence + space (space and cricle are as wide as a sentence is tall)
+        var sentenceWidth = this.foregroundContext.measureText(sentence).width + (4 * sentenceHeightApproximation);
+        if (sentenceWidth > maxSentenceWidth) {
+            maxSentenceWidth = sentenceWidth;
+        }
+        sentences.push(sentence);
+    }
+
+    if (this.data.u) {
+        var offsetIndex = this.properties.u_axis.offset_index ? this.properties.u_axis.offset_index : 0;
+        for (var i = 0; i < this.data.u.length; i++) {
+            var uValue = this.data.u[i][this.axisMinX + index - offsetIndex];
+            uValue = isNaN(uValue) ? 0 : uValue;
+            var labelComponents = this.getLabelComponentsU(uValue);
+            var formattedData = this.grapheneHelper.applyAffix(labelComponents.value, this.getLabelPrefixU(), labelComponents.suffix);
+            var sentence = this.dataNames[this.data.y.length + i] + ": " + formattedData;
+            // space + circle + space + sentence + space (space and cricle are as wide as a sentence is tall)
+            var sentenceWidth = this.foregroundContext.measureText(sentence).width + (4 * sentenceHeightApproximation);
+            if (sentenceWidth > maxSentenceWidth) {
+                maxSentenceWidth = sentenceWidth;
+            }
+            sentences.push(sentence);
+        }
+    }
+
+    var requiredWidth = maxSentenceWidth;
+    // space + sentence + space + sentence + space + ... + sentence + space
+    var requiredHeight = (((verticalData.length + 1) * 2) + 1) * sentenceHeightApproximation;
+    var panelX = this.graphStartX + (index * this.graphScaleX) + (2 * sentenceHeightApproximation);
+    var panelY = this.graphStartY + (this.graphHeight / 2) - (requiredHeight / 2);
+
+    if ((panelX + requiredWidth) > (this.graphStartX + this.graphWidth)) {
+        panelX = this.graphStartX + (index * this.graphScaleX) - (2 * sentenceHeightApproximation) - requiredWidth;
+        if (panelX < this.graphStartX) {
+            console.log("Information panel may be clipped horizontally!");
+        }
+    }
+
+    if (requiredHeight > this.graphHeight) {
+        console.log("Information panel may be clipped vertically!");
+    }
+
+    this.foregroundContext.fillStyle = this.grapheneHelper.hex2rgba(this.coloursInformationPanel, this.alphasInformationPanel);
+    this.grapheneHelper.fillRoundedRect(this.foregroundContext, panelX, panelY, requiredWidth, requiredHeight, parseFloat(this.radiiInformationPanelBorder));
+
+    var circleOffsetY = panelY + (3 * sentenceHeightApproximation);
+    var sentenceOffsetY = panelY + (2 * sentenceHeightApproximation);
+
+    this.foregroundContext.font = this.fontsInformationHeadingWeight + " " + this.fontsInformationHeadingSize + "px " + this.fontsInformationHeadingFamily;
+    this.foregroundContext.fillStyle = this.coloursInformationHeading;
+    this.foregroundContext.fillText(headingText, panelX + sentenceHeightApproximation, sentenceOffsetY);
+    sentenceOffsetY += 2 * sentenceHeightApproximation;
+
+    this.foregroundContext.font = this.fontsInformationSentencesWeight + " " + this.fontsInformationSentencesSize + "px " + this.fontsInformationSentencesFamily;
+    for (var i = 0; i < sentences.length; i++) {
+        this.foregroundContext.fillStyle = this.getDataColour(i);
+        this.foregroundContext.fillRect(panelX + sentenceHeightApproximation, circleOffsetY, sentenceHeightApproximation, sentenceHeightApproximation);
+        this.foregroundContext.fillStyle = this.coloursInformationSentences;
+        this.foregroundContext.fillText(sentences[i], panelX + (3 * sentenceHeightApproximation), sentenceOffsetY);
+        circleOffsetY += 2 * sentenceHeightApproximation;
+        sentenceOffsetY += 2 * sentenceHeightApproximation;
+    }
+  }
+
+  highlight(index) {
+    this.clearForeground();
+    if (index == -1) { return false; }
+
+    var axisHighlight = { x: this.graphStartX + ((0.5 + index) * this.graphScaleX), y: this.graphEndY };
+    var dataHighlights = new Array();
+
+    var verticalValueMax = Infinity;
+    for (var i = 0; i < this.data.y.length; i++) {
+        var y = this.data.y[i][this.axisMinX + index];
+        var yValue = this.graphStartY + (-(y - this.axisMaxY) * this.graphScaleY);
+        dataHighlights.push({ x: this.graphStartX + ((0.5 + index) * this.graphScaleX), y: yValue });
+        if (yValue < verticalValueMax) {
+            verticalValueMax = yValue;
+        }
+    }
+
+    if (this.data.u) {
+        var offsetIndex = this.properties.u_axis.offset_index ? this.properties.u_axis.offset_index : 0;
+        for (var i = 0; i < this.data.u.length; i++) {
+            var u = this.data.u[i][this.axisMinX + index - offsetIndex];
+            var uValue = this.graphStartY + (-((u * this.graphScaleU) - this.axisMaxY) * this.graphScaleY);
+            dataHighlights.push({ x: this.graphStartX + ((0.5 + index) * this.graphScaleX), y: uValue });
+            if (uValue < verticalValueMax) {
+                verticalValueMax = uValue;
+            }
+        }
+    }
+
+    this.drawHighlight(axisHighlight, verticalValueMax, dataHighlights);
+    this.drawInformationPanel(index);
+    this.mouseMoveIndex = index;
+  }
+
+  clearForeground() {
+    this.foregroundContext.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
+  }
+
+  calculateIndex(offsetX) {
+    var graphX = (offsetX - this.graphStartX) / this.graphScaleX;
+    return Math.min(Math.max(Math.floor(graphX), 0), this.calculateAxisRangeX());
+  }
+
+  handleMouseMove(event) {
+    if (!this.drawn) { return; }
+
+    var index = this.calculateIndex(event.offsetX);
+    if (this.highLightEnabled) {
+        if (index != this.mouseMoveIndex) {
+            this.highlight(index);
+        }
+    }
+  }
+
+  cancelMouseMove() {
+    this.mouseMoveIndex = -1;
+  }
+
+  handleMouseLeave(event) {
+    if (!this.drawn) { return; }
+
+    this.clearForeground();
+    this.cancelMouseMove();
   }
 
   // TODO: refactor this method
