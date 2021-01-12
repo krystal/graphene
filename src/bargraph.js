@@ -463,6 +463,7 @@ class GrapheneBargraph {
 
   drawLineGraph(index, scale) {
     var dataset = this.data.u[index];
+    var offsetIndex = this.properties.u_axis.offset_index ? this.properties.u_axis.offset_index : 0;
     this.backgroundContext.strokeStyle = this.getDataColour(this.data.y.length + index);
     this.backgroundContext.lineWidth = this.widthsData;
     this.transformDrawingArea();
@@ -470,10 +471,10 @@ class GrapheneBargraph {
     this.backgroundContext.beginPath();
 
     var axisRangeX = this.calculateAxisRangeX();
-    if (axisRangeX > 0) { this.backgroundContext.moveTo(0.5, dataset[this.axisMinX] * scale); }
+    if (axisRangeX > 0) { this.backgroundContext.moveTo(offsetIndex + 0.5, dataset[this.axisMinX] * scale); }
     var points = new Array();
     for (var i = 0; i <= axisRangeX; i++) {
-        points.push(i + 0.5);
+        points.push(offsetIndex + i + 0.5);
         points.push(dataset[this.axisMinX + i] * scale);
     }
     this.grapheneHelper.drawLines('lines', this.backgroundContext, points);
