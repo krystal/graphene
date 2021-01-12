@@ -597,6 +597,7 @@ class GrapheneBargraph {
   drawLineOfBestFit(index) {
     var projectedIndex = this.properties.x_axis.projected_index ? this.properties.x_axis.projected_index : this.axisMaxX;
     var dataset = this.data.y[index];
+    var datasetWidth = 1 / (this.data.y.length + 1);
 
     var parameters = this.grapheneHelper.calculateLineOfBestFit(Array.from(Array(this.data.x.length).keys()), dataset);
 
@@ -606,8 +607,8 @@ class GrapheneBargraph {
 
     this.backgroundContext.beginPath();
 
-    this.backgroundContext.moveTo(0, this.grapheneHelper.getPointOnLine(this.axisMinX, parameters.slope, parameters.intercept));
-    this.backgroundContext.lineTo(projectedIndex + 1, this.grapheneHelper.getPointOnLine(projectedIndex, parameters.slope, parameters.intercept));
+    this.backgroundContext.moveTo(datasetWidth + (datasetWidth * index), this.grapheneHelper.getPointOnLine(this.axisMinX, parameters.slope, parameters.intercept));
+    this.backgroundContext.lineTo(datasetWidth + projectedIndex + (datasetWidth * index), this.grapheneHelper.getPointOnLine(projectedIndex, parameters.slope, parameters.intercept));
 
     this.backgroundContext.restore();
     this.backgroundContext.stroke();
@@ -615,8 +616,8 @@ class GrapheneBargraph {
     this.backgroundContext.setLineDash([5, 5]);
     this.transformDrawingArea();
 
-    this.backgroundContext.moveTo(projectedIndex + 1, this.grapheneHelper.getPointOnLine(projectedIndex, parameters.slope, parameters.intercept));
-    this.backgroundContext.lineTo(this.calculateAxisRangeX() + 1, this.grapheneHelper.getPointOnLine(this.axisMaxX, parameters.slope, parameters.intercept));
+    this.backgroundContext.moveTo(datasetWidth + projectedIndex + (datasetWidth * index), this.grapheneHelper.getPointOnLine(projectedIndex, parameters.slope, parameters.intercept));
+    this.backgroundContext.lineTo(datasetWidth + this.axisMaxX + (datasetWidth * index), this.grapheneHelper.getPointOnLine(this.axisMaxX, parameters.slope, parameters.intercept));
 
     this.backgroundContext.restore();
     this.backgroundContext.stroke();
