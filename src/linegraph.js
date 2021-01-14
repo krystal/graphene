@@ -121,7 +121,7 @@ class GrapheneLinegraph {
         if (!this.hideHorizontalAxis) {
             this.drawHorizontalAxisLabels();
         }
-        if (this.properties.x_axis.markers) {
+        if (this.properties && this.properties.x_axis && this.properties.x_axis.markers) {
             this.drawMarkers();
         }
         if (!this.hideVerticalAxes) {
@@ -335,7 +335,7 @@ class GrapheneLinegraph {
             this.fontsAxesLabelsWeight = this.getStyle('--fonts-axes-labels-weight', 'normal');
         }
 
-        if (this.properties.x_axis.markers) {
+        if (this.properties && this.properties.x_axis && this.properties.x_axis.markers) {
             this.coloursMarker = this.getStyle('--colours-marker', '#000000');
             this.widthsMarker = this.getStyle('--widths-marker', 2);
         }
@@ -522,7 +522,7 @@ class GrapheneLinegraph {
             }
             if (!this.hideVerticalAxes) {
                 this.bottomMargin = Math.max(labelHeightApproximation, this.bottomMargin);
-                var labelHeightMultiplier = this.properties.x_axis.markers ? 3 : 1;
+                var labelHeightMultiplier = (this.properties && this.properties.x_axis && this.properties.x_axis.markers) ? 3 : 1;
                 this.graphStartY = Math.max(labelHeightApproximation * labelHeightMultiplier, this.graphStartY);
             }
 
