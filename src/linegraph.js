@@ -472,6 +472,21 @@ class GrapheneLinegraph {
         this.redraw();
     }
 
+    calculateLabelHeightMultiplier() {
+        if (this.properties && this.properties.x_axis && this.properties.x_axis.markers) {
+            var counts = Array(this.calculateAxisRangeX() + 1).fill(0);
+
+            for (var i = 0; i < this.properties.x_axis.markers.length; i++) {
+                var marker = this.properties.x_axis.markers[i];
+                counts[marker[0]] += 1;
+            }
+
+            return 1 + (Math.max(...counts) * 2);
+        } else {
+            return 1;
+        }
+    }
+
     // TODO: test this with data sets covering different ranges
     calculateParameters() {
         this.axisMinX = 0;
@@ -522,8 +537,7 @@ class GrapheneLinegraph {
             }
             if (!this.hideVerticalAxes) {
                 this.bottomMargin = Math.max(labelHeightApproximation, this.bottomMargin);
-                var labelHeightMultiplier = (this.properties && this.properties.x_axis && this.properties.x_axis.markers) ? 3 : 1;
-                this.graphStartY = Math.max(labelHeightApproximation * labelHeightMultiplier, this.graphStartY);
+                this.graphStartY = Math.max(labelHeightApproximation * this.calculateLabelHeightMultiplier(), this.graphStartY);
             }
 
             this.graphEndY = this.canvasHeight - this.bottomMargin;
@@ -743,10 +757,13 @@ class GrapheneLinegraph {
     }
 
     drawMarkers() {
+        var counts = Array(this.calculateAxisRangeX() + 1).fill(0);
+
         for (var i = 0; i < this.properties.x_axis.markers.length; i++) {
             var marker = this.properties.x_axis.markers[i];
+            var line = counts[marker[0]];
 
-            var axisPosition = { x: this.graphStartX + (marker[0] * this.graphScaleX), y: this.graphEndY };
+            var axisPosition = { x: this.graphStartX + ((marker[0] + 0.5) * this.graphScaleX), y: this.graphEndY };
 
             this.backgroundContext.strokeStyle = this.coloursMarker;
             this.backgroundContext.lineWidth = this.widthsMarker;
@@ -760,7 +777,10 @@ class GrapheneLinegraph {
             this.backgroundContext.textAlign = "center";
             this.backgroundContext.textBaseline = "middle";
 
-            this.backgroundContext.fillText(marker[1], this.graphStartX + (marker[0] * this.graphScaleX), this.graphStartY / 2);
+            var labelHeightApproximation = this.backgroundContext.measureText("M").width;
+            this.backgroundContext.fillText(marker[1], this.graphStartX + ((marker[0] + 0.5) * this.graphScaleX), labelHeightApproximation * (1.5 + (line * 2)));
+
+            counts[marker[0]] += 1;
         }
     }
 
