@@ -1,6 +1,6 @@
 {
   "name": "krystal-graphene",
-  "version": "1.0.17",
+  "version": "1.0.18",
   "description": "JavaScript powered HTML5 Canvas based graphing library",
   "main": "src/engine.js",
   "files": [
