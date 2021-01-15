@@ -112,7 +112,7 @@ class GrapheneBargraph {
             this.drawLineOfBestFit(i);
           }
       }
-      if (this.properties.x_axis.markers) {
+      if (this.properties && this.properties.x_axis && this.properties.x_axis.markers) {
         this.drawMarkers();
       }
   }
@@ -314,7 +314,7 @@ class GrapheneBargraph {
           this.fontsAxesLabelsWeight = this.getStyle('--fonts-axes-labels-weight', 'normal');
       }
 
-      if (this.properties.x_axis.markers) {
+      if (this.properties && this.properties.x_axis && this.properties.x_axis.markers) {
           this.coloursMarker = this.getStyle('--colours-marker', '#000000');
           this.widthsMarker = this.getStyle('--widths-marker', 2);
       }
@@ -385,7 +385,7 @@ class GrapheneBargraph {
           }
           if (!this.hideVerticalAxes) {
               this.bottomMargin = Math.max(labelHeightApproximation, this.bottomMargin);
-              var labelHeightMultiplier = this.properties.x_axis.markers ? 3 : 1;
+              var labelHeightMultiplier = (this.properties && this.properties.x_axis && this.properties.x_axis.markers) ? 3 : 1;
               this.graphStartY = Math.max(labelHeightApproximation * labelHeightMultiplier, this.graphStartY);
           }
 
@@ -464,7 +464,8 @@ class GrapheneBargraph {
   }
 
   drawBarGraph(index) {
-      var projectedIndex = this.properties.x_axis.projected_index ? this.properties.x_axis.projected_index : this.axisMaxX;
+      var hasProjectedIndex = this.properties && this.properties.x_axis && this.properties.x_axis.projected_index;
+      var projectedIndex = hasProjectedIndex ? this.properties.x_axis.projected_index : this.axisMaxX;
       var dataset = this.data.y[index];
       var datasetWidth = 1 / (this.data.y.length + 1);
       this.backgroundContext.fillStyle = this.getDataColour(index);
@@ -494,7 +495,8 @@ class GrapheneBargraph {
 
   drawLineGraph(index, scale) {
     var dataset = this.data.u[index];
-    var offsetIndex = this.properties.u_axis.offset_index ? this.properties.u_axis.offset_index : 0;
+    var hasOffsetIndex = this.properties && this.properties.u_axis && this.properties.u_axis.offset_index;
+    var offsetIndex = hasOffsetIndex ? this.properties.u_axis.offset_index : 0;
     this.backgroundContext.strokeStyle = this.getDataColour(this.data.y.length + index);
     this.backgroundContext.lineWidth = this.widthsData;
     this.transformDrawingArea();
@@ -691,7 +693,8 @@ class GrapheneBargraph {
     }
 
     if (this.data.u) {
-        var offsetIndex = this.properties.u_axis.offset_index ? this.properties.u_axis.offset_index : 0;
+        var hasOffsetIndex = this.properties && this.properties.u_axis && this.properties.u_axis.offset_index;
+        var offsetIndex = hasOffsetIndex ? this.properties.u_axis.offset_index : 0;
         for (var i = 0; i < this.data.u.length; i++) {
             var uValue = this.data.u[i][this.axisMinX + index - offsetIndex];
             uValue = isNaN(uValue) ? 0 : uValue;
@@ -764,7 +767,8 @@ class GrapheneBargraph {
     }
 
     if (this.data.u) {
-        var offsetIndex = this.properties.u_axis.offset_index ? this.properties.u_axis.offset_index : 0;
+        var hasOffsetIndex = this.properties && this.properties.u_axis && this.properties.u_axis.offset_index;
+        var offsetIndex = hasOffsetIndex ? this.properties.u_axis.offset_index : 0;
         for (var i = 0; i < this.data.u.length; i++) {
             var u = this.data.u[i][this.axisMinX + index - offsetIndex];
             var uValue = this.graphStartY + (-((u * this.graphScaleU) - this.axisMaxY) * this.graphScaleY);
@@ -813,7 +817,8 @@ class GrapheneBargraph {
 
   // TODO: refactor this method
   drawLineOfBestFit(index) {
-    var projectedIndex = this.properties.x_axis.projected_index ? this.properties.x_axis.projected_index : this.axisMaxX;
+    var hasProjectedIndex = this.properties && this.properties.x_axis && this.properties.x_axis.projected_index;
+    var projectedIndex = hasProjectedIndex ? this.properties.x_axis.projected_index : this.axisMaxX;
     var dataset = this.data.y[index];
     var datasetWidth = 1 / (this.data.y.length + 1);
 
