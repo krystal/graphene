@@ -80,14 +80,14 @@ class GrapheneLinegraph {
         if (this.coloursData && this.coloursData.length > 0) {
             return this.coloursData[i % this.coloursData.length];
         }
-        return this.defaultDataColour;
+        return this.defaultDataColourArray[i % this.defaultDataColourArray.length];
     }
 
     getDataColourStop(i) {
         if (this.coloursDataStop && this.coloursDataStop.length > 0) {
             return this.coloursDataStop[i % this.coloursDataStop.length];
         }
-        return this.defaultDataColour;
+        return this.defaultDataColourStopArray[i % this.defaultDataColourStopArray.length];
     }
 
     redraw() {
@@ -271,10 +271,9 @@ class GrapheneLinegraph {
         return defaultStyle;
     }
 
-    // TODO: review the default values so that a graph with no styles looks OKish
     retrieveSettings() {
         if (this.properties) {
-            this.graphDrawingMethod = this.properties.graph_drawing_method ? this.properties.graph_drawing_method : 'splines';
+            this.graphDrawingMethod = this.properties.graph_drawing_method ? this.properties.graph_drawing_method : 'lines';
             if (this.properties.flags) {
                 this.highLightEnabled = this.properties.flags.highlight_enabled ? true : false;
                 this.scrollEnabled = this.properties.flags.scroll_enabled ? true : false;
@@ -286,7 +285,7 @@ class GrapheneLinegraph {
                 this.showDataPoints = this.properties.flags.show_data_points ? true : false;
             }
         } else {
-            this.graphDrawingMethod = 'splines';
+            this.graphDrawingMethod = 'lines';
             this.highLightEnabled = false;
             this.scrollEnabled = false;
             this.zoomEnabled = false;
@@ -294,6 +293,7 @@ class GrapheneLinegraph {
             this.graphGradientHorizontal = false;
             this.hideHorizontalAxis = false;
             this.hideVerticalAxes = false;
+            this.showDataPoints = false;
         }
 
         if (Array.isArray(this.data.names)) {
@@ -307,12 +307,15 @@ class GrapheneLinegraph {
             verticalData = verticalData.concat(this.data.u);
         }
 
-        this.defaultDataColour = '#000000';
+        this.defaultDataColourArray = ['#826AF9', '#2D99FF', '#F97B37'];
+        this.defaultDataColourStopArray = ['#FFFFFF', '#FFFFFF', '#FFFFFF'];
+        var defaultFontFamily = this.getStyle('font-family', 'Arial');
 
         this.alphasBackground = this.getStyle('--alphas-background', 1);
-        this.alphasUnderGraph = this.getStyle('--alphas-under-graph', 0.1);
+        // TODO: review the default value here if how gradient stops are generated is reworked
+        this.alphasUnderGraph = this.getStyle('--alphas-under-graph', 0.75);
         this.coloursBackground = this.getStyle('--colours-background', '#FFFFFF');
-        this.coloursDataAxis = this.getStyle('--colours-data-axis', '#E0DEFF');
+        this.coloursDataAxis = this.getStyle('--colours-data-axis', '#EAEAEA');
         this.coloursData = new Array();
         this.coloursDataStop = new Array();
         // TODO: alter this to continue looking until it can't find a contiguous number, for datasets that are not present at the start
@@ -325,14 +328,14 @@ class GrapheneLinegraph {
                 if (stopColour && stopColour != false) { this.coloursDataStop.push(stopColour); }
             }
         }
-        this.widthsData = this.getStyle('--widths-data', 1);
+        this.widthsData = this.getStyle('--widths-data', 4);
 
         if (!this.hideHorizontalAxis || !this.hideVerticalAxes) {
-            this.coloursAxesLabels = this.getStyle('--colours-axes-labels', '#555555');
-            this.coloursHorizontalLines = this.getStyle('--colours-horizontal-lines', '#EEEEEE');
-            this.fontsAxesLabelsSize = this.getStyle('--fonts-axes-labels-size', 0);
-            this.fontsAxesLabelsFamily = this.getStyle('--fonts-axes-labels-family', 'Arial');
-            this.fontsAxesLabelsWeight = this.getStyle('--fonts-axes-labels-weight', 'normal');
+            this.coloursAxesLabels = this.getStyle('--colours-axes-labels', '#858585');
+            this.coloursHorizontalLines = this.getStyle('--colours-horizontal-lines', '#EAEAEA');
+            this.fontsAxesLabelsSize = this.getStyle('--fonts-axes-labels-size', 10);
+            this.fontsAxesLabelsFamily = this.getStyle('--fonts-axes-labels-family', defaultFontFamily);
+            this.fontsAxesLabelsWeight = this.getStyle('--fonts-axes-labels-weight', 500);
         }
 
         if (this.properties && this.properties.x_axis && this.properties.x_axis.markers) {
@@ -341,35 +344,37 @@ class GrapheneLinegraph {
         }
 
         if (this.highLightEnabled) {
-            this.alphasInformationPanel = this.getStyle('--alphas-information-panel', 0.75);
+            this.alphasInformationPanel = this.getStyle('--alphas-information-panel', 1);
             this.coloursHighlightIndicator = this.getStyle('--colours-highlight-indicator', '#FFFFFF');
             this.coloursInformationHeading = this.getStyle('--colours-information-heading', '#FFFFFF');
-            this.coloursInformationPanel = this.getStyle('--colours-information-panel', '#333333');
+            this.coloursInformationPanel = this.getStyle('--colours-information-panel', '#000000');
             this.coloursInformationSentences = this.getStyle('--colours-information-sentences', '#FFFFFF');
-            this.fontsInformationHeadingFamily = this.getStyle('--fonts-information-heading-family', 'Arial');
-            this.fontsInformationHeadingSize = this.getStyle('--fonts-information-heading-size', 13);
-            this.fontsInformationHeadingWeight = this.getStyle('--fonts-information-heading-weight', 'normal');
-            this.fontsInformationSentencesFamily = this.getStyle('--fonts-information-sentences-family', 'Arial');
-            this.fontsInformationSentencesSize = this.getStyle('--fonts-information-sentences-size', 13);
-            this.fontsInformationSentencesWeight = this.getStyle('--fonts-information-sentences-weight', 'normal');
-            this.radiiDataHighlightIndicator = this.getStyle('--radii-data-highlight-indicator', 4);
-            this.radiiHighlightIndicator = this.getStyle('--radii-highlight-indicator', 2);
+            this.fontsInformationHeadingFamily = this.getStyle('--fonts-information-heading-family', defaultFontFamily);
+            this.fontsInformationHeadingSize = this.getStyle('--fonts-information-heading-size', 12);
+            this.fontsInformationHeadingWeight = this.getStyle('--fonts-information-heading-weight', 700);
+            this.fontsInformationSentencesFamily = this.getStyle('--fonts-information-sentences-family', defaultFontFamily);
+            this.fontsInformationSentencesSize = this.getStyle('--fonts-information-sentences-size', 12);
+            this.fontsInformationSentencesWeight = this.getStyle('--fonts-information-sentences-weight', 500);
+            this.radiiDataHighlightIndicator = this.getStyle('--radii-data-highlight-indicator', 3);
+            this.radiiHighlightIndicator = this.getStyle('--radii-highlight-indicator', 3);
             this.radiiInformationPanelBorder = this.getStyle('--radii-information-panel-border', 10);
-            this.widthsDataHighlightIndicator = this.getStyle('--widths-data-highlight-indicator', 4);
-            this.widthsHighlightIndicator = this.getStyle('--widths-highlight-indicator', 2);
+            this.widthsDataHighlightIndicator = this.getStyle('--widths-data-highlight-indicator', 10);
+            this.widthsHighlightIndicator = this.getStyle('--widths-highlight-indicator', 3);
         }
 
         if (this.zoomEnabled) {
             this.alphasSelectionBox = this.getStyle('--alphas-selection-box', 0.25);
-            this.coloursSelectionBox = this.getStyle('--colours-selection-box', '#0000FF');
+            this.coloursSelectionBox = this.getStyle('--colours-selection-box', '#00FF00');
         }
 
         if (this.showDataPoints) {
+            // TODO: settle on defaults for alphasDataPoint, coloursDataPointInner and coloursDataPointOuter properties
+            // ^they should really include a fallback to the data colour, unless they are specified
             this.alphasDataPoint = this.getStyle('--alphas-data-point', 0.25);
             this.coloursDataPointInner = this.getStyle('--colours-data-point-inner', '#FF0000');
             this.coloursDataPointOuter = this.getStyle('--colours-data-point-outer', '#0000FF');
-            this.radiiDataPoint = this.getStyle('--radii-data-point', 2);
-            this.widthsDataPoint = this.getStyle('--widths-data-point', 4);
+            this.radiiDataPoint = this.getStyle('--radii-data-point', 3);
+            this.widthsDataPoint = this.getStyle('--widths-data-point', 10);
         }
     }
 
