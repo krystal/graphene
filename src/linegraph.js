@@ -98,6 +98,9 @@ class GrapheneLinegraph {
         if (!this.hideVerticalAxes) {
             this.drawHorizontalLines();
         }
+        if (!this.hideHorizontalAxis) {
+            this.drawVerticalLines();
+        }
         for (var i = 0; i < this.data.y.length; i++) {
             var dataColour = this.getDataColour(i);
             var dataColourStop = this.getDataColourStop(i);
@@ -333,6 +336,7 @@ class GrapheneLinegraph {
         if (!this.hideHorizontalAxis || !this.hideVerticalAxes) {
             this.coloursAxesLabels = this.getStyle('--colours-axes-labels', '#858585');
             this.coloursHorizontalLines = this.getStyle('--colours-horizontal-lines', '#EAEAEA');
+            this.coloursVerticalLines = this.getStyle('--colours-vertical-lines', '#EAEAEA');
             this.fontsAxesLabelsSize = this.getStyle('--fonts-axes-labels-size', 10);
             this.fontsAxesLabelsFamily = this.getStyle('--fonts-axes-labels-family', defaultFontFamily);
             this.fontsAxesLabelsWeight = this.getStyle('--fonts-axes-labels-weight', 500);
@@ -613,6 +617,22 @@ class GrapheneLinegraph {
         for (var i = 0; i < yAxisTotalIntervals; i++) {
             this.backgroundContext.moveTo(0, i * this.labelIntervalY);
             this.backgroundContext.lineTo(this.calculateAxisRangeX(), i * this.labelIntervalY);
+        }
+
+        this.backgroundContext.restore();
+        this.backgroundContext.stroke();
+    }
+
+    drawVerticalLines() {
+        this.backgroundContext.strokeStyle = this.coloursVerticalLines;
+        this.backgroundContext.lineWidth = 1;
+        this.transformDrawingArea();
+
+        this.backgroundContext.beginPath();
+
+        for (var i = 0; i <= this.calculateAxisRangeX(); i++) {
+            this.backgroundContext.moveTo(i, 0);
+            this.backgroundContext.lineTo(i, this.axisRangeY);
         }
 
         this.backgroundContext.restore();
