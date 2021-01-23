@@ -18,7 +18,6 @@ class GraphenePiegraph {
     this.addMouseEvents();
   }
 
-  // TODO: investigate pies getting larger than smaller when resizing (it may be a quirk of the way that the space for the key is allocated)
   // TODO: review the implementation of the horizontal margin
   // TODO: when available graph width > height centre the graph horizontally
   // TODO: allow the key to be placed at the top, left, right or bottom of the graph (for now, at least turn it off by default)
@@ -174,9 +173,9 @@ class GraphenePiegraph {
     var labelHeightApproximation = this.backgroundContext.measureText("M").width;
     this.keyWidth = (2 * labelHeightApproximation) + maxLabelWidth;
 
-    var horizontalMargin = this.canvasWidth * 0.05;
-    // a margin at either end then 1.5 margins between the graph and the key
-    var availableGraphWidth = this.canvasWidth - this.keyWidth - (3.5 * horizontalMargin);
+    var horizontalMargin = labelHeightApproximation;
+    // a margin at either end then 3 margins between the graph and the key
+    var availableGraphWidth = this.canvasWidth - this.keyWidth - (5 * horizontalMargin);
     var availableGraphHeight = this.canvasHeight - (2 * horizontalMargin);
     this.graphWidth = Math.min(availableGraphWidth, availableGraphHeight);
     this.graphHeight = this.graphWidth;
@@ -189,7 +188,7 @@ class GraphenePiegraph {
     var contentHeightAppoximation = labelHeightApproximation * (this.data.names.length + ((this.data.names.length - 1) * 2));
 
     this.keyHeight = contentHeightAppoximation;
-    this.keyStartX = this.graphWidth + (2.5 * horizontalMargin);
+    this.keyStartX = this.graphWidth + (4 * horizontalMargin);
     this.keyStartY = (this.canvasHeight - this.keyHeight) / 2;
   }
 
