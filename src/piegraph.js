@@ -19,10 +19,17 @@ class GraphenePiegraph {
   }
 
   // TODO: when available graph width > height centre the graph horizontally
-  // TODO: allow the key to be placed at the top, left, right or bottom of the graph (for now, at least turn it off by default)
+  // TODO: add a flag in properties for turning the key on (have it off by default)
+  // TODO: support the key being placed to the left as well as to the right of the graph
+  // TODO: investigate what happens when available height is greater than available width (does the graph centre vertically?)
+  // TODO: support the key being placed at the top or bottom of the graph (landscape layout rather than portrait)
   // TODO: parameterise more things in properties
-  // TODO: warn about key clipping
-  // TODO: stop drawing graph labels when there isn't enough space
+  // TODO: warn about key clipping - will that ever happen? we currently sacrifice graph space over key space...
+  // TODO: stop drawing graph labels when there isn't enough space in the segment (still a tricky thing to account for)
+  // TODO: add something to the foreground layer on hovering over a segment (the segment could appear shaded in and an information box could appear on top of it)
+  // ^if we keep counting the inner ring of doughnut (and margins between the segments) as valid segment space, then this shouldn't be too bad
+  // ^^because all we'd nee to check is if we're in the big circle then what the degree is on the circle
+  // ^^^the information panel should contain the name, percentage and raw value
 
   createLayers() {
     this.removeLayers();
