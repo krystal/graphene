@@ -18,7 +18,6 @@ class GraphenePiegraph {
     this.addMouseEvents();
   }
 
-  // TODO: review the implementation of the horizontal margin
   // TODO: when available graph width > height centre the graph horizontally
   // TODO: allow the key to be placed at the top, left, right or bottom of the graph (for now, at least turn it off by default)
   // TODO: parameterise more things in properties
