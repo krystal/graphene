@@ -337,10 +337,10 @@ class GrapheneLinegraph {
             this.coloursAxesLabels = this.getStyle('--colours-axes-labels', '#858585');
             this.coloursHorizontalLines = this.getStyle('--colours-horizontal-lines', '#EAEAEA');
             this.coloursVerticalLines = this.getStyle('--colours-vertical-lines', '#EAEAEA');
-            this.fontsAxesLabelsSize = this.getStyle('--fonts-axes-labels-size', 10);
-            this.fontsAxesLabelsFamily = this.getStyle('--fonts-axes-labels-family', defaultFontFamily);
-            this.fontsAxesLabelsWeight = this.getStyle('--fonts-axes-labels-weight', 500);
         }
+        this.fontsAxesLabelsSize = this.getStyle('--fonts-axes-labels-size', 10);
+        this.fontsAxesLabelsFamily = this.getStyle('--fonts-axes-labels-family', defaultFontFamily);
+        this.fontsAxesLabelsWeight = this.getStyle('--fonts-axes-labels-weight', 500);
 
         if (this.properties && this.properties.x_axis && this.properties.x_axis.markers) {
             this.coloursMarker = this.getStyle('--colours-marker', '#000000');

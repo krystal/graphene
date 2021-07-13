@@ -309,10 +309,10 @@ class GrapheneBargraph {
       if (!this.hideHorizontalAxis || !this.hideVerticalAxes) {
           this.coloursAxesLabels = this.getStyle('--colours-axes-labels', '#555555');
           this.coloursHorizontalLines = this.getStyle('--colours-horizontal-lines', '#EEEEEE');
-          this.fontsAxesLabelsSize = this.getStyle('--fonts-axes-labels-size', 0);
-          this.fontsAxesLabelsFamily = this.getStyle('--fonts-axes-labels-family', 'Arial');
-          this.fontsAxesLabelsWeight = this.getStyle('--fonts-axes-labels-weight', 'normal');
       }
+      this.fontsAxesLabelsSize = this.getStyle('--fonts-axes-labels-size', 0);
+      this.fontsAxesLabelsFamily = this.getStyle('--fonts-axes-labels-family', 'Arial');
+      this.fontsAxesLabelsWeight = this.getStyle('--fonts-axes-labels-weight', 'normal');
 
       if (this.properties && this.properties.x_axis && this.properties.x_axis.markers) {
           this.coloursMarker = this.getStyle('--colours-marker', '#000000');
