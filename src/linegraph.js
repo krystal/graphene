@@ -531,13 +531,16 @@ class GrapheneLinegraph {
 
         this.bottomMargin = greatestExtent;
         this.graphStartY = greatestExtent;
-        var maxLabelWidthX = 0;
-        var maxLabelWidthY = 0;
-        var maxLabelWidthU = 0;
+
         if (this.hideHorizontalAxis && this.hideVerticalAxes) {
             this.graphEndY = this.canvasHeight - this.bottomMargin;
             this.graphHeight = this.graphEndY - this.graphStartY;
+            this.leftMargin = 0;
+            this.rightMargin = 0;
         } else {
+            var maxLabelWidthX = 0;
+            var maxLabelWidthY = 0;
+            var maxLabelWidthU = 0;
             this.backgroundContext.font = this.fontsAxesLabelsWeight + " " + this.fontsAxesLabelsSize + "px " + this.fontsAxesLabelsFamily;
             var labelHeightApproximation = this.backgroundContext.measureText("M").width;
 
@@ -587,11 +590,12 @@ class GrapheneLinegraph {
                     }
                 }
             }
+
+            var minMargin = Math.max(maxLabelWidthX / 1.5, greatestExtent);
+            this.leftMargin = Math.max(maxLabelWidthY + (2 * this.fontsAxesLabelsSize), minMargin);
+            this.rightMargin = Math.max(maxLabelWidthU + (2 * this.fontsAxesLabelsSize), minMargin);
         }
 
-        var minMargin = Math.max(maxLabelWidthX / 1.5, greatestExtent);
-        this.leftMargin = Math.max(maxLabelWidthY + (2 * this.fontsAxesLabelsSize), minMargin);
-        this.rightMargin = Math.max(maxLabelWidthU + (2 * this.fontsAxesLabelsSize), minMargin);
         this.graphStartX = this.leftMargin;
         this.graphEndX = this.canvasWidth - this.rightMargin;
         this.graphWidth = this.graphEndX - this.graphStartX;
