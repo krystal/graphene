@@ -535,8 +535,8 @@ class GrapheneLinegraph {
         if (this.hideHorizontalAxis && this.hideVerticalAxes) {
             this.graphEndY = this.canvasHeight - this.bottomMargin;
             this.graphHeight = this.graphEndY - this.graphStartY;
-            this.leftMargin = 0;
-            this.rightMargin = 0;
+            this.leftMargin = greatestExtent;
+            this.rightMargin = greatestExtent;
         } else {
             var maxLabelWidthX = 0;
             var maxLabelWidthY = 0;
