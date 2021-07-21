@@ -690,7 +690,7 @@ class GrapheneLinegraph {
             points.push(i);
             points.push(dataset[this.axisMinX + i] * scale);
         }
-        this.grapheneHelper.drawLines(this.graphDrawingMethod, this.backgroundContext, points);
+        this.grapheneHelper.drawLines(this.graphDrawingMethod, this.backgroundContext, points, this.axisMaxY);
         this.backgroundContext.lineTo(axisRangeX, this.axisMinY);
 
         this.backgroundContext.restore();
@@ -711,7 +711,7 @@ class GrapheneLinegraph {
             points.push(i);
             points.push(dataset[this.axisMinX + i] * scale);
         }
-        this.grapheneHelper.drawLines(this.graphDrawingMethod, this.backgroundContext, points);
+        this.grapheneHelper.drawLines(this.graphDrawingMethod, this.backgroundContext, points, this.axisMaxY);
 
         this.backgroundContext.restore();
         this.backgroundContext.stroke();

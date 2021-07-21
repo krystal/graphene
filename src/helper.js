@@ -86,7 +86,7 @@ class GrapheneHelper {
     context.fill();
   }
 
-  drawLines(type, context, points) {
+  drawLines(type, context, points, maxY) {
     if (type == 'lines') {
       for (var i = 0; i < points.length; i += 2) {
         context.lineTo(points[i], points[i + 1]);
@@ -106,25 +106,37 @@ class GrapheneHelper {
         context.quadraticCurveTo(controlPointX2, y1, x1, y1);
       }
     } else if (type == 'splines') {
-      this.drawSpline(context, points, 0.33);
+      this.drawSpline(context, points, 0.33, maxY);
     }
   }
 
   //http://scaledinnovation.com/analytics/splines/aboutSplines.html
-  getControlPoints(x0, y0, x1, y1, x2, y2, t) {
+  getControlPoints(x0, y0, x1, y1, x2, y2, t, maxY) {
     //  x0,y0,x1,y1 are the coordinates of the end (knot) pts of this segment
     //  x2,y2 is the next knot -- not connected here but needed to calculate p2
     //  p1 is the control point calculated here, from x1 back toward x0.
     //  p2 is the next control point, calculated here and returned to become the
     //  next segment's p1.
     //  t is the 'tension' which controls how far the control points spread.
+    //  at is adjusted tension
+
+    var at = t;
+    if (y1 == 0) {
+      if (maxY >= 100) {
+        at = t;
+      } else if (maxY <= 3) {
+        at = 0.01;
+      } else {
+        at = (maxY / 100) * t;
+      }
+    }
 
     //  Scaling factors: distances from this knot to the previous and following knots.
     var d01 = Math.sqrt(Math.pow(x1 - x0, 2) + Math.pow(y1 - y0, 2));
     var d12 = Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
 
-    var fa = t * d01 / (d01 + d12);
-    var fb = t - fa;
+    var fa = at * d01 / (d01 + d12);
+    var fb = at - fa;
 
     var p1x = x1 + fa * (x0 - x2);
     var p1y = y1 + fa * (y0 - y2);
@@ -136,13 +148,13 @@ class GrapheneHelper {
   }
 
   //http://scaledinnovation.com/analytics/splines/aboutSplines.html
-  drawSpline(ctx, pts, t) {
+  drawSpline(ctx, pts, t, maxY) {
     var cp = [];   // array of control points, as x0,y0,x1,y1,...
     var n = pts.length;
 
     // Draw an open curve, not connected at the ends
     for (var i = 0; i < n - 4; i += 2) {
-      cp = cp.concat(this.getControlPoints(pts[i], pts[i + 1], pts[i + 2], pts[i + 3], pts[i + 4], pts[i + 5], t));
+      cp = cp.concat(this.getControlPoints(pts[i], pts[i + 1], pts[i + 2], pts[i + 3], pts[i + 4], pts[i + 5], t, maxY));
     }
 
     //  For open curves the first and last arcs are simple quadratics.

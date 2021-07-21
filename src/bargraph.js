@@ -524,7 +524,7 @@ class GrapheneBargraph {
         points.push(offsetIndex + i + 0.5);
         points.push(dataset[this.axisMinX + i] * scale);
     }
-    this.grapheneHelper.drawLines('lines', this.backgroundContext, points);
+    this.grapheneHelper.drawLines('lines', this.backgroundContext, points, this.axisMaxY);
 
     this.backgroundContext.restore();
     this.backgroundContext.stroke();
