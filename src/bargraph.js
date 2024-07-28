@@ -58,8 +58,10 @@ export default class Bargraph {
     this.foreground.addEventListener("mouseleave", this.handleMouseLeave.bind(this), false);
   }
 
-  // TODO: do some refactoring
-  // TODO: investigate "Save Image As..." in browsers, it currently, understandably, saves only the foreground layer
+  /*
+   * TODO: do some refactoring
+   * TODO: investigate "Save Image As..." in browsers, it currently, understandably, saves only the foreground layer
+   */
 
   draw() {
       this.drawn = true;
@@ -90,11 +92,11 @@ export default class Bargraph {
       if (!this.hideVerticalAxes) {
           this.drawHorizontalLines();
       }
-      for (var i = 0; i < this.data.y.length; i++) {
+      for (let i = 0; i < this.data.y.length; i += 1) {
           this.drawBarGraph(i);
       }
       if (this.data.u) {
-        for (var i = 0; i < this.data.u.length; i++) {
+        for (let i = 0; i < this.data.u.length; i += 1) {
             this.drawLineGraph(i, this.graphScaleU);
         }
       }
@@ -105,7 +107,7 @@ export default class Bargraph {
           this.drawVerticalAxesLabels();
       }
       if (this.drawLinesOfBestFit) {
-          for (var i = 0; i < this.data.y.length; i++) {
+          for (let i = 0; i < this.data.y.length; i += 1) {
             this.drawLineOfBestFit(i);
           }
       }
@@ -137,29 +139,29 @@ export default class Bargraph {
 
   getLabelComponents(value, labelSuffixArray) {
       if (labelSuffixArray.length == 1) {
-          return { "value": value, "suffix": labelSuffixArray[0][1] };
+          return {"value": value, "suffix": labelSuffixArray[0][1]};
       }
 
       var lastLimit = 1;
       var lastButOneLimit = 1;
       var lastSuffix = "";
-      for (var i = 0; i < labelSuffixArray.length; i++) {
+      for (let i = 0; i < labelSuffixArray.length; i += 1) {
           var limit = labelSuffixArray[i][0];
           var suffix = labelSuffixArray[i][1];
           if (value < limit) {
-              return { "value": value / (lastLimit), "suffix": suffix };
+              return {"value": value / (lastLimit), "suffix": suffix};
           }
           lastButOneLimit = lastLimit;
           lastLimit = limit;
           lastSuffix = suffix;
       }
 
-      return { "value": value / (lastLimit / lastButOneLimit), "suffix": lastSuffix };
+      return {"value": value / (lastLimit / lastButOneLimit), "suffix": lastSuffix};
   }
 
   getLabelComponentsY(value) {
       if (!this.properties || !this.properties.y_axis || !this.properties.y_axis.label_suffix) {
-          return { "value": value, "suffix": "" };
+          return {"value": value, "suffix": ""};
       }
 
       return this.getLabelComponents(value, this.properties.y_axis.label_suffix);
@@ -167,7 +169,7 @@ export default class Bargraph {
 
   getLabelComponentsU(value) {
       if (!this.properties || !this.properties.u_axis || !this.properties.u_axis.label_suffix) {
-          return { "value": value, "suffix": "" };
+          return {"value": value, "suffix": ""};
       }
 
       return this.getLabelComponents(value, this.properties.u_axis.label_suffix);
@@ -183,10 +185,10 @@ export default class Bargraph {
 
   getMaxValueY() {
       var maxY = 0;
-      for (var i = 0; i < this.data.y.length; i++) {
-          for (var j = 0; j < this.data.y[i].length; j++) {
+      for (let i = 0; i < this.data.y.length; i += 1) {
+          for (let j = 0; j < this.data.y[i].length; j += 1) {
               var y = this.data.y[i][j];
-              if (y > maxY) { maxY = y; }
+              if (y > maxY) {maxY = y;}
           }
       }
       return maxY != 0 ? maxY : 1;
@@ -195,10 +197,10 @@ export default class Bargraph {
   getMaxValueU() {
       var maxU = 0;
       if (this.data.u) {
-          for (var i = 0; i < this.data.u.length; i++) {
-              for (var j = 0; j < this.data.u[i].length; j++) {
+          for (let i = 0; i < this.data.u.length; i += 1) {
+              for (let j = 0; j < this.data.u[i].length; j += 1) {
                   var u = this.data.u[i][j];
-                  if (u > maxU) { maxU = u; }
+                  if (u > maxU) {maxU = u;}
               }
           }
       }
@@ -287,17 +289,17 @@ export default class Bargraph {
       this.coloursDataAxis = this.getStyle("--colours-data-axis", "#E0DEFF");
       this.coloursData = new Array();
       // TODO: alter this to continue looking until it can"t find a contiguous number, for datasets that are not present at the start
-      for (var i = 0; i < verticalData.length; i++) {
+      for (let i = 0; i < verticalData.length; i += 1) {
           var colour = this.getStyle("--colours-data-" + i, false);
-          if (colour && colour != false) { this.coloursData.push(colour); }
+          if (colour && colour != false) {this.coloursData.push(colour);}
       }
 
       if (this.drawLinesOfBestFit) {
         this.coloursBestFit = new Array();
         // TODO: alter this to continue looking until it can"t find a contiguous number, for datasets that are not present at the start
-        for (var i = 0; i < this.data.y.length; i++) {
+        for (let i = 0; i < this.data.y.length; i += 1) {
             var colour = this.getStyle("--colours-best-fit-" + i, false);
-            if (colour && colour != false) { this.coloursBestFit.push(colour); }
+            if (colour && colour != false) {this.coloursBestFit.push(colour);}
         }
         this.widthsBestFit = this.getStyle("--widths-best-fit", 4);
       }
@@ -340,7 +342,7 @@ export default class Bargraph {
       if (this.properties && this.properties.x_axis && this.properties.x_axis.markers) {
           var counts = Array(this.calculateAxisRangeX() + 1).fill(0);
 
-          for (var i = 0; i < this.properties.x_axis.markers.length; i++) {
+          for (let i = 0; i < this.properties.x_axis.markers.length; i += 1) {
               var marker = this.properties.x_axis.markers[i];
               counts[marker[0]] += 1;
           }
@@ -356,14 +358,14 @@ export default class Bargraph {
       this.axisMinX = 0;
       this.axisMaxX = this.data.x.length - 1;
       if (this.properties && this.properties.x_axis) {
-          if (this.properties.x_axis.min) { this.axisMinX = this.properties.x_axis.min; }
-          if (this.properties.x_axis.max) { this.axisMaxX = this.properties.x_axis.max; }
+          if (this.properties.x_axis.min) {this.axisMinX = this.properties.x_axis.min;}
+          if (this.properties.x_axis.max) {this.axisMaxX = this.properties.x_axis.max;}
       }
       this.axisMinY = 0;
       this.axisMaxY = this.calculateAxisMaxY();
       if (this.properties && this.properties.y_axis) {
-          if (this.properties.y_axis.min) { this.axisMinY = this.properties.y_axis.min; }
-          if (this.properties.y_axis.max) { this.axisMaxY = this.properties.y_axis.max; }
+          if (this.properties.y_axis.min) {this.axisMinY = this.properties.y_axis.min;}
+          if (this.properties.y_axis.max) {this.axisMaxY = this.properties.y_axis.max;}
       }
       this.axisRangeY = this.axisMaxY - this.axisMinY;
 
@@ -422,7 +424,7 @@ export default class Bargraph {
 
               this.labelIntervalY = workingInterval;
 
-              for (var i = this.axisMinY; i <= this.axisMaxY; i += this.labelIntervalY) {
+              for (let i = this.axisMinY; i <= this.axisMaxY; i += this.labelIntervalY) {
                   var labelComponentsY = this.getLabelComponentsY(i);
                   var labelWidthY = this.backgroundContext.measureText(this.helper.applyAffix(labelComponentsY.value, this.getLabelPrefixY(), labelComponentsY.suffix)).width;
                   if (labelWidthY > maxLabelWidthY) {
@@ -465,7 +467,7 @@ export default class Bargraph {
       this.backgroundContext.beginPath();
 
       var yAxisTotalIntervals = (this.axisRangeY / this.labelIntervalY) + 1;
-      for (var i = 0; i < yAxisTotalIntervals; i++) {
+      for (let i = 0; i < yAxisTotalIntervals; i += 1) {
           this.backgroundContext.moveTo(0, i * this.labelIntervalY);
           this.backgroundContext.lineTo(this.calculateAxisRangeX() + 1, i * this.labelIntervalY);
       }
@@ -484,7 +486,7 @@ export default class Bargraph {
 
       this.backgroundContext.beginPath();
 
-      for (var i = 0; i <= projectedIndex; i++) {
+      for (var i = 0; i <= projectedIndex; i += 1) {
           this.backgroundContext.fillRect((i + (datasetWidth / 2)) + (index * datasetWidth), this.graphStartY, datasetWidth, dataset[this.axisMinX + i]);
       }
 
@@ -496,7 +498,7 @@ export default class Bargraph {
 
       this.backgroundContext.beginPath();
 
-      for (var i = projectedIndex + 1; i <= this.axisMaxX; i++) {
+      for (let i = projectedIndex + 1; i <= this.axisMaxX; i += 1) {
           this.backgroundContext.fillRect((i + (datasetWidth / 2)) + (index * datasetWidth), this.graphStartY, datasetWidth, dataset[this.axisMinX + i]);
       }
 
@@ -515,9 +517,9 @@ export default class Bargraph {
     this.backgroundContext.beginPath();
 
     var axisRangeX = this.calculateAxisRangeX();
-    if (axisRangeX > 0) { this.backgroundContext.moveTo(offsetIndex + 0.5, dataset[this.axisMinX] * scale); }
+    if (axisRangeX > 0) {this.backgroundContext.moveTo(offsetIndex + 0.5, dataset[this.axisMinX] * scale);}
     var points = new Array();
-    for (var i = 0; i <= axisRangeX; i++) {
+    for (var i = 0; i <= axisRangeX; i += 1) {
         points.push(offsetIndex + i + 0.5);
         points.push(dataset[this.axisMinX + i] * scale);
     }
@@ -529,7 +531,7 @@ export default class Bargraph {
 
   caclulateMaxLabelWidthX() {
       var maxLabelWidthX = 0;
-      for (var i = this.axisMinX; i <= this.axisMaxX; i++) {
+      for (let i = this.axisMinX; i <= this.axisMaxX; i += 1) {
           var labelValue = this.data.x[i];
           var labelText = this.axisFormatter ? this.axisFormatter(labelValue, 0) : labelValue;
           var labelWidth = this.backgroundContext.measureText(labelText).width;
@@ -560,7 +562,7 @@ export default class Bargraph {
       this.backgroundContext.textAlign = "center";
       this.backgroundContext.textBaseline = "middle";
 
-      for (var i = 0; i <= this.calculateAxisRangeX(); i += xAxisLabelInterval) {
+      for (let i = 0; i <= this.calculateAxisRangeX(); i += xAxisLabelInterval) {
           var xValue = this.data.x[this.axisMinX + i];
           var xText = xValue;
           if (this.axisFormatter) {
@@ -574,11 +576,11 @@ export default class Bargraph {
   drawMarkers() {
       var counts = Array(this.calculateAxisRangeX() + 1).fill(0);
 
-      for (var i = 0; i < this.properties.x_axis.markers.length; i++) {
+      for (let i = 0; i < this.properties.x_axis.markers.length; i += 1) {
           var marker = this.properties.x_axis.markers[i];
           var line = counts[marker[0]];
 
-          var axisPosition = { x: this.graphStartX + ((marker[0] + 0.5) * this.graphScaleX), y: this.graphEndY };
+          var axisPosition = {x: this.graphStartX + ((marker[0] + 0.5) * this.graphScaleX), y: this.graphEndY};
 
           this.backgroundContext.strokeStyle = this.coloursMarker;
           this.backgroundContext.lineWidth = this.widthsMarker;
@@ -609,7 +611,7 @@ export default class Bargraph {
       let indexLabelMap = new Map();
 
       if (this.data.u) {
-        for (var i = this.axisMinY; i <= this.axisMaxY; i += this.labelIntervalY) {
+        for (let i = this.axisMinY; i <= this.axisMaxY; i += this.labelIntervalY) {
             var valueU = i / this.graphScaleU;
             valueU = isNaN(valueU) ? 0 : valueU;
             var labelValueU = +valueU.toFixed(this.getDecimalPlacesU());
@@ -617,7 +619,7 @@ export default class Bargraph {
             if (!labelValueIndexMap.has(labelValueU)) {
                 labelValueIndexMap.set(labelValueU, new Array());
             }
-            labelValueIndexMap.get(labelValueU).push({ value: Math.abs(labelValueU - valueU), index: i });
+            labelValueIndexMap.get(labelValueU).push({value: Math.abs(labelValueU - valueU), index: i});
         }
 
         for (let key of labelValueIndexMap.keys()) {
@@ -631,7 +633,7 @@ export default class Bargraph {
         }
     }
 
-      for (var i = this.axisMinY; i <= this.axisMaxY; i += this.labelIntervalY) {
+      for (let i = this.axisMinY; i <= this.axisMaxY; i += this.labelIntervalY) {
           var labelComponentsY = this.getLabelComponentsY(i);
           this.backgroundContext.fillText(this.helper.applyAffix(labelComponentsY.value, this.getLabelPrefixY(), labelComponentsY.suffix), (this.leftMargin / 2), this.graphEndY - ((i - this.axisMinY) * this.graphScaleY));
 
@@ -662,7 +664,7 @@ export default class Bargraph {
     this.foregroundContext.stroke();
     this.foregroundContext.fill();
 
-    for (var i = 0; i < dataHighlights.length; i++) {
+    for (let i = 0; i < dataHighlights.length; i += 1) {
         this.foregroundContext.strokeStyle = this.getDataColour(i);
         this.foregroundContext.lineWidth = this.widthsDataHighlightIndicator;
         this.foregroundContext.fillStyle = this.coloursHighlightIndicator;
@@ -695,7 +697,7 @@ export default class Bargraph {
     var sentenceHeightApproximation = this.foregroundContext.measureText("M").width;
     var maxSentenceWidth = this.foregroundContext.measureText(headingText).width + (2 * sentenceHeightApproximation);
     this.foregroundContext.font = this.fontsInformationSentencesWeight + " " + this.fontsInformationSentencesSize + "px " + this.fontsInformationSentencesFamily;
-    for (var i = 0; i < this.data.y.length; i++) {
+    for (let i = 0; i < this.data.y.length; i += 1) {
         var yValue = this.data.y[i][this.axisMinX + index];
         yValue = isNaN(yValue) ? 0 : yValue;
         var labelComponents = this.getLabelComponentsY(yValue);
@@ -712,7 +714,7 @@ export default class Bargraph {
     if (this.data.u) {
         var hasOffsetIndex = this.properties && this.properties.u_axis && this.properties.u_axis.offset_index;
         var offsetIndex = hasOffsetIndex ? this.properties.u_axis.offset_index : 0;
-        for (var i = 0; i < this.data.u.length; i++) {
+        for (let i = 0; i < this.data.u.length; i += 1) {
             var uValue = this.data.u[i][this.axisMinX + index - offsetIndex];
             uValue = isNaN(uValue) ? 0 : uValue;
             var labelComponents = this.getLabelComponentsU(uValue);
@@ -756,7 +758,7 @@ export default class Bargraph {
     sentenceOffsetY += 2 * sentenceHeightApproximation;
 
     this.foregroundContext.font = this.fontsInformationSentencesWeight + " " + this.fontsInformationSentencesSize + "px " + this.fontsInformationSentencesFamily;
-    for (var i = 0; i < sentences.length; i++) {
+    for (let i = 0; i < sentences.length; i += 1) {
         this.foregroundContext.fillStyle = this.getDataColour(i);
         this.foregroundContext.fillRect(panelX + sentenceHeightApproximation, circleOffsetY, sentenceHeightApproximation, sentenceHeightApproximation);
         this.foregroundContext.fillStyle = this.coloursInformationSentences;
@@ -768,16 +770,16 @@ export default class Bargraph {
 
   highlight(index) {
     this.clearForeground();
-    if (index == -1) { return false; }
+    if (index == -1) {return false; }
 
-    var axisHighlight = { x: this.graphStartX + ((0.5 + index) * this.graphScaleX), y: this.graphEndY };
+    var axisHighlight = {x: this.graphStartX + ((0.5 + index) * this.graphScaleX), y: this.graphEndY};
     var dataHighlights = new Array();
 
     var verticalValueMax = Infinity;
-    for (var i = 0; i < this.data.y.length; i++) {
+    for (let i = 0; i < this.data.y.length; i += 1) {
         var y = this.data.y[i][this.axisMinX + index];
         var yValue = this.graphStartY + (-(y - this.axisMaxY) * this.graphScaleY);
-        dataHighlights.push({ x: this.graphStartX + ((0.5 + index) * this.graphScaleX), y: yValue });
+        dataHighlights.push({x: this.graphStartX + ((0.5 + index) * this.graphScaleX), y: yValue});
         if (yValue < verticalValueMax) {
             verticalValueMax = yValue;
         }
@@ -786,10 +788,10 @@ export default class Bargraph {
     if (this.data.u) {
         var hasOffsetIndex = this.properties && this.properties.u_axis && this.properties.u_axis.offset_index;
         var offsetIndex = hasOffsetIndex ? this.properties.u_axis.offset_index : 0;
-        for (var i = 0; i < this.data.u.length; i++) {
+        for (let i = 0; i < this.data.u.length; i += 1) {
             var u = this.data.u[i][this.axisMinX + index - offsetIndex];
             var uValue = this.graphStartY + (-((u * this.graphScaleU) - this.axisMaxY) * this.graphScaleY);
-            dataHighlights.push({ x: this.graphStartX + ((0.5 + index) * this.graphScaleX), y: uValue });
+            dataHighlights.push({x: this.graphStartX + ((0.5 + index) * this.graphScaleX), y: uValue});
             if (uValue < verticalValueMax) {
                 verticalValueMax = uValue;
             }
@@ -811,7 +813,7 @@ export default class Bargraph {
   }
 
   handleMouseMove(event) {
-    if (!this.drawn) { return; }
+    if (!this.drawn) {return;}
 
     var index = this.calculateIndex(event.offsetX);
     if (this.highLightEnabled) {
@@ -826,7 +828,7 @@ export default class Bargraph {
   }
 
   handleMouseLeave(event) {
-    if (!this.drawn) { return; }
+    if (!this.drawn) {return;}
 
     this.clearForeground();
     this.cancelMouseMove();
