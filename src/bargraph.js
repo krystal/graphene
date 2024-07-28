@@ -1,4 +1,4 @@
-import Helper from './helper.js';
+import Helper from "./helper.js";
 
 export default class Bargraph {
   constructor(element, properties, data, axisFormatter, informationFormatter) {
@@ -22,15 +22,15 @@ export default class Bargraph {
   createLayers() {
       this.removeLayers();
 
-      this.background = document.createElement('CANVAS');
+      this.background = document.createElement("CANVAS");
       this.background.width = this.element.getBoundingClientRect().width;
-      this.background.height = this.element.getAttribute('height');
+      this.background.height = this.element.getAttribute("height");
       this.element.appendChild(this.background);
 
       this.foreground = document.createElement("CANVAS");
       this.foreground.width = this.element.getBoundingClientRect().width;
-      this.foreground.height = this.element.getAttribute('height');
-      this.foreground.style.position = 'absolute';
+      this.foreground.height = this.element.getAttribute("height");
+      this.foreground.style.position = "absolute";
       this.foreground.style.left = 0;
       this.foreground.style.top = 0;
       this.foreground.style.zIndex = 0;
@@ -54,8 +54,8 @@ export default class Bargraph {
 
   addMouseEvents() {
     this.cancelMouseMove();
-    this.foreground.addEventListener('mousemove', this.handleMouseMove.bind(this), false);
-    this.foreground.addEventListener('mouseleave', this.handleMouseLeave.bind(this), false);
+    this.foreground.addEventListener("mousemove", this.handleMouseMove.bind(this), false);
+    this.foreground.addEventListener("mouseleave", this.handleMouseLeave.bind(this), false);
   }
 
   // TODO: do some refactoring
@@ -279,60 +279,60 @@ export default class Bargraph {
           verticalData = verticalData.concat(this.data.u);
       }
 
-      this.defaultDataColour = '#999999';
-      this.defaultBestFitColour = '#000000';
+      this.defaultDataColour = "#999999";
+      this.defaultBestFitColour = "#000000";
 
-      this.alphasBackground = this.getStyle('--alphas-background', 1);
-      this.coloursBackground = this.getStyle('--colours-background', '#FFFFFF');
-      this.coloursDataAxis = this.getStyle('--colours-data-axis', '#E0DEFF');
+      this.alphasBackground = this.getStyle("--alphas-background", 1);
+      this.coloursBackground = this.getStyle("--colours-background", "#FFFFFF");
+      this.coloursDataAxis = this.getStyle("--colours-data-axis", "#E0DEFF");
       this.coloursData = new Array();
-      // TODO: alter this to continue looking until it can't find a contiguous number, for datasets that are not present at the start
+      // TODO: alter this to continue looking until it can"t find a contiguous number, for datasets that are not present at the start
       for (var i = 0; i < verticalData.length; i++) {
-          var colour = this.getStyle('--colours-data-' + i, false);
+          var colour = this.getStyle("--colours-data-" + i, false);
           if (colour && colour != false) { this.coloursData.push(colour); }
       }
 
       if (this.drawLinesOfBestFit) {
         this.coloursBestFit = new Array();
-        // TODO: alter this to continue looking until it can't find a contiguous number, for datasets that are not present at the start
+        // TODO: alter this to continue looking until it can"t find a contiguous number, for datasets that are not present at the start
         for (var i = 0; i < this.data.y.length; i++) {
-            var colour = this.getStyle('--colours-best-fit-' + i, false);
+            var colour = this.getStyle("--colours-best-fit-" + i, false);
             if (colour && colour != false) { this.coloursBestFit.push(colour); }
         }
-        this.widthsBestFit = this.getStyle('--widths-best-fit', 4);
+        this.widthsBestFit = this.getStyle("--widths-best-fit", 4);
       }
-      this.widthsData = this.getStyle('--widths-data', 1);
+      this.widthsData = this.getStyle("--widths-data", 1);
 
       if (!this.hideHorizontalAxis || !this.hideVerticalAxes) {
-          this.coloursAxesLabels = this.getStyle('--colours-axes-labels', '#555555');
-          this.coloursHorizontalLines = this.getStyle('--colours-horizontal-lines', '#EEEEEE');
+          this.coloursAxesLabels = this.getStyle("--colours-axes-labels", "#555555");
+          this.coloursHorizontalLines = this.getStyle("--colours-horizontal-lines", "#EEEEEE");
       }
-      this.fontsAxesLabelsSize = this.getStyle('--fonts-axes-labels-size', 0);
-      this.fontsAxesLabelsFamily = this.getStyle('--fonts-axes-labels-family', 'Arial');
-      this.fontsAxesLabelsWeight = this.getStyle('--fonts-axes-labels-weight', 'normal');
+      this.fontsAxesLabelsSize = this.getStyle("--fonts-axes-labels-size", 0);
+      this.fontsAxesLabelsFamily = this.getStyle("--fonts-axes-labels-family", "Arial");
+      this.fontsAxesLabelsWeight = this.getStyle("--fonts-axes-labels-weight", "normal");
 
       if (this.properties && this.properties.x_axis && this.properties.x_axis.markers) {
-          this.coloursMarker = this.getStyle('--colours-marker', '#000000');
-          this.widthsMarker = this.getStyle('--widths-marker', 2);
+          this.coloursMarker = this.getStyle("--colours-marker", "#000000");
+          this.widthsMarker = this.getStyle("--widths-marker", 2);
       }
 
       if (this.highLightEnabled) {
-        this.alphasInformationPanel = this.getStyle('--alphas-information-panel', 0.75);
-        this.coloursHighlightIndicator = this.getStyle('--colours-highlight-indicator', '#FFFFFF');
-        this.coloursInformationHeading = this.getStyle('--colours-information-heading', '#FFFFFF');
-        this.coloursInformationPanel = this.getStyle('--colours-information-panel', '#333333');
-        this.coloursInformationSentences = this.getStyle('--colours-information-sentences', '#FFFFFF');
-        this.fontsInformationHeadingFamily = this.getStyle('--fonts-information-heading-family', 'Arial');
-        this.fontsInformationHeadingSize = this.getStyle('--fonts-information-heading-size', 13);
-        this.fontsInformationHeadingWeight = this.getStyle('--fonts-information-heading-weight', 'normal');
-        this.fontsInformationSentencesFamily = this.getStyle('--fonts-information-sentences-family', 'Arial');
-        this.fontsInformationSentencesSize = this.getStyle('--fonts-information-sentences-size', 13);
-        this.fontsInformationSentencesWeight = this.getStyle('--fonts-information-sentences-weight', 'normal');
-        this.radiiDataHighlightIndicator = this.getStyle('--radii-data-highlight-indicator', 4);
-        this.radiiHighlightIndicator = this.getStyle('--radii-highlight-indicator', 2);
-        this.radiiInformationPanelBorder = this.getStyle('--radii-information-panel-border', 10);
-        this.widthsDataHighlightIndicator = this.getStyle('--widths-data-highlight-indicator', 4);
-        this.widthsHighlightIndicator = this.getStyle('--widths-highlight-indicator', 2);
+        this.alphasInformationPanel = this.getStyle("--alphas-information-panel", 0.75);
+        this.coloursHighlightIndicator = this.getStyle("--colours-highlight-indicator", "#FFFFFF");
+        this.coloursInformationHeading = this.getStyle("--colours-information-heading", "#FFFFFF");
+        this.coloursInformationPanel = this.getStyle("--colours-information-panel", "#333333");
+        this.coloursInformationSentences = this.getStyle("--colours-information-sentences", "#FFFFFF");
+        this.fontsInformationHeadingFamily = this.getStyle("--fonts-information-heading-family", "Arial");
+        this.fontsInformationHeadingSize = this.getStyle("--fonts-information-heading-size", 13);
+        this.fontsInformationHeadingWeight = this.getStyle("--fonts-information-heading-weight", "normal");
+        this.fontsInformationSentencesFamily = this.getStyle("--fonts-information-sentences-family", "Arial");
+        this.fontsInformationSentencesSize = this.getStyle("--fonts-information-sentences-size", 13);
+        this.fontsInformationSentencesWeight = this.getStyle("--fonts-information-sentences-weight", "normal");
+        this.radiiDataHighlightIndicator = this.getStyle("--radii-data-highlight-indicator", 4);
+        this.radiiHighlightIndicator = this.getStyle("--radii-highlight-indicator", 2);
+        this.radiiInformationPanelBorder = this.getStyle("--radii-information-panel-border", 10);
+        this.widthsDataHighlightIndicator = this.getStyle("--widths-data-highlight-indicator", 4);
+        this.widthsHighlightIndicator = this.getStyle("--widths-highlight-indicator", 2);
       }
   }
 
@@ -521,7 +521,7 @@ export default class Bargraph {
         points.push(offsetIndex + i + 0.5);
         points.push(dataset[this.axisMinX + i] * scale);
     }
-    this.helper.drawLines('lines', this.backgroundContext, points, this.axisMaxY);
+    this.helper.drawLines("lines", this.backgroundContext, points, this.axisMaxY);
 
     this.backgroundContext.restore();
     this.backgroundContext.stroke();
