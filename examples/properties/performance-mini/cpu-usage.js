@@ -1,5 +1,5 @@
 var CPU_USAGE_PROPERTIES = {
-    "y_axis": {
-        "label_suffix": [[0, "%"]]
-    }
+  "y_axis": {
+    "label_suffix": [[0, "%"]]
+  }
 };

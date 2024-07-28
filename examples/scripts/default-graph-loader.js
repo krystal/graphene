@@ -4,20 +4,20 @@ var engine = null;
 var linegraph = null;
 
 function loadGraphs() {
-    engine = new Engine();
+  engine = new Engine();
 
-    var divs = document.getElementsByTagName("div");
-    for (var i = 0; i < divs.length; i++) {
-        if (divs[i].dataset.type) {
-            var datasetProperties = divs[i].dataset.properties;
-            var properties = (datasetProperties && datasetProperties != "") ? datasetProperties : null
-            var data = divs[i].dataset.data;
+  var divs = document.getElementsByTagName("div");
+  for (var i = 0; i < divs.length; i++) {
+    if (divs[i].dataset.type) {
+      var datasetProperties = divs[i].dataset.properties;
+      var properties = (datasetProperties && datasetProperties != "") ? datasetProperties : null
+      var data = divs[i].dataset.data;
 
-            linegraph = engine.addLinegraph(divs[i], properties, data, null, null);
-        }
+      linegraph = engine.addLinegraph(divs[i], properties, data, null, null);
     }
+  }
 
-    engine.render();
+  engine.render();
 }
 
 window.addEventListener('load', loadGraphs, false);

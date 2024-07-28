@@ -3,84 +3,84 @@ import Piegraph from './piegraph.js';
 import Bargraph from './bargraph.js';
 
 export default class Engine {
-    constructor() {
-        this.graphDictionary = new Object();
+  constructor() {
+    this.graphDictionary = new Object();
 
-        window.addEventListener('resize', this.rerender.bind(this));
+    window.addEventListener('resize', this.rerender.bind(this));
+  }
+
+  addLinegraph(element, properties, data, axisFormatter, informationFormatter) {
+    if (typeof properties === "string") {
+      properties = JSON.parse(properties);
+    }
+    if (typeof data === "string") {
+      data = JSON.parse(data);
     }
 
-    addLinegraph(element, properties, data, axisFormatter, informationFormatter) {
-        if (typeof properties === "string") {
-            properties = JSON.parse(properties);
-        }
-        if (typeof data === "string") {
-            data = JSON.parse(data);
-        }
+    var linegraph = new Linegraph(element, properties, data, axisFormatter, informationFormatter);
 
-        var linegraph = new Linegraph(element, properties, data, axisFormatter, informationFormatter);
+    this.graphDictionary[element.id] = linegraph;
 
-        this.graphDictionary[element.id] = linegraph;
+    return linegraph;
+  }
 
-        return linegraph;
+  addPiegraph(element, properties, data) {
+    if (typeof properties === "string") {
+      properties = JSON.parse(properties);
+    }
+    if (typeof data === "string") {
+      data = JSON.parse(data);
     }
 
-    addPiegraph(element, properties, data) {
-        if (typeof properties === "string") {
-            properties = JSON.parse(properties);
-        }
-        if (typeof data === "string") {
-            data = JSON.parse(data);
-        }
+    var piegraph = new Piegraph(element, properties, data);
 
-        var piegraph = new Piegraph(element, properties, data);
+    this.graphDictionary[element.id] = piegraph;
 
-        this.graphDictionary[element.id] = piegraph;
+    return piegraph;
+  }
 
-        return piegraph;
+  addBargraph(element, properties, data, axisFormatter, informationFormatter) {
+    if (typeof properties === "string") {
+      properties = JSON.parse(properties);
+    }
+    if (typeof data === "string") {
+      data = JSON.parse(data);
     }
 
-    addBargraph(element, properties, data, axisFormatter, informationFormatter) {
-        if (typeof properties === "string") {
-            properties = JSON.parse(properties);
-        }
-        if (typeof data === "string") {
-            data = JSON.parse(data);
-        }
+    var bargraph = new Bargraph(element, properties, data, axisFormatter, informationFormatter);
 
-        var bargraph = new Bargraph(element, properties, data, axisFormatter, informationFormatter);
+    this.graphDictionary[element.id] = bargraph;
 
-        this.graphDictionary[element.id] = bargraph;
+    return bargraph;
+  }
 
-        return bargraph;
+  render() {
+    for (var elementId in this.graphDictionary) {
+      var graph = this.graphDictionary[elementId];
+      if (!graph.drawn) {
+        graph.draw();
+      }
     }
+  }
 
-    render() {
-        for (var elementId in this.graphDictionary) {
-            var graph = this.graphDictionary[elementId];
-            if (!graph.drawn) {
-                graph.draw();
-            }
-        }
+  rerender() {
+    for (var elementId in this.graphDictionary) {
+      var graph = this.graphDictionary[elementId];
+      graph.createLayers();
+      graph.addMouseEvents();
+      if (graph.drawn) {
+        graph.draw();
+      }
     }
+  }
 
-    rerender() {
-        for (var elementId in this.graphDictionary) {
-            var graph = this.graphDictionary[elementId];
-            graph.createLayers();
-            graph.addMouseEvents();
-            if (graph.drawn) {
-                graph.draw();
-            }
-        }
-    }
+  getGraph(element) {
+    return this.graphDictionary[element.id];
+  }
 
-    getGraph(element) {
-        return this.graphDictionary[element.id];
-    }
-
-    removeGraph(element) {
-        var graph = this.getGraph(element);
-        graph.removeLayers();
-        delete this.graphDictionary[element.id];
-    }
+  removeGraph(element) {
+    var graph = this.getGraph(element);
+    graph.removeLayers();
+    delete this.graphDictionary[element.id];
+  }
 }
