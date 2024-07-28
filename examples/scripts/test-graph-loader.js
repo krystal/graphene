@@ -1,10 +1,12 @@
+import Engine from "../../src/engine.js";
+
 const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
-var grapheneEngine = null;
+var engine = null;
 var linegraph = null;
 
 function loadGraphs() {
-    grapheneEngine = new GrapheneEngine();
+    engine = new Engine();
 
     var divs = document.getElementsByTagName("div");
     for (var i = 0; i < divs.length; i++) {
@@ -19,11 +21,11 @@ function loadGraphs() {
                 data = data ? JSON.parse(data) : null;
             }
 
-            linegraph = grapheneEngine.addLinegraph(divs[i], properties, data, this.axisFormatter, this.informationFormatter);
+            linegraph = engine.addLinegraph(divs[i], properties, data, this.axisFormatter, this.informationFormatter);
         }
     }
 
-    grapheneEngine.render();
+    engine.render();
 
     var prepareUpdateButton = document.getElementById("prepareUpdateButton");
     if (prepareUpdateButton) {

@@ -1,11 +1,8 @@
-class GrapheneLinegraph {
+import Helper from './helper.js';
+
+export default class Linegraph {
     constructor(element, properties, data, axisFormatter, informationFormatter) {
-        if (typeof module !== "undefined") {
-            const GrapheneHelper = require('./helper');
-            this.grapheneHelper = new GrapheneHelper();
-        } else {
-            this.grapheneHelper = new GrapheneHelper();
-        }
+        this.helper = new Helper();
         this.drawn = false;
         this.userDefinedViewPort = false;
         this.element = element;
@@ -42,8 +39,8 @@ class GrapheneLinegraph {
         this.canvasWidth = this.background.width;
         this.canvasHeight = this.background.height;
 
-        this.backgroundContext = this.grapheneHelper.getContext(this.background);
-        this.foregroundContext = this.grapheneHelper.getContext(this.foreground);
+        this.backgroundContext = this.helper.getContext(this.background);
+        this.foregroundContext = this.helper.getContext(this.foreground);
     }
 
     removeLayers() {
@@ -92,7 +89,7 @@ class GrapheneLinegraph {
 
     redraw() {
         this.backgroundContext.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
-        this.backgroundContext.fillStyle = this.grapheneHelper.hex2rgba(this.coloursBackground, this.alphasBackground);
+        this.backgroundContext.fillStyle = this.helper.hex2rgba(this.coloursBackground, this.alphasBackground);
         this.backgroundContext.fillRect(0, 0, this.canvasWidth, this.canvasHeight);
 
         if (!this.hideVerticalAxes) {
@@ -224,7 +221,7 @@ class GrapheneLinegraph {
     }
 
     calculateAxisMax(base, max) {
-        var floorPowerOfBase = this.grapheneHelper.calculateFloorPowerOfBase(base, max);
+        var floorPowerOfBase = this.helper.calculateFloorPowerOfBase(base, max);
         var floorPowerOfBaseOverBase = floorPowerOfBase / base;
 
         var candidateMax = floorPowerOfBase;
@@ -560,7 +557,7 @@ class GrapheneLinegraph {
             }
             if (!this.hideVerticalAxes) {
                 var maxLabelsY = Math.round(this.graphHeight / (labelHeightApproximation * 4));
-                var factors = this.grapheneHelper.calculateFactors(this.axisMaxY);
+                var factors = this.helper.calculateFactors(this.axisMaxY);
 
                 var factorIndex = 0;
                 var workingInterval = factors[factorIndex];
@@ -576,14 +573,14 @@ class GrapheneLinegraph {
 
                 for (var i = this.axisMinY; i <= this.axisMaxY; i += this.labelIntervalY) {
                     var labelComponentsY = this.getLabelComponentsY(i);
-                    var labelWidthY = this.backgroundContext.measureText(this.grapheneHelper.applyAffix(labelComponentsY.value, this.getLabelPrefixY(), labelComponentsY.suffix)).width;
+                    var labelWidthY = this.backgroundContext.measureText(this.helper.applyAffix(labelComponentsY.value, this.getLabelPrefixY(), labelComponentsY.suffix)).width;
                     if (labelWidthY > maxLabelWidthY) {
                         maxLabelWidthY = labelWidthY;
                     }
 
                     if (this.data.u) {
                         var labelComponentsU = this.getLabelComponentsU(i / this.graphScaleU);
-                        var labelWidthU = this.backgroundContext.measureText(this.grapheneHelper.applyAffix(labelComponentsU.value, this.getLabelPrefixU(), labelComponentsU.suffix)).width;
+                        var labelWidthU = this.backgroundContext.measureText(this.helper.applyAffix(labelComponentsU.value, this.getLabelPrefixU(), labelComponentsU.suffix)).width;
                         if (labelWidthU > maxLabelWidthU) {
                             maxLabelWidthU = labelWidthU;
                         }
@@ -647,11 +644,11 @@ class GrapheneLinegraph {
         var graphStroke = null;
         if (this.graphGradientHorizontal) {
             graphStroke = this.backgroundContext.createLinearGradient(this.graphStartX, 0, this.graphEndX, 0);
-            graphStroke.addColorStop(0, this.grapheneHelper.hex2rgba(colour, alpha));
+            graphStroke.addColorStop(0, this.helper.hex2rgba(colour, alpha));
             if (this.graphGradientColour) {
-                graphStroke.addColorStop(1, this.grapheneHelper.hex2rgba(colourStop, alpha));
+                graphStroke.addColorStop(1, this.helper.hex2rgba(colourStop, alpha));
             } else {
-                graphStroke.addColorStop(1, this.grapheneHelper.hex2rgba(colour, 0));
+                graphStroke.addColorStop(1, this.helper.hex2rgba(colour, 0));
             }
         } else {
             graphStroke = colour;
@@ -666,11 +663,11 @@ class GrapheneLinegraph {
         } else {
             graphFill = this.backgroundContext.createLinearGradient(0, this.graphStartY, 0, this.graphEndY);
         }
-        graphFill.addColorStop(0, this.grapheneHelper.hex2rgba(colour, alpha));
+        graphFill.addColorStop(0, this.helper.hex2rgba(colour, alpha));
         if (this.graphGradientColour) {
-            graphFill.addColorStop(1, this.grapheneHelper.hex2rgba(colourStop, alpha));
+            graphFill.addColorStop(1, this.helper.hex2rgba(colourStop, alpha));
         } else {
-            graphFill.addColorStop(1, this.grapheneHelper.hex2rgba(colour, 0));
+            graphFill.addColorStop(1, this.helper.hex2rgba(colour, 0));
         }
         return graphFill;
     }
@@ -690,7 +687,7 @@ class GrapheneLinegraph {
             points.push(i);
             points.push(dataset[this.axisMinX + i] * scale);
         }
-        this.grapheneHelper.drawLines(this.graphDrawingMethod, this.backgroundContext, points, this.axisMaxY);
+        this.helper.drawLines(this.graphDrawingMethod, this.backgroundContext, points, this.axisMaxY);
         this.backgroundContext.lineTo(axisRangeX, this.axisMinY);
 
         this.backgroundContext.restore();
@@ -711,14 +708,14 @@ class GrapheneLinegraph {
             points.push(i);
             points.push(dataset[this.axisMinX + i] * scale);
         }
-        this.grapheneHelper.drawLines(this.graphDrawingMethod, this.backgroundContext, points, this.axisMaxY);
+        this.helper.drawLines(this.graphDrawingMethod, this.backgroundContext, points, this.axisMaxY);
 
         this.backgroundContext.restore();
         this.backgroundContext.stroke();
     }
 
     drawDataPoints(dataset, scale) {
-        this.backgroundContext.strokeStyle = this.grapheneHelper.hex2rgba(this.coloursDataPointOuter, this.alphasDataPoint);
+        this.backgroundContext.strokeStyle = this.helper.hex2rgba(this.coloursDataPointOuter, this.alphasDataPoint);
         this.backgroundContext.lineWidth = this.widthsDataPoint;
         this.backgroundContext.fillStyle = this.coloursDataPointInner;
 
@@ -847,12 +844,12 @@ class GrapheneLinegraph {
 
         for (var i = this.axisMinY; i <= this.axisMaxY; i += this.labelIntervalY) {
             var labelComponentsY = this.getLabelComponentsY(i);
-            this.backgroundContext.fillText(this.grapheneHelper.applyAffix(labelComponentsY.value, this.getLabelPrefixY(), labelComponentsY.suffix), (this.leftMargin / 2), this.graphEndY - ((i - this.axisMinY) * this.graphScaleY));
+            this.backgroundContext.fillText(this.helper.applyAffix(labelComponentsY.value, this.getLabelPrefixY(), labelComponentsY.suffix), (this.leftMargin / 2), this.graphEndY - ((i - this.axisMinY) * this.graphScaleY));
 
             if (this.data.u) {
                 if (indexLabelMap.has(i)) {
                     var labelComponentsU = this.getLabelComponentsU(indexLabelMap.get(i));
-                    this.backgroundContext.fillText(this.grapheneHelper.applyAffix(labelComponentsU.value, this.getLabelPrefixU(), labelComponentsU.suffix), this.graphEndX + (this.rightMargin / 2), this.graphEndY - ((i - this.axisMinY) * this.graphScaleY));
+                    this.backgroundContext.fillText(this.helper.applyAffix(labelComponentsU.value, this.getLabelPrefixU(), labelComponentsU.suffix), this.graphEndX + (this.rightMargin / 2), this.graphEndY - ((i - this.axisMinY) * this.graphScaleY));
                 }
             }
         }
@@ -929,7 +926,7 @@ class GrapheneLinegraph {
             var yValue = this.data.y[i][this.axisMinX + index];
             yValue = isNaN(yValue) ? 0 : yValue;
             var labelComponents = this.getLabelComponentsY(yValue);
-            var formattedData = this.grapheneHelper.applyAffix(labelComponents.value, this.getLabelPrefixY(), labelComponents.suffix);
+            var formattedData = this.helper.applyAffix(labelComponents.value, this.getLabelPrefixY(), labelComponents.suffix);
             var sentence = this.dataNames[i] + ": " + formattedData;
             // space + circle + space + sentence + space (space and cricle are as wide as a sentence is tall)
             var sentenceWidth = this.foregroundContext.measureText(sentence).width + (4 * sentenceHeightApproximation);
@@ -944,7 +941,7 @@ class GrapheneLinegraph {
                 var uValue = this.data.u[i][this.axisMinX + index];
                 uValue = isNaN(uValue) ? 0 : uValue;
                 var labelComponents = this.getLabelComponentsU(uValue);
-                var formattedData = this.grapheneHelper.applyAffix(labelComponents.value, this.getLabelPrefixU(), labelComponents.suffix);
+                var formattedData = this.helper.applyAffix(labelComponents.value, this.getLabelPrefixU(), labelComponents.suffix);
                 var sentence = this.dataNames[this.data.y.length + i] + ": " + formattedData;
                 // space + circle + space + sentence + space (space and cricle are as wide as a sentence is tall)
                 var sentenceWidth = this.foregroundContext.measureText(sentence).width + (4 * sentenceHeightApproximation);
@@ -972,8 +969,8 @@ class GrapheneLinegraph {
             console.log("Information panel may be clipped vertically!");
         }
 
-        this.foregroundContext.fillStyle = this.grapheneHelper.hex2rgba(this.coloursInformationPanel, this.alphasInformationPanel);
-        this.grapheneHelper.fillRoundedRect(this.foregroundContext, panelX, panelY, requiredWidth, requiredHeight, parseFloat(this.radiiInformationPanelBorder));
+        this.foregroundContext.fillStyle = this.helper.hex2rgba(this.coloursInformationPanel, this.alphasInformationPanel);
+        this.helper.fillRoundedRect(this.foregroundContext, panelX, panelY, requiredWidth, requiredHeight, parseFloat(this.radiiInformationPanelBorder));
 
         var circleOffsetY = panelY + (3 * sentenceHeightApproximation);
         var sentenceOffsetY = panelY + (2 * sentenceHeightApproximation);
@@ -1042,7 +1039,7 @@ class GrapheneLinegraph {
         var boxX = this.graphStartX + (this.shiftMouseDownStartIndex * this.graphScaleX);
         var boxWidth = (this.shiftMouseDownEndIndex - this.shiftMouseDownStartIndex) * this.graphScaleX;
 
-        this.foregroundContext.fillStyle = this.grapheneHelper.hex2rgba(this.coloursSelectionBox, this.alphasSelectionBox);
+        this.foregroundContext.fillStyle = this.helper.hex2rgba(this.coloursSelectionBox, this.alphasSelectionBox);
         this.foregroundContext.fillRect(boxX, this.graphStartY, boxWidth, this.graphHeight);
     }
 
@@ -1153,8 +1150,4 @@ class GrapheneLinegraph {
         this.clearForeground();
         this.redraw();
     }
-}
-
-if (typeof module !== "undefined") {
-    module.exports = GrapheneLinegraph;
 }

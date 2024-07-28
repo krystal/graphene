@@ -1,11 +1,8 @@
-class GrapheneBargraph {
+import Helper from './helper.js';
+
+export default class Bargraph {
   constructor(element, properties, data, axisFormatter, informationFormatter) {
-      if (typeof module !== "undefined") {
-          const GrapheneHelper = require('./helper');
-          this.grapheneHelper = new GrapheneHelper();
-      } else {
-          this.grapheneHelper = new GrapheneHelper();
-      }
+      this.helper = new Helper();
       this.drawn = false;
       this.userDefinedViewPort = false;
       this.element = element;
@@ -42,8 +39,8 @@ class GrapheneBargraph {
       this.canvasWidth = this.background.width;
       this.canvasHeight = this.background.height;
 
-      this.backgroundContext = this.grapheneHelper.getContext(this.background);
-      this.foregroundContext = this.grapheneHelper.getContext(this.foreground);
+      this.backgroundContext = this.helper.getContext(this.background);
+      this.foregroundContext = this.helper.getContext(this.foreground);
   }
 
   removeLayers() {
@@ -87,7 +84,7 @@ class GrapheneBargraph {
 
   redraw() {
       this.backgroundContext.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
-      this.backgroundContext.fillStyle = this.grapheneHelper.hex2rgba(this.coloursBackground, this.alphasBackground);
+      this.backgroundContext.fillStyle = this.helper.hex2rgba(this.coloursBackground, this.alphasBackground);
       this.backgroundContext.fillRect(0, 0, this.canvasWidth, this.canvasHeight);
 
       if (!this.hideVerticalAxes) {
@@ -209,7 +206,7 @@ class GrapheneBargraph {
   }
 
   calculateAxisMax(base, max) {
-      var floorPowerOfBase = this.grapheneHelper.calculateFloorPowerOfBase(base, max);
+      var floorPowerOfBase = this.helper.calculateFloorPowerOfBase(base, max);
       var floorPowerOfBaseOverBase = floorPowerOfBase / base;
 
       var candidateMax = floorPowerOfBase;
@@ -411,7 +408,7 @@ class GrapheneBargraph {
           }
           if (!this.hideVerticalAxes) {
               var maxLabelsY = Math.round(this.graphHeight / (labelHeightApproximation * 4));
-              var factors = this.grapheneHelper.calculateFactors(this.axisMaxY);
+              var factors = this.helper.calculateFactors(this.axisMaxY);
 
               var factorIndex = 0;
               var workingInterval = factors[factorIndex];
@@ -427,14 +424,14 @@ class GrapheneBargraph {
 
               for (var i = this.axisMinY; i <= this.axisMaxY; i += this.labelIntervalY) {
                   var labelComponentsY = this.getLabelComponentsY(i);
-                  var labelWidthY = this.backgroundContext.measureText(this.grapheneHelper.applyAffix(labelComponentsY.value, this.getLabelPrefixY(), labelComponentsY.suffix)).width;
+                  var labelWidthY = this.backgroundContext.measureText(this.helper.applyAffix(labelComponentsY.value, this.getLabelPrefixY(), labelComponentsY.suffix)).width;
                   if (labelWidthY > maxLabelWidthY) {
                       maxLabelWidthY = labelWidthY;
                   }
 
                   if (this.data.u) {
                       var labelComponentsU = this.getLabelComponentsU(i / this.graphScaleU);
-                      var labelWidthU = this.backgroundContext.measureText(this.grapheneHelper.applyAffix(labelComponentsU.value, this.getLabelPrefixU(), labelComponentsU.suffix)).width;
+                      var labelWidthU = this.backgroundContext.measureText(this.helper.applyAffix(labelComponentsU.value, this.getLabelPrefixU(), labelComponentsU.suffix)).width;
                       if (labelWidthU > maxLabelWidthU) {
                           maxLabelWidthU = labelWidthU;
                       }
@@ -494,7 +491,7 @@ class GrapheneBargraph {
       this.backgroundContext.restore();
       this.backgroundContext.fill();
 
-      this.backgroundContext.fillStyle = this.grapheneHelper.hex2rgba(this.getDataColour(index), 0.5);
+      this.backgroundContext.fillStyle = this.helper.hex2rgba(this.getDataColour(index), 0.5);
       this.transformDrawingArea();
 
       this.backgroundContext.beginPath();
@@ -524,7 +521,7 @@ class GrapheneBargraph {
         points.push(offsetIndex + i + 0.5);
         points.push(dataset[this.axisMinX + i] * scale);
     }
-    this.grapheneHelper.drawLines('lines', this.backgroundContext, points, this.axisMaxY);
+    this.helper.drawLines('lines', this.backgroundContext, points, this.axisMaxY);
 
     this.backgroundContext.restore();
     this.backgroundContext.stroke();
@@ -636,12 +633,12 @@ class GrapheneBargraph {
 
       for (var i = this.axisMinY; i <= this.axisMaxY; i += this.labelIntervalY) {
           var labelComponentsY = this.getLabelComponentsY(i);
-          this.backgroundContext.fillText(this.grapheneHelper.applyAffix(labelComponentsY.value, this.getLabelPrefixY(), labelComponentsY.suffix), (this.leftMargin / 2), this.graphEndY - ((i - this.axisMinY) * this.graphScaleY));
+          this.backgroundContext.fillText(this.helper.applyAffix(labelComponentsY.value, this.getLabelPrefixY(), labelComponentsY.suffix), (this.leftMargin / 2), this.graphEndY - ((i - this.axisMinY) * this.graphScaleY));
 
           if (this.data.u) {
             if (indexLabelMap.has(i)) {
                 var labelComponentsU = this.getLabelComponentsU(indexLabelMap.get(i));
-                this.backgroundContext.fillText(this.grapheneHelper.applyAffix(labelComponentsU.value, this.getLabelPrefixU(), labelComponentsU.suffix), this.graphEndX + (this.rightMargin / 2), this.graphEndY - ((i - this.axisMinY) * this.graphScaleY));
+                this.backgroundContext.fillText(this.helper.applyAffix(labelComponentsU.value, this.getLabelPrefixU(), labelComponentsU.suffix), this.graphEndX + (this.rightMargin / 2), this.graphEndY - ((i - this.axisMinY) * this.graphScaleY));
             }
         }
       }
@@ -702,7 +699,7 @@ class GrapheneBargraph {
         var yValue = this.data.y[i][this.axisMinX + index];
         yValue = isNaN(yValue) ? 0 : yValue;
         var labelComponents = this.getLabelComponentsY(yValue);
-        var formattedData = this.grapheneHelper.applyAffix(labelComponents.value, this.getLabelPrefixY(), labelComponents.suffix);
+        var formattedData = this.helper.applyAffix(labelComponents.value, this.getLabelPrefixY(), labelComponents.suffix);
         var sentence = this.dataNames[i] + ": " + formattedData;
         // space + circle + space + sentence + space (space and cricle are as wide as a sentence is tall)
         var sentenceWidth = this.foregroundContext.measureText(sentence).width + (4 * sentenceHeightApproximation);
@@ -719,7 +716,7 @@ class GrapheneBargraph {
             var uValue = this.data.u[i][this.axisMinX + index - offsetIndex];
             uValue = isNaN(uValue) ? 0 : uValue;
             var labelComponents = this.getLabelComponentsU(uValue);
-            var formattedData = this.grapheneHelper.applyAffix(labelComponents.value, this.getLabelPrefixU(), labelComponents.suffix);
+            var formattedData = this.helper.applyAffix(labelComponents.value, this.getLabelPrefixU(), labelComponents.suffix);
             var sentence = this.dataNames[this.data.y.length + i] + ": " + formattedData;
             // space + circle + space + sentence + space (space and cricle are as wide as a sentence is tall)
             var sentenceWidth = this.foregroundContext.measureText(sentence).width + (4 * sentenceHeightApproximation);
@@ -747,8 +744,8 @@ class GrapheneBargraph {
         console.log("Information panel may be clipped vertically!");
     }
 
-    this.foregroundContext.fillStyle = this.grapheneHelper.hex2rgba(this.coloursInformationPanel, this.alphasInformationPanel);
-    this.grapheneHelper.fillRoundedRect(this.foregroundContext, panelX, panelY, requiredWidth, requiredHeight, parseFloat(this.radiiInformationPanelBorder));
+    this.foregroundContext.fillStyle = this.helper.hex2rgba(this.coloursInformationPanel, this.alphasInformationPanel);
+    this.helper.fillRoundedRect(this.foregroundContext, panelX, panelY, requiredWidth, requiredHeight, parseFloat(this.radiiInformationPanelBorder));
 
     var circleOffsetY = panelY + (3 * sentenceHeightApproximation);
     var sentenceOffsetY = panelY + (2 * sentenceHeightApproximation);
@@ -842,7 +839,7 @@ class GrapheneBargraph {
     var dataset = this.data.y[index];
     var datasetWidth = 1 / (this.data.y.length + 1);
 
-    var parameters = this.grapheneHelper.calculateLineOfBestFit(Array.from(Array(this.data.x.length).keys()), dataset);
+    var parameters = this.helper.calculateLineOfBestFit(Array.from(Array(this.data.x.length).keys()), dataset);
 
     this.backgroundContext.strokeStyle = this.getBestFitColour(index);
     this.backgroundContext.lineWidth = this.widthsBestFit;
@@ -850,8 +847,8 @@ class GrapheneBargraph {
 
     this.backgroundContext.beginPath();
 
-    this.backgroundContext.moveTo(datasetWidth + (datasetWidth * index), this.grapheneHelper.getPointOnLine(this.axisMinX, parameters.slope, parameters.intercept));
-    this.backgroundContext.lineTo(datasetWidth + projectedIndex + (datasetWidth * index), this.grapheneHelper.getPointOnLine(projectedIndex, parameters.slope, parameters.intercept));
+    this.backgroundContext.moveTo(datasetWidth + (datasetWidth * index), this.helper.getPointOnLine(this.axisMinX, parameters.slope, parameters.intercept));
+    this.backgroundContext.lineTo(datasetWidth + projectedIndex + (datasetWidth * index), this.helper.getPointOnLine(projectedIndex, parameters.slope, parameters.intercept));
 
     this.backgroundContext.restore();
     this.backgroundContext.stroke();
@@ -859,15 +856,11 @@ class GrapheneBargraph {
     this.backgroundContext.setLineDash([5, 5]);
     this.transformDrawingArea();
 
-    this.backgroundContext.moveTo(datasetWidth + projectedIndex + (datasetWidth * index), this.grapheneHelper.getPointOnLine(projectedIndex, parameters.slope, parameters.intercept));
-    this.backgroundContext.lineTo(datasetWidth + this.axisMaxX + (datasetWidth * index), this.grapheneHelper.getPointOnLine(this.axisMaxX, parameters.slope, parameters.intercept));
+    this.backgroundContext.moveTo(datasetWidth + projectedIndex + (datasetWidth * index), this.helper.getPointOnLine(projectedIndex, parameters.slope, parameters.intercept));
+    this.backgroundContext.lineTo(datasetWidth + this.axisMaxX + (datasetWidth * index), this.helper.getPointOnLine(this.axisMaxX, parameters.slope, parameters.intercept));
 
     this.backgroundContext.restore();
     this.backgroundContext.stroke();
     this.backgroundContext.setLineDash([]);
   }
-}
-
-if (typeof module !== "undefined") {
-  module.exports = GrapheneBargraph;
 }

@@ -1,4 +1,4 @@
-class GrapheneHelper {
+export default class Helper {
   applyAffix(value, prefix = "", suffix = "") {
     var negative = value < 0;
     var absoluteValue = Math.abs(value);
@@ -202,8 +202,4 @@ class GrapheneHelper {
   getPointOnLine(x, slope, intercept) {
     return (slope * x) + intercept;
   }
-}
-
-if (typeof module !== "undefined") {
-  module.exports = GrapheneHelper;
 }

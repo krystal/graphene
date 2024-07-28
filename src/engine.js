@@ -1,4 +1,8 @@
-class GrapheneEngine {
+import Linegraph from './linegraph.js';
+import Piegraph from './piegraph.js';
+import Bargraph from './bargraph.js';
+
+export default class Engine {
     constructor() {
         this.graphDictionary = new Object();
 
@@ -13,14 +17,8 @@ class GrapheneEngine {
             data = JSON.parse(data);
         }
 
-        var linegraph = null;
+        var linegraph = new Linegraph(element, properties, data, axisFormatter, informationFormatter);
 
-        if (typeof module !== "undefined") {
-            const GrapheneLinegraph = require('./linegraph.js');
-            linegraph = new GrapheneLinegraph(element, properties, data, axisFormatter, informationFormatter);
-        } else {
-            linegraph = new GrapheneLinegraph(element, properties, data, axisFormatter, informationFormatter);
-        }
         this.graphDictionary[element.id] = linegraph;
 
         return linegraph;
@@ -34,14 +32,8 @@ class GrapheneEngine {
             data = JSON.parse(data);
         }
 
-        var piegraph = null;
+        var piegraph = new Piegraph(element, properties, data);
 
-        if (typeof module !== "undefined") {
-            const GraphenePiegraph = require('./piegraph.js');
-            piegraph = new GraphenePiegraph(element, properties, data);
-        } else {
-            piegraph = new GraphenePiegraph(element, properties, data);
-        }
         this.graphDictionary[element.id] = piegraph;
 
         return piegraph;
@@ -55,14 +47,8 @@ class GrapheneEngine {
             data = JSON.parse(data);
         }
 
-        var bargraph = null;
+        var bargraph = new Bargraph(element, properties, data, axisFormatter, informationFormatter);
 
-        if (typeof module !== "undefined") {
-            const GrapheneBargraph = require('./bargraph.js');
-            bargraph = new GrapheneBargraph(element, properties, data, axisFormatter, informationFormatter);
-        } else {
-            bargraph = new GrapheneBargraph(element, properties, data, axisFormatter, informationFormatter);
-        }
         this.graphDictionary[element.id] = bargraph;
 
         return bargraph;
@@ -97,8 +83,4 @@ class GrapheneEngine {
         graph.removeLayers();
         delete this.graphDictionary[element.id];
     }
-}
-
-if (typeof module !== "undefined") {
-    module.exports = GrapheneEngine;
 }

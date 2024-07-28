@@ -84,10 +84,10 @@ declare module "krystal-graphene" {
     };
   };
 
-  class GrapheneLinegraph {}
-  class GrapheneBargraph {}
+  class Linegraph {}
+  class Bargraph {}
 
-  class GrapheneEngine {
+  class Engine {
     constructor();
 
     addLinegraph(
@@ -96,7 +96,7 @@ declare module "krystal-graphene" {
       data: Data | string,
       axisFormatter: AxisFormatter | null,
       informationFormatter: InformationFormatter | null
-    ): GrapheneLinegraph;
+    ): Linegraph;
 
     addBargraph(
       element: HTMLElement,
@@ -104,14 +104,14 @@ declare module "krystal-graphene" {
       data: Data | string,
       axisFormatter: AxisFormatter | null,
       informationFormatter: InformationFormatter | null
-    ): GrapheneBargraph;
+    ): Bargraph;
 
     render(): void;
 
-    getGraph(element: HTMLElement): GrapheneLinegraph | GrapheneBargraph;
+    getGraph(element: HTMLElement): Linegraph | Bargraph;
 
     removeGraph(element: HTMLElement): void;
   }
 
-  export default GrapheneEngine;
+  export default Engine;
 }

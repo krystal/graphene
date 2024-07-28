@@ -1,11 +1,8 @@
-class GraphenePiegraph {
+import Helper from './helper.js';
+
+export default class Piegraph {
   constructor(element, properties, data) {
-    if (typeof module !== "undefined") {
-      const GrapheneHelper = require('./helper');
-      this.grapheneHelper = new GrapheneHelper();
-    } else {
-      this.grapheneHelper = new GrapheneHelper();
-    }
+    this.helper = new Helper();
     this.drawn = false;
     this.element = element;
     this.createLayers();
@@ -51,8 +48,8 @@ class GraphenePiegraph {
     this.canvasWidth = this.background.width;
     this.canvasHeight = this.background.height;
 
-    this.backgroundContext = this.grapheneHelper.getContext(this.background);
-    this.foregroundContext = this.grapheneHelper.getContext(this.foreground);
+    this.backgroundContext = this.helper.getContext(this.background);
+    this.foregroundContext = this.helper.getContext(this.foreground);
   }
 
   removeLayers() {
@@ -83,7 +80,7 @@ class GraphenePiegraph {
 
   redraw() {
     this.backgroundContext.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
-    this.backgroundContext.fillStyle = this.grapheneHelper.hex2rgba(this.coloursBackground, this.alphasBackground);
+    this.backgroundContext.fillStyle = this.helper.hex2rgba(this.coloursBackground, this.alphasBackground);
     this.backgroundContext.fillRect(0, 0, this.canvasWidth, this.canvasHeight);
 
     this.drawGraph();
@@ -262,7 +259,7 @@ class GraphenePiegraph {
 
       var value = this.getSegmentsLabelFormatIsPercentage() ? segmentPercentage : segmentValue;
       var labelValue = +value.toFixed(this.getSegmentsLabelDecimalPlaces());
-      var labelText = this.grapheneHelper.applyAffix(labelValue, this.getSegmentsLabelPrefix(), this.getSegmentsLabelSuffix());
+      var labelText = this.helper.applyAffix(labelValue, this.getSegmentsLabelPrefix(), this.getSegmentsLabelSuffix());
 
       var segmentCentreAngle = angleOffset + cumulativeAngle + (segmentAngle / 2);
       var labelX = distanceFromCentre * Math.cos(segmentCentreAngle);
@@ -293,8 +290,4 @@ class GraphenePiegraph {
       yOffset += 3 * labelHeightApproximation;
     }
   }
-}
-
-if (typeof module !== "undefined") {
-  module.exports = GraphenePiegraph;
 }

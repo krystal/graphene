@@ -1,8 +1,10 @@
-var grapheneEngine = null;
+import Engine from "../../src/engine.js";
+
+var engine = null;
 var linegraph = null;
 
 function loadGraphs() {
-    grapheneEngine = new GrapheneEngine();
+    engine = new Engine();
 
     var divs = document.getElementsByTagName("div");
     for (var i = 0; i < divs.length; i++) {
@@ -11,11 +13,11 @@ function loadGraphs() {
             var properties = (datasetProperties && datasetProperties != "") ? datasetProperties : null
             var data = divs[i].dataset.data;
 
-            linegraph = grapheneEngine.addLinegraph(divs[i], properties, data, null, null);
+            linegraph = engine.addLinegraph(divs[i], properties, data, null, null);
         }
     }
 
-    grapheneEngine.render();
+    engine.render();
 }
 
 window.addEventListener('load', loadGraphs, false);
