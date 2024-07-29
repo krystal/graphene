@@ -532,9 +532,6 @@ module.exports = [
       "no-template-curly-in-string": [
         "error"
       ],
-      "no-ternary": [
-        "error"
-      ],
       "no-this-before-super": [
         "error"
       ],
@@ -793,6 +790,9 @@ module.exports = [
       "yoda": [
         "error"
       ]
+    },
+    "env": {
+      "browser": true
     }
   }
 ];
