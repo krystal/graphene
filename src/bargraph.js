@@ -141,7 +141,7 @@ export default class Bargraph {
     if (labelSuffixArray.length == 1) {
       return {
         "suffix": labelSuffixArray[0][1],
-        "value": value
+        value
       };
     }
 
@@ -153,7 +153,7 @@ export default class Bargraph {
       const suffix = labelSuffixArray[i][1];
       if (value < limit) {
         return {
-          "suffix": suffix,
+          suffix,
           "value": value / lastLimit
         };
       }
@@ -172,7 +172,7 @@ export default class Bargraph {
     if (!this.properties || !this.properties.y_axis || !this.properties.y_axis.label_suffix) {
       return {
         "suffix": "",
-        "value": value
+        value
       };
     }
 
@@ -183,7 +183,7 @@ export default class Bargraph {
     if (!this.properties || !this.properties.u_axis || !this.properties.u_axis.label_suffix) {
       return {
         "suffix": "",
-        "value": value
+        value
       };
     }
 
@@ -382,10 +382,10 @@ export default class Bargraph {
         counts[marker[0]] += 1;
       }
 
-      return 1 + (Math.max(...counts) * 2);
-    } else {
-      return 1;
+      return 1 + Math.max(...counts) * 2;
     }
+
+    return 1;
   }
 
   // TODO: test this with data sets covering different ranges
@@ -421,8 +421,8 @@ export default class Bargraph {
 
     let greatestRadius = 0;
     if (this.highLightEnabled) {
-      const dataHighlightIndicatorRadius = (parseFloat(this.radiiDataHighlightIndicator) / 2) + parseFloat(this.widthsDataHighlightIndicator);
-      const highlightIndicatorRadius = (parseFloat(this.radiiHighlightIndicator) / 2) + parseFloat(this.widthsHighlightIndicator);
+      const dataHighlightIndicatorRadius = parseFloat(this.radiiDataHighlightIndicator) / 2 + parseFloat(this.widthsDataHighlightIndicator);
+      const highlightIndicatorRadius = parseFloat(this.radiiHighlightIndicator) / 2 + parseFloat(this.widthsHighlightIndicator);
       greatestRadius = Math.max(dataHighlightIndicatorRadius, highlightIndicatorRadius);
     }
     const greatestExtent = Math.max(parseFloat(this.widthsData) / 2, greatestRadius);
@@ -462,7 +462,7 @@ export default class Bargraph {
         let proposedLabelsY = this.axisRangeY / workingInterval;
 
         while (proposedLabelsY > maxLabelsY) {
-          factorIndex++;
+          factorIndex += 1;
           workingInterval = factors[factorIndex];
           proposedLabelsY = this.axisRangeY / workingInterval;
         }
@@ -488,8 +488,8 @@ export default class Bargraph {
     }
 
     const minMargin = Math.max(maxLabelWidthX / 1.5, greatestExtent);
-    this.leftMargin = Math.max(maxLabelWidthY + (2 * this.fontsAxesLabelsSize), minMargin);
-    this.rightMargin = Math.max(maxLabelWidthU + (2 * this.fontsAxesLabelsSize), minMargin);
+    this.leftMargin = Math.max(maxLabelWidthY + 2 * this.fontsAxesLabelsSize, minMargin);
+    this.rightMargin = Math.max(maxLabelWidthU + 2 * this.fontsAxesLabelsSize, minMargin);
     this.graphStartX = this.leftMargin;
     this.graphEndX = this.canvasWidth - this.rightMargin;
     this.graphWidth = this.graphEndX - this.graphStartX;
@@ -511,7 +511,7 @@ export default class Bargraph {
 
     this.backgroundContext.beginPath();
 
-    const yAxisTotalIntervals = (this.axisRangeY / this.labelIntervalY) + 1;
+    const yAxisTotalIntervals = this.axisRangeY / this.labelIntervalY + 1;
     for (let i = 0; i < yAxisTotalIntervals; i += 1) {
       this.backgroundContext.moveTo(0, i * this.labelIntervalY);
       this.backgroundContext.lineTo(this.calculateAxisRangeX() + 1, i * this.labelIntervalY);
@@ -534,7 +534,7 @@ export default class Bargraph {
     this.backgroundContext.beginPath();
 
     for (let i = 0; i <= projectedIndex; i += 1) {
-      this.backgroundContext.fillRect((i + (datasetWidth / 2)) + (index * datasetWidth), this.graphStartY, datasetWidth, dataset[this.axisMinX + i]);
+      this.backgroundContext.fillRect(i + datasetWidth / 2 + index * datasetWidth, this.graphStartY, datasetWidth, dataset[this.axisMinX + i]);
     }
 
     this.backgroundContext.restore();
@@ -546,7 +546,7 @@ export default class Bargraph {
     this.backgroundContext.beginPath();
 
     for (let i = projectedIndex + 1; i <= this.axisMaxX; i += 1) {
-      this.backgroundContext.fillRect((i + (datasetWidth / 2)) + (index * datasetWidth), this.graphStartY, datasetWidth, dataset[this.axisMinX + i]);
+      this.backgroundContext.fillRect(i + datasetWidth / 2 + index * datasetWidth, this.graphStartY, datasetWidth, dataset[this.axisMinX + i]);
     }
 
     this.backgroundContext.restore();
@@ -605,8 +605,8 @@ export default class Bargraph {
     let xAxisLabelInterval = 1;
     let availableWidthPerLabel = this.graphWidth / ((this.calculateAxisRangeX() + 1 + 1) / xAxisLabelInterval);
     const maxLabelWidthX = this.caclulateMaxLabelWidthX();
-    while ((availableWidthPerLabel / maxLabelWidthX) < 3) {
-      xAxisLabelInterval++;
+    while (availableWidthPerLabel / maxLabelWidthX < 3) {
+      xAxisLabelInterval += 1;
       availableWidthPerLabel = this.graphWidth / ((this.calculateAxisRangeX() + 1 + 1) / xAxisLabelInterval);
     }
 
@@ -624,7 +624,7 @@ export default class Bargraph {
         : xValue;
         xText = this.axisFormatter(xValue, this.calculateAxisInterval(xAxisLabelInterval));
       }
-      this.backgroundContext.fillText(xText, this.graphStartX + ((i + 0.5) * this.graphScaleX), this.graphEndY + (this.bottomMargin / 2));
+      this.backgroundContext.fillText(xText, this.graphStartX + (i + 0.5) * this.graphScaleX, this.graphEndY + this.bottomMargin / 2);
     }
   }
 
@@ -636,8 +636,8 @@ export default class Bargraph {
       const line = counts[marker[0]];
 
       const axisPosition = {
-        x: this.graphStartX + ((marker[0] + 0.5) * this.graphScaleX),
-        y: this.graphEndY
+        "x": this.graphStartX + (marker[0] + 0.5) * this.graphScaleX,
+        "y": this.graphEndY
       };
 
       this.backgroundContext.strokeStyle = this.coloursMarker;
@@ -653,7 +653,7 @@ export default class Bargraph {
       this.backgroundContext.textBaseline = "middle";
 
       const labelHeightApproximation = this.backgroundContext.measureText("M").width;
-      this.backgroundContext.fillText(marker[1], this.graphStartX + ((marker[0] + 0.5) * this.graphScaleX), labelHeightApproximation * (1.5 + (line * 2)));
+      this.backgroundContext.fillText(marker[1], this.graphStartX + (marker[0] + 0.5) * this.graphScaleX, labelHeightApproximation * (1.5 + line * 2));
 
       counts[marker[0]] += 1;
     }
@@ -665,8 +665,8 @@ export default class Bargraph {
     this.backgroundContext.textAlign = "center";
     this.backgroundContext.textBaseline = "middle";
 
-    let labelValueIndexMap = new Map();
-    let indexLabelMap = new Map();
+    const labelValueIndexMap = new Map();
+    const indexLabelMap = new Map();
 
     if (this.data.u) {
       for (let i = this.axisMinY; i <= this.axisMaxY; i += this.labelIntervalY) {
@@ -680,13 +680,13 @@ export default class Bargraph {
           labelValueIndexMap.set(labelValueU, []);
         }
         labelValueIndexMap.get(labelValueU).push({
-          index: i,
-          value: Math.abs(labelValueU - valueU)
+          "index": i,
+          "value": Math.abs(labelValueU - valueU)
         });
       }
 
-      for (let key of labelValueIndexMap.keys()) {
-        let array = labelValueIndexMap.get(key);
+      for (const key of labelValueIndexMap.keys()) {
+        const array = labelValueIndexMap.get(key);
 
         array.sort(function (a, b) {
           return a.value - b.value;
@@ -846,8 +846,8 @@ export default class Bargraph {
     }
 
     const axisHighlight = {
-      x: this.graphStartX + ((0.5 + index) * this.graphScaleX),
-      y: this.graphEndY
+      "x": this.graphStartX + ((0.5 + index) * this.graphScaleX),
+      "y": this.graphEndY
     };
     const dataHighlights = [];
 
@@ -856,8 +856,8 @@ export default class Bargraph {
       const y = this.data.y[i][this.axisMinX + index];
       const yValue = this.graphStartY + (-(y - this.axisMaxY) * this.graphScaleY);
       dataHighlights.push({
-        x: this.graphStartX + ((0.5 + index) * this.graphScaleX),
-        y: yValue
+        "x": this.graphStartX + ((0.5 + index) * this.graphScaleX),
+        "y": yValue
       });
       if (yValue < verticalValueMax) {
         verticalValueMax = yValue;
@@ -871,10 +871,10 @@ export default class Bargraph {
       : 0;
       for (let i = 0; i < this.data.u.length; i += 1) {
         const u = this.data.u[i][this.axisMinX + index - offsetIndex];
-        let uValue = this.graphStartY + (-((u * this.graphScaleU) - this.axisMaxY) * this.graphScaleY);
+        const uValue = this.graphStartY + -(u * this.graphScaleU - this.axisMaxY) * this.graphScaleY;
         dataHighlights.push({
-          x: this.graphStartX + ((0.5 + index) * this.graphScaleX),
-          y: uValue
+          "x": this.graphStartX + ((0.5 + index) * this.graphScaleX),
+          "y": uValue
         });
         if (uValue < verticalValueMax) {
           verticalValueMax = uValue;
