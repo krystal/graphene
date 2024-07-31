@@ -698,12 +698,12 @@ export default class Bargraph {
 
     for (let i = this.axisMinY; i <= this.axisMaxY; i += this.labelIntervalY) {
       const labelComponentsY = this.getLabelComponentsY(i);
-      this.backgroundContext.fillText(this.helper.applyAffix(labelComponentsY.value, this.getLabelPrefixY(), labelComponentsY.suffix), (this.leftMargin / 2), this.graphEndY - ((i - this.axisMinY) * this.graphScaleY));
+      this.backgroundContext.fillText(this.helper.applyAffix(labelComponentsY.value, this.getLabelPrefixY(), labelComponentsY.suffix), this.leftMargin / 2, this.graphEndY - (i - this.axisMinY) * this.graphScaleY);
 
       if (this.data.u) {
         if (indexLabelMap.has(i)) {
           const labelComponentsU = this.getLabelComponentsU(indexLabelMap.get(i));
-          this.backgroundContext.fillText(this.helper.applyAffix(labelComponentsU.value, this.getLabelPrefixU(), labelComponentsU.suffix), this.graphEndX + (this.rightMargin / 2), this.graphEndY - ((i - this.axisMinY) * this.graphScaleY));
+          this.backgroundContext.fillText(this.helper.applyAffix(labelComponentsU.value, this.getLabelPrefixU(), labelComponentsU.suffix), this.graphEndX + this.rightMargin / 2, this.graphEndY - (i - this.axisMinY) * this.graphScaleY);
         }
       }
     }
@@ -760,7 +760,7 @@ export default class Bargraph {
     }
     const sentences = [];
     const sentenceHeightApproximation = this.foregroundContext.measureText("M").width;
-    let maxSentenceWidth = this.foregroundContext.measureText(headingText).width + (2 * sentenceHeightApproximation);
+    let maxSentenceWidth = this.foregroundContext.measureText(headingText).width + 2 * sentenceHeightApproximation;
     this.foregroundContext.font = this.fontsInformationSentencesWeight + " " + this.fontsInformationSentencesSize + "px " + this.fontsInformationSentencesFamily;
     for (let i = 0; i < this.data.y.length; i += 1) {
       let yValue = this.data.y[i][this.axisMinX + index];
@@ -770,8 +770,8 @@ export default class Bargraph {
       const labelComponents = this.getLabelComponentsY(yValue);
       const formattedData = this.helper.applyAffix(labelComponents.value, this.getLabelPrefixY(), labelComponents.suffix);
       const sentence = this.dataNames[i] + ": " + formattedData;
-      // space + circle + space + sentence + space (space and cricle are as wide as a sentence is tall)
-      const sentenceWidth = this.foregroundContext.measureText(sentence).width + (4 * sentenceHeightApproximation);
+      // Space + Circle + Space + Sentence + Space (space and cricle are as wide as a sentence is tall)
+      const sentenceWidth = this.foregroundContext.measureText(sentence).width + 4 * sentenceHeightApproximation;
       if (sentenceWidth > maxSentenceWidth) {
         maxSentenceWidth = sentenceWidth;
       }
@@ -791,8 +791,8 @@ export default class Bargraph {
         const labelComponents = this.getLabelComponentsU(uValue);
         const formattedData = this.helper.applyAffix(labelComponents.value, this.getLabelPrefixU(), labelComponents.suffix);
         const sentence = this.dataNames[this.data.y.length + i] + ": " + formattedData;
-        // space + circle + space + sentence + space (space and cricle are as wide as a sentence is tall)
-        const sentenceWidth = this.foregroundContext.measureText(sentence).width + (4 * sentenceHeightApproximation);
+        // Space + Circle + Space + Sentence + Space (space and cricle are as wide as a sentence is tall)
+        const sentenceWidth = this.foregroundContext.measureText(sentence).width + 4 * sentenceHeightApproximation;
         if (sentenceWidth > maxSentenceWidth) {
           maxSentenceWidth = sentenceWidth;
         }
@@ -801,13 +801,13 @@ export default class Bargraph {
     }
 
     const requiredWidth = maxSentenceWidth;
-    // space + sentence + space + sentence + space + ... + sentence + space
-    const requiredHeight = (((verticalData.length + 1) * 2) + 1) * sentenceHeightApproximation;
-    let panelX = this.graphStartX + ((index + 0.5) * this.graphScaleX) + (2 * sentenceHeightApproximation);
-    const panelY = this.graphStartY + (this.graphHeight / 2) - (requiredHeight / 2);
+    // Space + Sentence + Space + Sentence + Space + ... + Sentence + Space
+    const requiredHeight = ((verticalData.length + 1) * 2 + 1) * sentenceHeightApproximation;
+    let panelX = this.graphStartX + (index + 0.5) * this.graphScaleX + 2 * sentenceHeightApproximation;
+    const panelY = this.graphStartY + this.graphHeight / 2 - requiredHeight / 2;
 
-    if ((panelX + requiredWidth) > (this.graphStartX + this.graphWidth)) {
-      panelX = this.graphStartX + ((index + 0.5) * this.graphScaleX) - (2 * sentenceHeightApproximation) - requiredWidth;
+    if (panelX + requiredWidth > this.graphStartX + this.graphWidth) {
+      panelX = this.graphStartX + (index + 0.5) * this.graphScaleX - 2 * sentenceHeightApproximation - requiredWidth;
       if (panelX < this.graphStartX) {
         console.log("Information panel may be clipped horizontally!");
       }
@@ -820,8 +820,8 @@ export default class Bargraph {
     this.foregroundContext.fillStyle = this.helper.hex2rgba(this.coloursInformationPanel, this.alphasInformationPanel);
     this.helper.fillRoundedRect(this.foregroundContext, panelX, panelY, requiredWidth, requiredHeight, parseFloat(this.radiiInformationPanelBorder));
 
-    let circleOffsetY = panelY + (3 * sentenceHeightApproximation);
-    let sentenceOffsetY = panelY + (2 * sentenceHeightApproximation);
+    let circleOffsetY = panelY + 3 * sentenceHeightApproximation;
+    let sentenceOffsetY = panelY + 2 * sentenceHeightApproximation;
 
     this.foregroundContext.font = this.fontsInformationHeadingWeight + " " + this.fontsInformationHeadingSize + "px " + this.fontsInformationHeadingFamily;
     this.foregroundContext.fillStyle = this.coloursInformationHeading;
@@ -833,7 +833,7 @@ export default class Bargraph {
       this.foregroundContext.fillStyle = this.getDataColour(i);
       this.foregroundContext.fillRect(panelX + sentenceHeightApproximation, circleOffsetY, sentenceHeightApproximation, sentenceHeightApproximation);
       this.foregroundContext.fillStyle = this.coloursInformationSentences;
-      this.foregroundContext.fillText(sentences[i], panelX + (3 * sentenceHeightApproximation), sentenceOffsetY);
+      this.foregroundContext.fillText(sentences[i], panelX + 3 * sentenceHeightApproximation, sentenceOffsetY);
       circleOffsetY += 2 * sentenceHeightApproximation;
       sentenceOffsetY += 2 * sentenceHeightApproximation;
     }
@@ -842,11 +842,11 @@ export default class Bargraph {
   highlight(index) {
     this.clearForeground();
     if (index == -1) {
-      return false;
+      return;
     }
 
     const axisHighlight = {
-      "x": this.graphStartX + ((0.5 + index) * this.graphScaleX),
+      "x": this.graphStartX + (0.5 + index) * this.graphScaleX,
       "y": this.graphEndY
     };
     const dataHighlights = [];
@@ -854,9 +854,9 @@ export default class Bargraph {
     let verticalValueMax = Infinity;
     for (let i = 0; i < this.data.y.length; i += 1) {
       const y = this.data.y[i][this.axisMinX + index];
-      const yValue = this.graphStartY + (-(y - this.axisMaxY) * this.graphScaleY);
+      const yValue = this.graphStartY + -(y - this.axisMaxY) * this.graphScaleY;
       dataHighlights.push({
-        "x": this.graphStartX + ((0.5 + index) * this.graphScaleX),
+        "x": this.graphStartX + (0.5 + index) * this.graphScaleX,
         "y": yValue
       });
       if (yValue < verticalValueMax) {
@@ -873,7 +873,7 @@ export default class Bargraph {
         const u = this.data.u[i][this.axisMinX + index - offsetIndex];
         const uValue = this.graphStartY + -(u * this.graphScaleU - this.axisMaxY) * this.graphScaleY;
         dataHighlights.push({
-          "x": this.graphStartX + ((0.5 + index) * this.graphScaleX),
+          "x": this.graphStartX + (0.5 + index) * this.graphScaleX,
           "y": uValue
         });
         if (uValue < verticalValueMax) {

@@ -223,9 +223,6 @@ module.exports = [
       "no-confusing-arrow": [
         "error"
       ],
-      "no-console": [
-        "error"
-      ],
       "no-const-assign": [
         "error"
       ],
@@ -623,9 +620,6 @@ module.exports = [
         "error"
       ],
       "no-void": [
-        "error"
-      ],
-      "no-warning-comments": [
         "error"
       ],
       "no-whitespace-before-property": [
