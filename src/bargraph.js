@@ -137,7 +137,7 @@ export default class Bargraph {
     return 0;
   }
 
-  getLabelComponents(value, labelSuffixArray) {
+  static getLabelComponents(value, labelSuffixArray) {
     if (labelSuffixArray.length == 1) {
       return {
         "suffix": labelSuffixArray[0][1],
@@ -176,7 +176,7 @@ export default class Bargraph {
       };
     }
 
-    return this.getLabelComponents(value, this.properties.y_axis.label_suffix);
+    return Bargraph.getLabelComponents(value, this.properties.y_axis.label_suffix);
   }
 
   getLabelComponentsU(value) {
@@ -187,7 +187,7 @@ export default class Bargraph {
       };
     }
 
-    return this.getLabelComponents(value, this.properties.u_axis.label_suffix);
+    return Bargraph.getLabelComponents(value, this.properties.u_axis.label_suffix);
   }
 
   calculateAxisRangeX() {
@@ -286,16 +286,16 @@ export default class Bargraph {
     if (this.properties) {
       if (this.properties.flags) {
         this.highLightEnabled = this.properties.flags.highlight_enabled
-        ? true
+        ? this.properties.flags.highlight_enabled
         : false;
         this.hideHorizontalAxis = this.properties.flags.hide_horizontal_axis
-        ? true
+        ? this.properties.flags.hide_horizontal_axis
         : false;
         this.hideVerticalAxes = this.properties.flags.hide_vertical_axes
-        ? true
+        ? this.properties.flags.hide_vertical_axes
         : false;
         this.drawLinesOfBestFit = this.properties.flags.draw_lines_of_best_fit
-        ? true
+        ? this.properties.flags.draw_lines_of_best_fit
         : false;
       }
     } else {
@@ -674,7 +674,7 @@ export default class Bargraph {
         valueU = isNaN(valueU)
         ? 0
         : valueU;
-        const labelValueU = +valueU.toFixed(this.getDecimalPlacesU());
+        const labelValueU = Number(valueU.toFixed(this.getDecimalPlacesU()));
 
         if (!labelValueIndexMap.has(labelValueU)) {
           labelValueIndexMap.set(labelValueU, []);
@@ -688,9 +688,7 @@ export default class Bargraph {
       for (const key of labelValueIndexMap.keys()) {
         const array = labelValueIndexMap.get(key);
 
-        array.sort(function (a, b) {
-          return a.value - b.value;
-        });
+        array.sort((a, b) => a.value - b.value);
 
         indexLabelMap.set(array[0].index, key);
       }
