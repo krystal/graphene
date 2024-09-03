@@ -8,7 +8,7 @@ export default class Helper {
 
   // TODO: add a function for calculating max width
 
-  //https://stackoverflow.com/questions/21646738/convert-hex-to-rgba
+  // https://stackoverflow.com/questions/21646738/convert-hex-to-rgba
   static hex2rgba(hex, alpha) {
     const hexTrimmed = hex.trim();
     const hexSansHash = hexTrimmed.substring(1);
@@ -18,7 +18,7 @@ export default class Helper {
     return `rgba(${r},${g},${b},${alpha})`;
   }
 
-  //https://gomakethings.com/converting-a-color-from-a-three-digit-hexcolor-to-a-six-digit-hexcolor-with-vanilla-js/
+  // https://gomakethings.com/converting-a-color-from-a-three-digit-hexcolor-to-a-six-digit-hexcolor-with-vanilla-js/
   static ensureHexLength(hexcolor) {
     if (hexcolor.length === 3) {
       hexcolor = hexcolor.split("").map(function (hex) {
@@ -39,7 +39,7 @@ export default class Helper {
   // TODO: find a solution for numbers < 1
   static calculateFactors(number) {
     const lowerDivisors = [];
-    for (let i = 1; i * i <= number; i++) {
+    for (let i = 1; i * i <= number; i += 1) {
       if (number % i == 0) {
         lowerDivisors.push(i);
       }
@@ -51,7 +51,7 @@ export default class Helper {
     }
 
     const upperDivisors = [];
-    for (let i = startIndex; i >= 0; i--) {
+    for (let i = startIndex; i >= 0; i -= 1) {
       upperDivisors.push(number / lowerDivisors[i]);
     }
 
@@ -110,7 +110,7 @@ export default class Helper {
     }
   }
 
-  //http://scaledinnovation.com/analytics/splines/aboutSplines.html
+  // http://scaledinnovation.com/analytics/splines/aboutSplines.html
   static getControlPoints(x0, y0, x1, y1, x2, y2, t, maxY) {
     //  x0,y0,x1,y1 are the coordinates of the end (knot) pts of this segment
     //  x2,y2 is the next knot -- not connected here but needed to calculate p2
@@ -131,7 +131,7 @@ export default class Helper {
       }
     }
 
-    //  Scaling factors: distances from this knot to the previous and following knots.
+    // Scaling factors: distances from this knot to the previous and following knots.
     const d01 = Math.sqrt(Math.pow(x1 - x0, 2) + Math.pow(y1 - y0, 2));
     const d12 = Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
 
@@ -147,9 +147,9 @@ export default class Helper {
     return [p1x, p1y, p2x, p2y];
   }
 
-  //http://scaledinnovation.com/analytics/splines/aboutSplines.html
+  // http://scaledinnovation.com/analytics/splines/aboutSplines.html
   static drawSpline(ctx, pts, t, maxY) {
-    let cp = [];   // array of control points, as x0,y0,x1,y1,...
+    let cp = []; // array of control points, as x0,y0,x1,y1,...
     const n = pts.length;
 
     // Draw an open curve, not connected at the ends
@@ -157,20 +157,20 @@ export default class Helper {
       cp = cp.concat(this.getControlPoints(pts[i], pts[i + 1], pts[i + 2], pts[i + 3], pts[i + 4], pts[i + 5], t, maxY));
     }
 
-    //  For open curves the first and last arcs are simple quadratics.
+    // For open curves the first and last arcs are simple quadratics.
     ctx.quadraticCurveTo(cp[0], cp[1], pts[2], pts[3]);
 
     for (let i = 2; i < pts.length - 5; i += 2) {
       ctx.bezierCurveTo(cp[2 * i - 2], cp[2 * i - 1], cp[2 * i], cp[2 * i + 1], pts[i + 2], pts[i + 3]);
     }
 
-    //  For open curves the first and last arcs are simple quadratics.
+    // For open curves the first and last arcs are simple quadratics.
     ctx.quadraticCurveTo(cp[2 * n - 10], cp[2 * n - 9], pts[n - 2], pts[n - 1]);
   }
 
   static calculateAverage(numbers) {
     let sum = 0;
-    for (let i = 0; i < numbers.length; i++) {
+    for (let i = 0; i < numbers.length; i += 1) {
       sum += numbers[i];
     }
     return sum / numbers.length;
@@ -179,7 +179,7 @@ export default class Helper {
   // TODO: rename this to something more fitting
   static calculateChange(numbersX, numbersY, meanX, meanY) {
     let sum = 0;
-    for (let i = 0; i < numbersX.length; i++) {
+    for (let i = 0; i < numbersX.length; i += 1) {
       sum += (numbersX[i] - meanX) * (numbersY[i] - meanY);
     }
     return sum;
@@ -195,7 +195,7 @@ export default class Helper {
     const slope = changeXY / changeXX;
     const intercept = meanY - (slope * meanX);
 
-    return {"slope": slope, "intercept": intercept};
+    return {"intercept": intercept, "slope": slope};
   }
 
   // TODO: rename this to something more fitting
