@@ -2,7 +2,6 @@ import Helper from "./helper.js";
 
 export default class Bargraph {
   constructor(element, properties, data, axisFormatter, informationFormatter) {
-    this.helper = new Helper();
     this.drawn = false;
     this.userDefinedViewPort = false;
     this.element = element;
@@ -39,8 +38,8 @@ export default class Bargraph {
     this.canvasWidth = this.background.width;
     this.canvasHeight = this.background.height;
 
-    this.backgroundContext = this.helper.getContext(this.background);
-    this.foregroundContext = this.helper.getContext(this.foreground);
+    this.backgroundContext = Helper.getContext(this.background);
+    this.foregroundContext = Helper.getContext(this.foreground);
   }
 
   removeLayers() {
@@ -86,7 +85,7 @@ export default class Bargraph {
 
   redraw() {
     this.backgroundContext.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
-    this.backgroundContext.fillStyle = this.helper.hex2rgba(this.coloursBackground, this.alphasBackground);
+    this.backgroundContext.fillStyle = Helper.hex2rgba(this.coloursBackground, this.alphasBackground);
     this.backgroundContext.fillRect(0, 0, this.canvasWidth, this.canvasHeight);
 
     if (!this.hideVerticalAxes) {
@@ -231,7 +230,7 @@ export default class Bargraph {
   }
 
   calculateAxisMax(base, max) {
-    const floorPowerOfBase = this.helper.calculateFloorPowerOfBase(base, max);
+    const floorPowerOfBase = Helper.calculateFloorPowerOfBase(base, max);
     const floorPowerOfBaseOverBase = floorPowerOfBase / base;
 
     let candidateMax = floorPowerOfBase;
@@ -455,7 +454,7 @@ export default class Bargraph {
       }
       if (!this.hideVerticalAxes) {
         const maxLabelsY = Math.round(this.graphHeight / (labelHeightApproximation * 4));
-        const factors = this.helper.calculateFactors(this.axisMaxY);
+        const factors = Helper.calculateFactors(this.axisMaxY);
 
         let factorIndex = 0;
         let workingInterval = factors[factorIndex];
@@ -471,14 +470,14 @@ export default class Bargraph {
 
         for (let i = this.axisMinY; i <= this.axisMaxY; i += this.labelIntervalY) {
           const labelComponentsY = this.getLabelComponentsY(i);
-          const labelWidthY = this.backgroundContext.measureText(this.helper.applyAffix(labelComponentsY.value, this.getLabelPrefixY(), labelComponentsY.suffix)).width;
+          const labelWidthY = this.backgroundContext.measureText(Helper.applyAffix(labelComponentsY.value, this.getLabelPrefixY(), labelComponentsY.suffix)).width;
           if (labelWidthY > maxLabelWidthY) {
             maxLabelWidthY = labelWidthY;
           }
 
           if (this.data.u) {
             const labelComponentsU = this.getLabelComponentsU(i / this.graphScaleU);
-            const labelWidthU = this.backgroundContext.measureText(this.helper.applyAffix(labelComponentsU.value, this.getLabelPrefixU(), labelComponentsU.suffix)).width;
+            const labelWidthU = this.backgroundContext.measureText(Helper.applyAffix(labelComponentsU.value, this.getLabelPrefixU(), labelComponentsU.suffix)).width;
             if (labelWidthU > maxLabelWidthU) {
               maxLabelWidthU = labelWidthU;
             }
@@ -540,7 +539,7 @@ export default class Bargraph {
     this.backgroundContext.restore();
     this.backgroundContext.fill();
 
-    this.backgroundContext.fillStyle = this.helper.hex2rgba(this.getDataColour(index), 0.5);
+    this.backgroundContext.fillStyle = Helper.hex2rgba(this.getDataColour(index), 0.5);
     this.transformDrawingArea();
 
     this.backgroundContext.beginPath();
@@ -574,7 +573,7 @@ export default class Bargraph {
       points.push(offsetIndex + i + 0.5);
       points.push(dataset[this.axisMinX + i] * scale);
     }
-    this.helper.drawLines("lines", this.backgroundContext, points, this.axisMaxY);
+    Helper.drawLines("lines", this.backgroundContext, points, this.axisMaxY);
 
     this.backgroundContext.restore();
     this.backgroundContext.stroke();
@@ -696,12 +695,12 @@ export default class Bargraph {
 
     for (let i = this.axisMinY; i <= this.axisMaxY; i += this.labelIntervalY) {
       const labelComponentsY = this.getLabelComponentsY(i);
-      this.backgroundContext.fillText(this.helper.applyAffix(labelComponentsY.value, this.getLabelPrefixY(), labelComponentsY.suffix), this.leftMargin / 2, this.graphEndY - (i - this.axisMinY) * this.graphScaleY);
+      this.backgroundContext.fillText(Helper.applyAffix(labelComponentsY.value, this.getLabelPrefixY(), labelComponentsY.suffix), this.leftMargin / 2, this.graphEndY - (i - this.axisMinY) * this.graphScaleY);
 
       if (this.data.u) {
         if (indexLabelMap.has(i)) {
           const labelComponentsU = this.getLabelComponentsU(indexLabelMap.get(i));
-          this.backgroundContext.fillText(this.helper.applyAffix(labelComponentsU.value, this.getLabelPrefixU(), labelComponentsU.suffix), this.graphEndX + this.rightMargin / 2, this.graphEndY - (i - this.axisMinY) * this.graphScaleY);
+          this.backgroundContext.fillText(Helper.applyAffix(labelComponentsU.value, this.getLabelPrefixU(), labelComponentsU.suffix), this.graphEndX + this.rightMargin / 2, this.graphEndY - (i - this.axisMinY) * this.graphScaleY);
         }
       }
     }
@@ -766,7 +765,7 @@ export default class Bargraph {
       ? 0
       : yValue;
       const labelComponents = this.getLabelComponentsY(yValue);
-      const formattedData = this.helper.applyAffix(labelComponents.value, this.getLabelPrefixY(), labelComponents.suffix);
+      const formattedData = Helper.applyAffix(labelComponents.value, this.getLabelPrefixY(), labelComponents.suffix);
       const sentence = this.dataNames[i] + ": " + formattedData;
       // Space + Circle + Space + Sentence + Space (space and cricle are as wide as a sentence is tall)
       const sentenceWidth = this.foregroundContext.measureText(sentence).width + 4 * sentenceHeightApproximation;
@@ -787,7 +786,7 @@ export default class Bargraph {
         ? 0
         : uValue;
         const labelComponents = this.getLabelComponentsU(uValue);
-        const formattedData = this.helper.applyAffix(labelComponents.value, this.getLabelPrefixU(), labelComponents.suffix);
+        const formattedData = Helper.applyAffix(labelComponents.value, this.getLabelPrefixU(), labelComponents.suffix);
         const sentence = this.dataNames[this.data.y.length + i] + ": " + formattedData;
         // Space + Circle + Space + Sentence + Space (space and cricle are as wide as a sentence is tall)
         const sentenceWidth = this.foregroundContext.measureText(sentence).width + 4 * sentenceHeightApproximation;
@@ -815,8 +814,8 @@ export default class Bargraph {
       console.log("Information panel may be clipped vertically!");
     }
 
-    this.foregroundContext.fillStyle = this.helper.hex2rgba(this.coloursInformationPanel, this.alphasInformationPanel);
-    this.helper.fillRoundedRect(this.foregroundContext, panelX, panelY, requiredWidth, requiredHeight, parseFloat(this.radiiInformationPanelBorder));
+    this.foregroundContext.fillStyle = Helper.hex2rgba(this.coloursInformationPanel, this.alphasInformationPanel);
+    Helper.fillRoundedRect(this.foregroundContext, panelX, panelY, requiredWidth, requiredHeight, parseFloat(this.radiiInformationPanelBorder));
 
     let circleOffsetY = panelY + 3 * sentenceHeightApproximation;
     let sentenceOffsetY = panelY + 2 * sentenceHeightApproximation;
@@ -929,7 +928,7 @@ export default class Bargraph {
     const dataset = this.data.y[index];
     const datasetWidth = 1 / (this.data.y.length + 1);
 
-    const parameters = this.helper.calculateLineOfBestFit(Array.from(Array(this.data.x.length).keys()), dataset);
+    const parameters = Helper.calculateLineOfBestFit(Array.from(Array(this.data.x.length).keys()), dataset);
 
     this.backgroundContext.strokeStyle = this.getBestFitColour(index);
     this.backgroundContext.lineWidth = this.widthsBestFit;
@@ -937,8 +936,8 @@ export default class Bargraph {
 
     this.backgroundContext.beginPath();
 
-    this.backgroundContext.moveTo(datasetWidth + datasetWidth * index, this.helper.getPointOnLine(this.axisMinX, parameters.slope, parameters.intercept));
-    this.backgroundContext.lineTo(datasetWidth + projectedIndex + datasetWidth * index, this.helper.getPointOnLine(projectedIndex, parameters.slope, parameters.intercept));
+    this.backgroundContext.moveTo(datasetWidth + datasetWidth * index, Helper.getPointOnLine(this.axisMinX, parameters.slope, parameters.intercept));
+    this.backgroundContext.lineTo(datasetWidth + projectedIndex + datasetWidth * index, Helper.getPointOnLine(projectedIndex, parameters.slope, parameters.intercept));
 
     this.backgroundContext.restore();
     this.backgroundContext.stroke();
@@ -949,8 +948,8 @@ export default class Bargraph {
     ]);
     this.transformDrawingArea();
 
-    this.backgroundContext.moveTo(datasetWidth + projectedIndex + datasetWidth * index, this.helper.getPointOnLine(projectedIndex, parameters.slope, parameters.intercept));
-    this.backgroundContext.lineTo(datasetWidth + this.axisMaxX + datasetWidth * index, this.helper.getPointOnLine(this.axisMaxX, parameters.slope, parameters.intercept));
+    this.backgroundContext.moveTo(datasetWidth + projectedIndex + datasetWidth * index, Helper.getPointOnLine(projectedIndex, parameters.slope, parameters.intercept));
+    this.backgroundContext.lineTo(datasetWidth + this.axisMaxX + datasetWidth * index, Helper.getPointOnLine(this.axisMaxX, parameters.slope, parameters.intercept));
 
     this.backgroundContext.restore();
     this.backgroundContext.stroke();

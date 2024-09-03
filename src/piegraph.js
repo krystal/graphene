@@ -48,8 +48,8 @@ export default class Piegraph {
     this.canvasWidth = this.background.width;
     this.canvasHeight = this.background.height;
 
-    this.backgroundContext = this.helper.getContext(this.background);
-    this.foregroundContext = this.helper.getContext(this.foreground);
+    this.backgroundContext = Helper.getContext(this.background);
+    this.foregroundContext = Helper.getContext(this.foreground);
   }
 
   removeLayers() {
@@ -80,7 +80,7 @@ export default class Piegraph {
 
   redraw() {
     this.backgroundContext.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
-    this.backgroundContext.fillStyle = this.helper.hex2rgba(this.coloursBackground, this.alphasBackground);
+    this.backgroundContext.fillStyle = Helper.hex2rgba(this.coloursBackground, this.alphasBackground);
     this.backgroundContext.fillRect(0, 0, this.canvasWidth, this.canvasHeight);
 
     this.drawGraph();
@@ -259,7 +259,7 @@ export default class Piegraph {
 
       var value = this.getSegmentsLabelFormatIsPercentage() ? segmentPercentage : segmentValue;
       var labelValue = +value.toFixed(this.getSegmentsLabelDecimalPlaces());
-      var labelText = this.helper.applyAffix(labelValue, this.getSegmentsLabelPrefix(), this.getSegmentsLabelSuffix());
+      var labelText = Helper.applyAffix(labelValue, this.getSegmentsLabelPrefix(), this.getSegmentsLabelSuffix());
 
       var segmentCentreAngle = angleOffset + cumulativeAngle + (segmentAngle / 2);
       var labelX = distanceFromCentre * Math.cos(segmentCentreAngle);
