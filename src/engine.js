@@ -2,6 +2,11 @@ import Bargraph from "./bargraph.js";
 import Linegraph from "./linegraph.js";
 import Piegraph from "./piegraph.js";
 
+/*
+ * TODO; remove data sets as an option for data, type and properties
+ * ^then the parsing in here (and linting warnings) can go
+ */
+
 export default class Engine {
   constructor() {
     this.graphDictionary = {};
@@ -56,20 +61,24 @@ export default class Engine {
 
   render() {
     for (const elementId in this.graphDictionary) {
-      const graph = this.graphDictionary[elementId];
-      if (!graph.drawn) {
-        graph.draw();
+      if (Object.hasOwn(this.graphDictionary, elementId)) {
+        const graph = this.graphDictionary[elementId];
+        if (!graph.drawn) {
+          graph.draw();
+        }
       }
     }
   }
 
   rerender() {
     for (const elementId in this.graphDictionary) {
-      const graph = this.graphDictionary[elementId];
-      graph.createLayers();
-      graph.addMouseEvents();
-      if (graph.drawn) {
-        graph.draw();
+      if (Object.hasOwn(this.graphDictionary, elementId)) {
+        const graph = this.graphDictionary[elementId];
+        graph.createLayers();
+        graph.addMouseEvents();
+        if (graph.drawn) {
+          graph.draw();
+        }
       }
     }
   }
