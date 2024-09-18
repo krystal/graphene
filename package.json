@@ -15,5 +15,9 @@
   "bugs": {
     "url": "https://github.com/krystal/graphene/issues"
   },
-  "homepage": "https://github.com/krystal/graphene#readme"
+  "homepage": "https://github.com/krystal/graphene#readme",
+  "devDependencies": {
+    "eslint": "^9.10.0",
+    "globals": "^15.9.0"
+  }
 }

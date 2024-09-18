@@ -781,9 +781,6 @@ module.exports = [
       "yoda": [
         "error"
       ]
-    },
-    "env": {
-      "browser": true
     }
   }
 ];
