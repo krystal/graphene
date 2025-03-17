@@ -1,4 +1,4 @@
-import Helper from './helper.js';
+import Helper from "./helper.js";
 
 export default class Linegraph {
   constructor(element, properties, data, axisFormatter, informationFormatter) {
@@ -22,15 +22,15 @@ export default class Linegraph {
   createLayers() {
     this.removeLayers();
 
-    this.background = document.createElement('CANVAS');
+    this.background = document.createElement("CANVAS");
     this.background.width = this.element.getBoundingClientRect().width;
-    this.background.height = this.element.getAttribute('height');
+    this.background.height = this.element.getAttribute("height");
     this.element.appendChild(this.background);
 
     this.foreground = document.createElement("CANVAS");
     this.foreground.width = this.element.getBoundingClientRect().width;
-    this.foreground.height = this.element.getAttribute('height');
-    this.foreground.style.position = 'absolute';
+    this.foreground.height = this.element.getAttribute("height");
+    this.foreground.style.position = "absolute";
     this.foreground.style.left = 0;
     this.foreground.style.top = 0;
     this.foreground.style.zIndex = 0;
@@ -56,15 +56,17 @@ export default class Linegraph {
     this.cancelMouseMove();
     this.cancelMouseDown();
     this.cancelShiftMouseDown();
-    this.foreground.addEventListener('mousemove', this.handleMouseMove.bind(this), false);
-    this.foreground.addEventListener('mouseleave', this.handleMouseLeave.bind(this), false);
-    this.foreground.addEventListener('mousedown', this.handleMouseDown.bind(this), false);
-    this.foreground.addEventListener('mouseup', this.handleMouseUp.bind(this), false);
-    this.foreground.addEventListener('dblclick', this.handleDoubleClick.bind(this), false);
+    this.foreground.addEventListener("mousemove", this.handleMouseMove.bind(this), false);
+    this.foreground.addEventListener("mouseleave", this.handleMouseLeave.bind(this), false);
+    this.foreground.addEventListener("mousedown", this.handleMouseDown.bind(this), false);
+    this.foreground.addEventListener("mouseup", this.handleMouseUp.bind(this), false);
+    this.foreground.addEventListener("dblclick", this.handleDoubleClick.bind(this), false);
   }
 
-  // TODO: do some refactoring
-  // TODO: investigate "Save Image As..." in browsers, it currently, understandably, saves only the foreground layer
+  /*
+   * TODO: do some refactoring
+   * TODO: investigate "Save Image As..." in browsers, it currently, understandably, saves only the foreground layer
+   */
 
   draw() {
     this.drawn = true;
@@ -98,9 +100,9 @@ export default class Linegraph {
     if (!this.hideHorizontalAxis) {
       this.drawVerticalLines();
     }
-    for (var i = 0; i < this.data.y.length; i++) {
-      var dataColour = this.getDataColour(i);
-      var dataColourStop = this.getDataColourStop(i);
+    for (let i = 0; i < this.data.y.length; i += 1) {
+      const dataColour = this.getDataColour(i);
+      const dataColourStop = this.getDataColourStop(i);
       this.drawAreaUnderGraph(this.data.y[i], dataColour, dataColourStop, 1);
       this.drawGraph(this.data.y[i], dataColour, dataColourStop, 1);
       if (this.showDataPoints) {
@@ -108,9 +110,9 @@ export default class Linegraph {
       }
     }
     if (this.data.u) {
-      for (var i = 0; i < this.data.u.length; i++) {
-        var dataColour = this.getDataColour(this.data.y.length + i);
-        var dataColourStop = this.getDataColourStop(this.data.y.length + i);
+      for (let i = 0; i < this.data.u.length; i += 1) {
+        const dataColour = this.getDataColour(this.data.y.length + i);
+        const dataColourStop = this.getDataColourStop(this.data.y.length + i);
         this.drawAreaUnderGraph(this.data.u[i], dataColour, dataColourStop, this.graphScaleU);
         this.drawGraph(this.data.u[i], dataColour, dataColourStop, this.graphScaleU);
         if (this.showDataPoints) {
@@ -150,31 +152,44 @@ export default class Linegraph {
     return 0;
   }
 
-  getLabelComponents(value, labelSuffixArray) {
+  // TODO: sort out the callers of this
+  static getLabelComponents(value, labelSuffixArray) {
     if (labelSuffixArray.length == 1) {
-      return { "value": value, "suffix": labelSuffixArray[0][1] };
+      return {
+        "suffix": labelSuffixArray[0][1],
+        value
+      };
     }
 
-    var lastLimit = 1;
-    var lastButOneLimit = 1;
-    var lastSuffix = "";
-    for (var i = 0; i < labelSuffixArray.length; i++) {
-      var limit = labelSuffixArray[i][0];
-      var suffix = labelSuffixArray[i][1];
+    let lastLimit = 1;
+    let lastButOneLimit = 1;
+    let lastSuffix = "";
+    for (let i = 0; i < labelSuffixArray.length; i += 1) {
+      const limit = labelSuffixArray[i][0];
+      const suffix = labelSuffixArray[i][1];
       if (value < limit) {
-        return { "value": value / (lastLimit), "suffix": suffix };
+        return {
+          suffix,
+          "value": value / lastLimit
+        };
       }
       lastButOneLimit = lastLimit;
       lastLimit = limit;
       lastSuffix = suffix;
     }
 
-    return { "value": value / (lastLimit / lastButOneLimit), "suffix": lastSuffix };
+    return {
+      "suffix": lastSuffix,
+      "value": value / (lastLimit / lastButOneLimit)
+    };
   }
 
   getLabelComponentsY(value) {
     if (!this.properties || !this.properties.y_axis || !this.properties.y_axis.label_suffix) {
-      return { "value": value, "suffix": "" };
+      return {
+        "suffix": "",
+        value
+      };
     }
 
     return this.getLabelComponents(value, this.properties.y_axis.label_suffix);
@@ -182,7 +197,10 @@ export default class Linegraph {
 
   getLabelComponentsU(value) {
     if (!this.properties || !this.properties.u_axis || !this.properties.u_axis.label_suffix) {
-      return { "value": value, "suffix": "" };
+      return {
+        "suffix": "",
+        value
+      };
     }
 
     return this.getLabelComponents(value, this.properties.u_axis.label_suffix);
@@ -197,39 +215,47 @@ export default class Linegraph {
   }
 
   getMaxValueY() {
-    var maxY = 0;
-    for (var i = 0; i < this.data.y.length; i++) {
-      for (var j = 0; j < this.data.y[i].length; j++) {
-        var y = this.data.y[i][j];
-        if (y > maxY) { maxY = y; }
-      }
-    }
-    return maxY != 0 ? maxY : 1;
-  }
-
-  getMaxValueU() {
-    var maxU = 0;
-    if (this.data.u) {
-      for (var i = 0; i < this.data.u.length; i++) {
-        for (var j = 0; j < this.data.u[i].length; j++) {
-          var u = this.data.u[i][j];
-          if (u > maxU) { maxU = u; }
+    let maxY = 0;
+    for (let i = 0; i < this.data.y.length; i += 1) {
+      for (let j = 0; j < this.data.y[i].length; j += 1) {
+        const y = this.data.y[i][j];
+        if (y > maxY) {
+          maxY = y;
         }
       }
     }
-    return maxU != 0 ? maxU : 1;
+    return maxY == 0
+    ? 1
+    : maxY;
   }
 
-  calculateAxisMax(base, max) {
-    var floorPowerOfBase = Helper.calculateFloorPowerOfBase(base, max);
-    var floorPowerOfBaseOverBase = floorPowerOfBase / base;
+  getMaxValueU() {
+    let maxU = 0;
+    if (this.data.u) {
+      for (let i = 0; i < this.data.u.length; i += 1) {
+        for (let j = 0; j < this.data.u[i].length; j += j) {
+          const u = this.data.u[i][j];
+          if (u > maxU) {
+            maxU = u;
+          }
+        }
+      }
+    }
+    return maxU == 0
+    ? 1
+    : maxU;
+  }
 
-    var candidateMax = floorPowerOfBase;
+  static calculateAxisMax(base, max) {
+    const floorPowerOfBase = Helper.calculateFloorPowerOfBase(base, max);
+    const floorPowerOfBaseOverBase = floorPowerOfBase / base;
+
+    let candidateMax = floorPowerOfBase;
     while (max > candidateMax) {
       candidateMax += floorPowerOfBase;
     }
 
-    // in an effort to keep the graph aesthetically pleasing, limit potential blank space at the top to 20%
+    // In an effort to keep the graph aesthetically pleasing, limit potential blank space at the top to 20%
     if (max / candidateMax < 0.8) {
       candidateMax = floorPowerOfBase;
       while (max > candidateMax) {
@@ -241,26 +267,26 @@ export default class Linegraph {
   }
 
   calculateAxisMaxY() {
-    var base = 10;
+    let base = 10;
     if (this.properties && this.properties.y_axis && this.properties.y_axis.base) {
       base = this.properties.y_axis.base;
     }
 
-    return this.calculateAxisMax(base, this.getMaxValueY());
+    return Linegraph.calculateAxisMax(base, this.getMaxValueY());
   }
 
   calculateAxisMaxU() {
-    var base = 10;
+    let base = 10;
     if (this.properties && this.properties.u_axis && this.properties.u_axis.base) {
       base = this.properties.u_axis.base;
     }
 
-    return this.calculateAxisMax(base, this.getMaxValueU());
+    return Linegraph.calculateAxisMax(base, this.getMaxValueU());
   }
 
   // TODO: check if any existing callers need to set this optional parameter
   getStyle(name, defaultStyle, logToConsole = true) {
-    var style = getComputedStyle(this.element).getPropertyValue(name);
+    const style = getComputedStyle(this.element).getPropertyValue(name);
     if (style) {
       return style;
     }
@@ -273,7 +299,7 @@ export default class Linegraph {
 
   retrieveSettings() {
     if (this.properties) {
-      this.graphDrawingMethod = this.properties.graph_drawing_method ? this.properties.graph_drawing_method : 'lines';
+      this.graphDrawingMethod = this.properties.graph_drawing_method ? this.properties.graph_drawing_method : "lines";
       if (this.properties.flags) {
         this.highLightEnabled = this.properties.flags.highlight_enabled ? true : false;
         this.scrollEnabled = this.properties.flags.scroll_enabled ? true : false;
@@ -285,7 +311,7 @@ export default class Linegraph {
         this.showDataPoints = this.properties.flags.show_data_points ? true : false;
       }
     } else {
-      this.graphDrawingMethod = 'lines';
+      this.graphDrawingMethod = "lines";
       this.highLightEnabled = false;
       this.scrollEnabled = false;
       this.zoomEnabled = false;
@@ -302,94 +328,103 @@ export default class Linegraph {
       this.dataNames = this.data.names.y.concat(this.data.names.u);
     }
 
-    var verticalData = this.data.y;
+    let verticalData = this.data.y;
     if (this.data.u) {
       verticalData = verticalData.concat(this.data.u);
     }
 
-    this.defaultDataColourArray = ['#826AF9', '#2D99FF', '#F97B37'];
-    this.defaultDataColourStopArray = ['#FFFFFF', '#FFFFFF', '#FFFFFF'];
-    var defaultFontFamily = this.getStyle('font-family', 'Arial');
+    this.defaultDataColourArray = ["#826AF9", "#2D99FF", "#F97B37"];
+    this.defaultDataColourStopArray = ["#FFFFFF", "#FFFFFF", "#FFFFFF"];
+    const defaultFontFamily = this.getStyle("font-family", "Arial");
 
-    this.alphasBackground = this.getStyle('--alphas-background', 1);
+    this.alphasBackground = this.getStyle("--alphas-background", 1);
     // TODO: review the default value here if how gradient stops are generated is reworked
-    this.alphasUnderGraph = this.getStyle('--alphas-under-graph', 0.75);
-    this.coloursBackground = this.getStyle('--colours-background', '#FFFFFF');
-    this.coloursDataAxis = this.getStyle('--colours-data-axis', '#EAEAEA');
-    this.coloursData = new Array();
-    this.coloursDataStop = new Array();
-    // TODO: alter this to continue looking until it can't find a contiguous number, for datasets that are not present at the start
-    for (var i = 0; i < verticalData.length; i++) {
-      var colour = this.getStyle('--colours-data-' + i, false);
-      if (colour && colour != false) { this.coloursData.push(colour); }
+    this.alphasUnderGraph = this.getStyle("--alphas-under-graph", 0.75);
+    this.coloursBackground = this.getStyle("--colours-background", "#FFFFFF");
+    this.coloursDataAxis = this.getStyle("--colours-data-axis", "#EAEAEA");
+    this.coloursData = [];
+    this.coloursDataStop = [];
+    // TODO: alter this to continue looking until it can"t find a contiguous number, for datasets that are not present at the start
+    for (let i = 0; i < verticalData.length; i += 0) {
+      const colour = this.getStyle("--colours-data-" + i, false);
+      if (colour && colour != false) {
+        this.coloursData.push(colour);
+      }
 
       if (this.graphGradientColour) {
-        var stopColour = this.getStyle('--colours-data-stop-' + i, false);
-        if (stopColour && stopColour != false) { this.coloursDataStop.push(stopColour); }
+        const stopColour = this.getStyle("--colours-data-stop-" + i, false);
+        if (stopColour && stopColour != false) {
+          this.coloursDataStop.push(stopColour);
+        }
       }
     }
-    this.widthsData = this.getStyle('--widths-data', 4);
+    this.widthsData = this.getStyle("--widths-data", 4);
 
     if (!this.hideHorizontalAxis || !this.hideVerticalAxes) {
-      this.coloursAxesLabels = this.getStyle('--colours-axes-labels', '#858585');
-      this.coloursHorizontalLines = this.getStyle('--colours-horizontal-lines', '#EAEAEA');
-      this.coloursVerticalLines = this.getStyle('--colours-vertical-lines', '#EAEAEA');
+      this.coloursAxesLabels = this.getStyle("--colours-axes-labels", "#858585");
+      this.coloursHorizontalLines = this.getStyle("--colours-horizontal-lines", "#EAEAEA");
+      this.coloursVerticalLines = this.getStyle("--colours-vertical-lines", "#EAEAEA");
     }
-    this.fontsAxesLabelsSize = this.getStyle('--fonts-axes-labels-size', 10);
-    this.fontsAxesLabelsFamily = this.getStyle('--fonts-axes-labels-family', defaultFontFamily);
-    this.fontsAxesLabelsWeight = this.getStyle('--fonts-axes-labels-weight', 500);
+    this.fontsAxesLabelsSize = this.getStyle("--fonts-axes-labels-size", 10);
+    this.fontsAxesLabelsFamily = this.getStyle("--fonts-axes-labels-family", defaultFontFamily);
+    this.fontsAxesLabelsWeight = this.getStyle("--fonts-axes-labels-weight", 500);
 
     if (this.properties && this.properties.x_axis && this.properties.x_axis.markers) {
-      this.coloursMarker = this.getStyle('--colours-marker', '#000000');
-      this.widthsMarker = this.getStyle('--widths-marker', 2);
+      this.coloursMarker = this.getStyle("--colours-marker", "#000000");
+      this.widthsMarker = this.getStyle("--widths-marker", 2);
     }
 
     if (this.highLightEnabled) {
-      this.alphasInformationPanel = this.getStyle('--alphas-information-panel', 1);
-      this.coloursHighlightIndicator = this.getStyle('--colours-highlight-indicator', '#FFFFFF');
-      this.coloursInformationHeading = this.getStyle('--colours-information-heading', '#FFFFFF');
-      this.coloursInformationPanel = this.getStyle('--colours-information-panel', '#000000');
-      this.coloursInformationSentences = this.getStyle('--colours-information-sentences', '#FFFFFF');
-      this.fontsInformationHeadingFamily = this.getStyle('--fonts-information-heading-family', defaultFontFamily);
-      this.fontsInformationHeadingSize = this.getStyle('--fonts-information-heading-size', 12);
-      this.fontsInformationHeadingWeight = this.getStyle('--fonts-information-heading-weight', 700);
-      this.fontsInformationSentencesFamily = this.getStyle('--fonts-information-sentences-family', defaultFontFamily);
-      this.fontsInformationSentencesSize = this.getStyle('--fonts-information-sentences-size', 12);
-      this.fontsInformationSentencesWeight = this.getStyle('--fonts-information-sentences-weight', 500);
-      this.radiiDataHighlightIndicator = this.getStyle('--radii-data-highlight-indicator', 3);
-      this.radiiHighlightIndicator = this.getStyle('--radii-highlight-indicator', 3);
-      this.radiiInformationPanelBorder = this.getStyle('--radii-information-panel-border', 10);
-      this.widthsDataHighlightIndicator = this.getStyle('--widths-data-highlight-indicator', 10);
-      this.widthsHighlightIndicator = this.getStyle('--widths-highlight-indicator', 3);
+      this.alphasInformationPanel = this.getStyle("--alphas-information-panel", 1);
+      this.coloursHighlightIndicator = this.getStyle("--colours-highlight-indicator", "#FFFFFF");
+      this.coloursInformationHeading = this.getStyle("--colours-information-heading", "#FFFFFF");
+      this.coloursInformationPanel = this.getStyle("--colours-information-panel", "#000000");
+      this.coloursInformationSentences = this.getStyle("--colours-information-sentences", "#FFFFFF");
+      this.fontsInformationHeadingFamily = this.getStyle("--fonts-information-heading-family", defaultFontFamily);
+      this.fontsInformationHeadingSize = this.getStyle("--fonts-information-heading-size", 12);
+      this.fontsInformationHeadingWeight = this.getStyle("--fonts-information-heading-weight", 700);
+      this.fontsInformationSentencesFamily = this.getStyle("--fonts-information-sentences-family", defaultFontFamily);
+      this.fontsInformationSentencesSize = this.getStyle("--fonts-information-sentences-size", 12);
+      this.fontsInformationSentencesWeight = this.getStyle("--fonts-information-sentences-weight", 500);
+      this.radiiDataHighlightIndicator = this.getStyle("--radii-data-highlight-indicator", 3);
+      this.radiiHighlightIndicator = this.getStyle("--radii-highlight-indicator", 3);
+      this.radiiInformationPanelBorder = this.getStyle("--radii-information-panel-border", 10);
+      this.widthsDataHighlightIndicator = this.getStyle("--widths-data-highlight-indicator", 10);
+      this.widthsHighlightIndicator = this.getStyle("--widths-highlight-indicator", 3);
     }
 
     if (this.zoomEnabled) {
-      this.alphasSelectionBox = this.getStyle('--alphas-selection-box', 0.25);
-      this.coloursSelectionBox = this.getStyle('--colours-selection-box', '#00FF00');
+      this.alphasSelectionBox = this.getStyle("--alphas-selection-box", 0.25);
+      this.coloursSelectionBox = this.getStyle("--colours-selection-box", "#00FF00");
     }
 
     if (this.showDataPoints) {
-      // TODO: settle on defaults for alphasDataPoint, coloursDataPointInner and coloursDataPointOuter properties
-      // ^they should really include a fallback to the data colour, unless they are specified
-      this.alphasDataPoint = this.getStyle('--alphas-data-point', 0.25);
-      this.coloursDataPointInner = this.getStyle('--colours-data-point-inner', '#FF0000');
-      this.coloursDataPointOuter = this.getStyle('--colours-data-point-outer', '#0000FF');
-      this.radiiDataPoint = this.getStyle('--radii-data-point', 3);
-      this.widthsDataPoint = this.getStyle('--widths-data-point', 10);
+
+      /*
+       * TODO: settle on defaults for alphasDataPoint, coloursDataPointInner and coloursDataPointOuter properties
+       * ^they should really include a fallback to the data colour, unless they are specified
+       */
+      this.alphasDataPoint = this.getStyle("--alphas-data-point", 0.25);
+      this.coloursDataPointInner = this.getStyle("--colours-data-point-inner", "#FF0000");
+      this.coloursDataPointOuter = this.getStyle("--colours-data-point-outer", "#0000FF");
+      this.radiiDataPoint = this.getStyle("--radii-data-point", 3);
+      this.widthsDataPoint = this.getStyle("--widths-data-point", 10);
     }
   }
 
   updateData(data, properties) {
-    var cachedAxisMinX = this.axisMinX;
-    var cachedAxisMaxX = this.axisMaxX;
-    var cachedGraphScaleX = this.graphScaleX;
+    const cachedAxisMinX = this.axisMinX;
+    const cachedAxisMaxX = this.axisMaxX;
+    const cachedGraphScaleX = this.graphScaleX;
 
     if (typeof data === "string") {
       this.data = JSON.parse(data);
     } else {
       this.data = data;
     }
-    this.properties = properties ? JSON.parse(properties) : this.properties;
+    this.properties = properties
+    ? JSON.parse(properties)
+    : this.properties;
     this.calculateParameters();
 
     if (this.userDefinedViewPort) {
@@ -403,24 +438,26 @@ export default class Linegraph {
   }
 
   addHorizontalData(data, properties) {
-    var cachedAxisMinX = this.axisMinX;
-    var cachedAxisMaxX = this.axisMaxX;
-    var cachedGraphScaleX = this.graphScaleX;
+    const cachedAxisMinX = this.axisMinX;
+    const cachedAxisMaxX = this.axisMaxX;
+    const cachedGraphScaleX = this.graphScaleX;
 
-    var parsedData = data;
+    let parsedData = data;
     if (typeof data === "string") {
       parsedData = JSON.parse(data);
     }
     this.data.x = this.data.x.concat(parsedData.x);
-    for (var i = 0; i < this.data.y.length; i++) {
+    for (let i = 0; i < this.data.y.length; i += 1) {
       this.data.y[i] = this.data.y[i].concat(parsedData.y[i]);
     }
     if (parsedData.u) {
-      for (var i = 0; i < this.data.u.length; i++) {
+      for (let i = 0; i < this.data.u.length; i += 1) {
         this.data.u[i] = this.data.u[i].concat(parsedData.u[i]);
       }
     }
-    this.properties = properties ? JSON.parse(properties) : this.properties;
+    this.properties = properties
+    ? JSON.parse(properties)
+    : this.properties;
     this.calculateParameters();
 
     if (this.userDefinedViewPort) {
@@ -434,11 +471,11 @@ export default class Linegraph {
   }
 
   addVerticalData(data, properties) {
-    var cachedAxisMinX = this.axisMinX;
-    var cachedAxisMaxX = this.axisMaxX;
-    var cachedGraphScaleX = this.graphScaleX;
+    const cachedAxisMinX = this.axisMinX;
+    const cachedAxisMaxX = this.axisMaxX;
+    const cachedGraphScaleX = this.graphScaleX;
 
-    var parsedData = data;
+    let parsedData = data;
     if (typeof data === "string") {
       parsedData = JSON.parse(data);
     }
@@ -465,7 +502,9 @@ export default class Linegraph {
       }
       this.retrieveSettings();
     }
-    this.properties = properties ? JSON.parse(properties) : this.properties;
+    this.properties = properties
+    ? JSON.parse(properties)
+    : this.properties;
     this.calculateParameters();
 
     if (this.userDefinedViewPort) {
@@ -480,17 +519,17 @@ export default class Linegraph {
 
   calculateLabelHeightMultiplier() {
     if (this.properties && this.properties.x_axis && this.properties.x_axis.markers) {
-      var counts = Array(this.calculateAxisRangeX() + 1).fill(0);
+      const counts = Array(this.calculateAxisRangeX() + 1).fill(0);
 
-      for (var i = 0; i < this.properties.x_axis.markers.length; i++) {
-        var marker = this.properties.x_axis.markers[i];
+      for (let i = 0; i < this.properties.x_axis.markers.length; i += 1) {
+        const marker = this.properties.x_axis.markers[i];
         counts[marker[0]] += 1;
       }
 
-      return 1 + (Math.max(...counts) * 2);
-    } else {
-      return 1;
+      return 1 + Math.max(...counts) * 2;
     }
+
+    return 1;
   }
 
   // TODO: test this with data sets covering different ranges
@@ -498,33 +537,43 @@ export default class Linegraph {
     this.axisMinX = 0;
     this.axisMaxX = this.data.x.length - 1;
     if (this.properties && this.properties.x_axis) {
-      if (this.properties.x_axis.min) { this.axisMinX = this.properties.x_axis.min; }
-      if (this.properties.x_axis.max) { this.axisMaxX = this.properties.x_axis.max; }
+      if (this.properties.x_axis.min) {
+        this.axisMinX = this.properties.x_axis.min;
+      }
+      if (this.properties.x_axis.max) {
+        this.axisMaxX = this.properties.x_axis.max;
+      }
     }
     this.axisMinY = 0;
     this.axisMaxY = this.calculateAxisMaxY();
     if (this.properties && this.properties.y_axis) {
-      if (this.properties.y_axis.min) { this.axisMinY = this.properties.y_axis.min; }
-      if (this.properties.y_axis.max) { this.axisMaxY = this.properties.y_axis.max; }
+      if (this.properties.y_axis.min) {
+        this.axisMinY = this.properties.y_axis.min;
+      }
+      if (this.properties.y_axis.max) {
+        this.axisMaxY = this.properties.y_axis.max;
+      }
     }
     this.axisRangeY = this.axisMaxY - this.axisMinY;
 
     if (this.data.u) {
-      var axisMaxU = this.calculateAxisMaxU();
-      this.graphScaleU = axisMaxU != 0 ? this.axisMaxY / axisMaxU : 1;
+      const axisMaxU = this.calculateAxisMaxU();
+      this.graphScaleU = axisMaxU == 0
+      ? 1
+      : this.axisMaxY / axisMaxU;
     }
 
-    var greatestRadius = 0;
+    let greatestRadius = 0;
     if (this.highLightEnabled) {
-      var dataHighlightIndicatorRadius = (parseFloat(this.radiiDataHighlightIndicator) / 2) + parseFloat(this.widthsDataHighlightIndicator);
-      var highlightIndicatorRadius = (parseFloat(this.radiiHighlightIndicator) / 2) + parseFloat(this.widthsHighlightIndicator);
+      const dataHighlightIndicatorRadius = (parseFloat(this.radiiDataHighlightIndicator) / 2) + parseFloat(this.widthsDataHighlightIndicator);
+      const highlightIndicatorRadius = (parseFloat(this.radiiHighlightIndicator) / 2) + parseFloat(this.widthsHighlightIndicator);
       greatestRadius = Math.max(dataHighlightIndicatorRadius, highlightIndicatorRadius);
     }
     if (this.showDataPoints) {
-      var dataPointRadius = parseFloat(this.radiiDataPoint) + (parseFloat(this.widthsDataPoint) / 2);
+      const dataPointRadius = parseFloat(this.radiiDataPoint) + (parseFloat(this.widthsDataPoint) / 2);
       greatestRadius = Math.max(dataPointRadius, greatestRadius);
     }
-    var greatestExtent = Math.max(parseFloat(this.widthsData) / 2, greatestRadius);
+    const greatestExtent = Math.max(parseFloat(this.widthsData) / 2, greatestRadius);
 
     this.bottomMargin = greatestExtent;
     this.graphStartY = greatestExtent;
@@ -535,11 +584,11 @@ export default class Linegraph {
       this.leftMargin = greatestExtent;
       this.rightMargin = greatestExtent;
     } else {
-      var maxLabelWidthX = 0;
-      var maxLabelWidthY = 0;
-      var maxLabelWidthU = 0;
+      let maxLabelWidthX = 0;
+      let maxLabelWidthY = 0;
+      let maxLabelWidthU = 0;
       this.backgroundContext.font = this.fontsAxesLabelsWeight + " " + this.fontsAxesLabelsSize + "px " + this.fontsAxesLabelsFamily;
-      var labelHeightApproximation = this.backgroundContext.measureText("M").width;
+      const labelHeightApproximation = this.backgroundContext.measureText("M").width;
 
       if (!this.hideHorizontalAxis) {
         this.bottomMargin = Math.max(labelHeightApproximation * 3, greatestExtent);
@@ -556,31 +605,31 @@ export default class Linegraph {
         maxLabelWidthX = this.caclulateMaxLabelWidthX();
       }
       if (!this.hideVerticalAxes) {
-        var maxLabelsY = Math.round(this.graphHeight / (labelHeightApproximation * 4));
-        var factors = Helper.calculateFactors(this.axisMaxY);
+        const maxLabelsY = Math.round(this.graphHeight / (labelHeightApproximation * 4));
+        const factors = Helper.calculateFactors(this.axisMaxY);
 
-        var factorIndex = 0;
-        var workingInterval = factors[factorIndex];
-        var proposedLabelsY = this.axisRangeY / workingInterval;
+        let factorIndex = 0;
+        let workingInterval = factors[factorIndex];
+        let proposedLabelsY = this.axisRangeY / workingInterval;
 
         while (proposedLabelsY > maxLabelsY) {
-          factorIndex++;
+          factorIndex += 1;
           workingInterval = factors[factorIndex];
           proposedLabelsY = this.axisRangeY / workingInterval;
         }
 
         this.labelIntervalY = workingInterval;
 
-        for (var i = this.axisMinY; i <= this.axisMaxY; i += this.labelIntervalY) {
-          var labelComponentsY = this.getLabelComponentsY(i);
-          var labelWidthY = this.backgroundContext.measureText(Helper.applyAffix(labelComponentsY.value, this.getLabelPrefixY(), labelComponentsY.suffix)).width;
+        for (let i = this.axisMinY; i <= this.axisMaxY; i += this.labelIntervalY) {
+          const labelComponentsY = this.getLabelComponentsY(i);
+          const labelWidthY = this.backgroundContext.measureText(Helper.applyAffix(labelComponentsY.value, this.getLabelPrefixY(), labelComponentsY.suffix)).width;
           if (labelWidthY > maxLabelWidthY) {
             maxLabelWidthY = labelWidthY;
           }
 
           if (this.data.u) {
-            var labelComponentsU = this.getLabelComponentsU(i / this.graphScaleU);
-            var labelWidthU = this.backgroundContext.measureText(Helper.applyAffix(labelComponentsU.value, this.getLabelPrefixU(), labelComponentsU.suffix)).width;
+            const labelComponentsU = this.getLabelComponentsU(i / this.graphScaleU);
+            const labelWidthU = this.backgroundContext.measureText(Helper.applyAffix(labelComponentsU.value, this.getLabelPrefixU(), labelComponentsU.suffix)).width;
             if (labelWidthU > maxLabelWidthU) {
               maxLabelWidthU = labelWidthU;
             }
@@ -588,9 +637,9 @@ export default class Linegraph {
         }
       }
 
-      var minMargin = Math.max(maxLabelWidthX / 1.5, greatestExtent);
-      this.leftMargin = Math.max(maxLabelWidthY + (2 * this.fontsAxesLabelsSize), minMargin);
-      this.rightMargin = Math.max(maxLabelWidthU + (2 * this.fontsAxesLabelsSize), minMargin);
+      const minMargin = Math.max(maxLabelWidthX / 1.5, greatestExtent);
+      this.leftMargin = Math.max(maxLabelWidthY + 2 * this.fontsAxesLabelsSize, minMargin);
+      this.rightMargin = Math.max(maxLabelWidthU + 2 * this.fontsAxesLabelsSize, minMargin);
     }
 
     this.graphStartX = this.leftMargin;
@@ -614,8 +663,8 @@ export default class Linegraph {
 
     this.backgroundContext.beginPath();
 
-    var yAxisTotalIntervals = (this.axisRangeY / this.labelIntervalY) + 1;
-    for (var i = 0; i < yAxisTotalIntervals; i++) {
+    const yAxisTotalIntervals = this.axisRangeY / this.labelIntervalY + 1;
+    for (let i = 0; i < yAxisTotalIntervals; i += 1) {
       this.backgroundContext.moveTo(0, i * this.labelIntervalY);
       this.backgroundContext.lineTo(this.calculateAxisRangeX(), i * this.labelIntervalY);
     }
@@ -631,7 +680,7 @@ export default class Linegraph {
 
     this.backgroundContext.beginPath();
 
-    for (var i = 0; i <= this.calculateAxisRangeX(); i++) {
+    for (let i = 0; i <= this.calculateAxisRangeX(); i += 1) {
       this.backgroundContext.moveTo(i, 0);
       this.backgroundContext.lineTo(i, this.axisRangeY);
     }
@@ -641,7 +690,7 @@ export default class Linegraph {
   }
 
   createGraphStroke(colour, colourStop, alpha) {
-    var graphStroke = null;
+    let graphStroke = null;
     if (this.graphGradientHorizontal) {
       graphStroke = this.backgroundContext.createLinearGradient(this.graphStartX, 0, this.graphEndX, 0);
       graphStroke.addColorStop(0, Helper.hex2rgba(colour, alpha));
@@ -657,7 +706,7 @@ export default class Linegraph {
   }
 
   createGraphFill(colour, colourStop, alpha) {
-    var graphFill = null;
+    let graphFill = null;
     if (this.graphGradientHorizontal) {
       graphFill = this.backgroundContext.createLinearGradient(this.graphStartX, 0, this.graphEndX, 0);
     } else {
@@ -680,10 +729,12 @@ export default class Linegraph {
 
     this.backgroundContext.moveTo(0, this.axisMinY);
 
-    var axisRangeX = this.calculateAxisRangeX();
-    if (axisRangeX > 0) { this.backgroundContext.lineTo(0, dataset[this.axisMinX] * scale); }
-    var points = new Array();
-    for (var i = 0; i <= axisRangeX; i++) {
+    const axisRangeX = this.calculateAxisRangeX();
+    if (axisRangeX > 0) {
+      this.backgroundContext.lineTo(0, dataset[this.axisMinX] * scale);
+    }
+    const points = [];
+    for (let i = 0; i <= axisRangeX; i += 1) {
       points.push(i);
       points.push(dataset[this.axisMinX + i] * scale);
     }
@@ -701,10 +752,12 @@ export default class Linegraph {
 
     this.backgroundContext.beginPath();
 
-    var axisRangeX = this.calculateAxisRangeX();
-    if (axisRangeX > 0) { this.backgroundContext.moveTo(0, dataset[this.axisMinX] * scale); }
-    var points = new Array();
-    for (var i = 0; i <= axisRangeX; i++) {
+    const axisRangeX = this.calculateAxisRangeX();
+    if (axisRangeX > 0) {
+      this.backgroundContext.moveTo(0, dataset[this.axisMinX] * scale);
+    }
+    const points = [];
+    for (let i = 0; i <= axisRangeX; i += 1) {
       points.push(i);
       points.push(dataset[this.axisMinX + i] * scale);
     }
@@ -719,16 +772,16 @@ export default class Linegraph {
     this.backgroundContext.lineWidth = this.widthsDataPoint;
     this.backgroundContext.fillStyle = this.coloursDataPointInner;
 
-    var axisRangeX = this.calculateAxisRangeX();
-    var points = new Array();
-    for (var i = 0; i <= axisRangeX; i++) {
+    const axisRangeX = this.calculateAxisRangeX();
+    const points = [];
+    for (let i = 0; i <= axisRangeX; i += 1) {
       points.push(i);
       points.push(dataset[this.axisMinX + i] * scale);
     }
 
-    for (var i = 0; i < points.length; i += 2) {
-      var xValue = this.graphStartX + (points[i] * this.graphScaleX);
-      var yValue = this.graphStartY + (-(points[i + 1] - this.axisMaxY) * this.graphScaleY);
+    for (let i = 0; i < points.length; i += 2) {
+      const xValue = this.graphStartX + points[i] * this.graphScaleX;
+      const yValue = this.graphStartY + -(points[i + 1] - this.axisMaxY) * this.graphScaleY;
 
       this.backgroundContext.beginPath();
       this.backgroundContext.arc(xValue, yValue, this.radiiDataPoint, 0, 2 * Math.PI);
@@ -739,11 +792,13 @@ export default class Linegraph {
   }
 
   caclulateMaxLabelWidthX() {
-    var maxLabelWidthX = 0;
-    for (var i = this.axisMinX; i <= this.axisMaxX; i++) {
-      var labelValue = this.data.x[i];
-      var labelText = this.axisFormatter ? this.axisFormatter(labelValue, 0) : labelValue;
-      var labelWidth = this.backgroundContext.measureText(labelText).width;
+    let maxLabelWidthX = 0;
+    for (let i = this.axisMinX; i <= this.axisMaxX; i += 1) {
+      const labelValue = this.data.x[i];
+      const labelText = this.axisFormatter
+      ? this.axisFormatter(labelValue, 0)
+      : labelValue;
+      const labelWidth = this.backgroundContext.measureText(labelText).width;
       if (labelWidth > maxLabelWidthX) {
         maxLabelWidthX = labelWidth;
       }
@@ -752,17 +807,17 @@ export default class Linegraph {
   }
 
   calculateAxisInterval(axisLabelInterval) {
-    var firstValue = this.data.x[this.axisMinX];
-    var secondValue = this.data.x[this.axisMinX + axisLabelInterval];
+    const firstValue = this.data.x[this.axisMinX];
+    const secondValue = this.data.x[this.axisMinX + axisLabelInterval];
     return secondValue - firstValue;
   }
 
   drawHorizontalAxisLabels() {
-    var xAxisLabelInterval = 1;
-    var availableWidthPerLabel = this.graphWidth / ((this.calculateAxisRangeX() + 1) / xAxisLabelInterval);
-    var maxLabelWidthX = this.caclulateMaxLabelWidthX();
+    let xAxisLabelInterval = 1;
+    let availableWidthPerLabel = this.graphWidth / ((this.calculateAxisRangeX() + 1) / xAxisLabelInterval);
+    const maxLabelWidthX = this.caclulateMaxLabelWidthX();
     while ((availableWidthPerLabel / maxLabelWidthX) < 3) {
-      xAxisLabelInterval++;
+      xAxisLabelInterval += 1;
       availableWidthPerLabel = this.graphWidth / ((this.calculateAxisRangeX() + 1) / xAxisLabelInterval);
     }
 
@@ -771,11 +826,13 @@ export default class Linegraph {
     this.backgroundContext.textAlign = "center";
     this.backgroundContext.textBaseline = "middle";
 
-    for (var i = 0; i <= this.calculateAxisRangeX(); i += xAxisLabelInterval) {
-      var xValue = this.data.x[this.axisMinX + i];
-      var xText = xValue;
+    for (let i = 0; i <= this.calculateAxisRangeX(); i += xAxisLabelInterval) {
+      let xValue = this.data.x[this.axisMinX + i];
+      let xText = xValue;
       if (this.axisFormatter) {
-        xValue = isNaN(xValue) ? 0 : xValue;
+        xValue = isNaN(xValue)
+        ? 0
+        : xValue;
         xText = this.axisFormatter(xValue, this.calculateAxisInterval(xAxisLabelInterval));
       }
       this.backgroundContext.fillText(xText, this.graphStartX + (i * this.graphScaleX), this.graphEndY + (this.bottomMargin / 2));
@@ -783,13 +840,16 @@ export default class Linegraph {
   }
 
   drawMarkers() {
-    var counts = Array(this.calculateAxisRangeX() + 1).fill(0);
+    const counts = Array(this.calculateAxisRangeX() + 1).fill(0);
 
-    for (var i = 0; i < this.properties.x_axis.markers.length; i++) {
-      var marker = this.properties.x_axis.markers[i];
-      var line = counts[marker[0]];
+    for (let i = 0; i < this.properties.x_axis.markers.length; i += 1) {
+      const marker = this.properties.x_axis.markers[i];
+      const line = counts[marker[0]];
 
-      var axisPosition = { x: this.graphStartX + ((marker[0] + 0.5) * this.graphScaleX), y: this.graphEndY };
+      const axisPosition = {
+        "x": this.graphStartX + (marker[0] + 0.5) * this.graphScaleX,
+        "y": this.graphEndY
+      };
 
       this.backgroundContext.strokeStyle = this.coloursMarker;
       this.backgroundContext.lineWidth = this.widthsMarker;
@@ -803,7 +863,7 @@ export default class Linegraph {
       this.backgroundContext.textAlign = "center";
       this.backgroundContext.textBaseline = "middle";
 
-      var labelHeightApproximation = this.backgroundContext.measureText("M").width;
+      const labelHeightApproximation = this.backgroundContext.measureText("M").width;
       this.backgroundContext.fillText(marker[1], this.graphStartX + ((marker[0] + 0.5) * this.graphScaleX), labelHeightApproximation * (1.5 + (line * 2)));
 
       counts[marker[0]] += 1;
@@ -816,23 +876,25 @@ export default class Linegraph {
     this.backgroundContext.textAlign = "center";
     this.backgroundContext.textBaseline = "middle";
 
-    let labelValueIndexMap = new Map();
-    let indexLabelMap = new Map();
+    const labelValueIndexMap = new Map();
+    const indexLabelMap = new Map();
 
     if (this.data.u) {
-      for (var i = this.axisMinY; i <= this.axisMaxY; i += this.labelIntervalY) {
-        var valueU = i / this.graphScaleU;
-        valueU = isNaN(valueU) ? 0 : valueU;
-        var labelValueU = +valueU.toFixed(this.getDecimalPlacesU());
+      for (let i = this.axisMinY; i <= this.axisMaxY; i += this.labelIntervalY) {
+        let valueU = i / this.graphScaleU;
+        valueU = isNaN(valueU)
+        ? 0
+        : valueU;
+        const labelValueU = +valueU.toFixed(this.getDecimalPlacesU());
 
         if (!labelValueIndexMap.has(labelValueU)) {
-          labelValueIndexMap.set(labelValueU, new Array());
+          labelValueIndexMap.set(labelValueU, []);
         }
         labelValueIndexMap.get(labelValueU).push({ value: Math.abs(labelValueU - valueU), index: i });
       }
 
-      for (let key of labelValueIndexMap.keys()) {
-        let array = labelValueIndexMap.get(key);
+      for (const key of labelValueIndexMap.keys()) {
+        const array = labelValueIndexMap.get(key);
 
         array.sort(function (a, b) {
           return a.value - b.value;
@@ -842,24 +904,26 @@ export default class Linegraph {
       }
     }
 
-    for (var i = this.axisMinY; i <= this.axisMaxY; i += this.labelIntervalY) {
-      var labelComponentsY = this.getLabelComponentsY(i);
+    for (let i = this.axisMinY; i <= this.axisMaxY; i += this.labelIntervalY) {
+      const labelComponentsY = this.getLabelComponentsY(i);
       this.backgroundContext.fillText(Helper.applyAffix(labelComponentsY.value, this.getLabelPrefixY(), labelComponentsY.suffix), (this.leftMargin / 2), this.graphEndY - ((i - this.axisMinY) * this.graphScaleY));
 
       if (this.data.u) {
         if (indexLabelMap.has(i)) {
-          var labelComponentsU = this.getLabelComponentsU(indexLabelMap.get(i));
+          const labelComponentsU = this.getLabelComponentsU(indexLabelMap.get(i));
           this.backgroundContext.fillText(Helper.applyAffix(labelComponentsU.value, this.getLabelPrefixU(), labelComponentsU.suffix), this.graphEndX + (this.rightMargin / 2), this.graphEndY - ((i - this.axisMinY) * this.graphScaleY));
         }
       }
     }
   }
 
-  // TODO: change to a grabbing cursor when moving with the mouse down
-  // TODO: change to a no entry style cursor when trying to move a graph that is already showing the full extent of its range
+  /*
+   * TODO: change to a grabbing cursor when moving with the mouse down
+   * TODO: change to a no entry style cursor when trying to move a graph that is already showing the full extent of its range
+   */
   scroll(differenceIndex) {
-    var newAxisMinX = this.mouseDownAxisMinX - differenceIndex;
-    var newAxisMaxX = this.mouseDownAxisMaxX - differenceIndex;
+    const newAxisMinX = this.mouseDownAxisMinX - differenceIndex;
+    const newAxisMaxX = this.mouseDownAxisMaxX - differenceIndex;
 
     if (newAxisMinX >= 0 && newAxisMaxX < this.data.x.length) {
       this.userDefinedViewPort = true;
@@ -889,7 +953,7 @@ export default class Linegraph {
     this.foregroundContext.stroke();
     this.foregroundContext.fill();
 
-    for (var i = 0; i < dataHighlights.length; i++) {
+    for (let i = 0; i < dataHighlights.length; i += 1) {
       this.foregroundContext.strokeStyle = this.getDataColour(i);
       this.foregroundContext.lineWidth = this.widthsDataHighlightIndicator;
       this.foregroundContext.fillStyle = this.coloursHighlightIndicator;
@@ -904,7 +968,7 @@ export default class Linegraph {
 
   // TODO: consider moving the calculation code in highlight(index) and reserve this method for actual drawing
   drawInformationPanel(index) {
-    var verticalData = this.data.y;
+    let verticalData = this.data.y;
     if (this.data.u) {
       verticalData = verticalData.concat(this.data.u);
     }
@@ -912,8 +976,8 @@ export default class Linegraph {
     this.foregroundContext.textAlign = "left";
     this.foregroundContext.font = this.fontsInformationHeadingWeight + " " + this.fontsInformationHeadingSize + "px " + this.fontsInformationHeadingFamily;
 
-    var headingValue = this.data.x[this.axisMinX + index];
-    var headingText = headingValue;
+    let headingValue = this.data.x[this.axisMinX + index];
+    let headingText = headingValue;
     if (this.informationFormatter) {
       headingValue = isNaN(headingValue) ? 0 : headingValue;
       headingText = this.informationFormatter(headingValue);
@@ -922,14 +986,14 @@ export default class Linegraph {
     var sentenceHeightApproximation = this.foregroundContext.measureText("M").width;
     var maxSentenceWidth = this.foregroundContext.measureText(headingText).width + (2 * sentenceHeightApproximation);
     this.foregroundContext.font = this.fontsInformationSentencesWeight + " " + this.fontsInformationSentencesSize + "px " + this.fontsInformationSentencesFamily;
-    for (var i = 0; i < this.data.y.length; i++) {
+    for (let i = 0; i < this.data.y.length; i += 1) {
       var yValue = this.data.y[i][this.axisMinX + index];
       yValue = isNaN(yValue) ? 0 : yValue;
-      var labelComponents = this.getLabelComponentsY(yValue);
-      var formattedData = Helper.applyAffix(labelComponents.value, this.getLabelPrefixY(), labelComponents.suffix);
-      var sentence = this.dataNames[i] + ": " + formattedData;
-      // space + circle + space + sentence + space (space and cricle are as wide as a sentence is tall)
-      var sentenceWidth = this.foregroundContext.measureText(sentence).width + (4 * sentenceHeightApproximation);
+      const labelComponents = this.getLabelComponentsY(yValue);
+      const formattedData = Helper.applyAffix(labelComponents.value, this.getLabelPrefixY(), labelComponents.suffix);
+      const sentence = this.dataNames[i] + ": " + formattedData;
+      // Space + Circle + Space + Sentence + Space (space and circle are as wide as a sentence is tall)
+      const sentenceWidth = this.foregroundContext.measureText(sentence).width + (4 * sentenceHeightApproximation);
       if (sentenceWidth > maxSentenceWidth) {
         maxSentenceWidth = sentenceWidth;
       }
@@ -937,14 +1001,16 @@ export default class Linegraph {
     }
 
     if (this.data.u) {
-      for (var i = 0; i < this.data.u.length; i++) {
-        var uValue = this.data.u[i][this.axisMinX + index];
-        uValue = isNaN(uValue) ? 0 : uValue;
-        var labelComponents = this.getLabelComponentsU(uValue);
-        var formattedData = Helper.applyAffix(labelComponents.value, this.getLabelPrefixU(), labelComponents.suffix);
-        var sentence = this.dataNames[this.data.y.length + i] + ": " + formattedData;
-        // space + circle + space + sentence + space (space and cricle are as wide as a sentence is tall)
-        var sentenceWidth = this.foregroundContext.measureText(sentence).width + (4 * sentenceHeightApproximation);
+      for (let i = 0; i < this.data.u.length; i += 1) {
+        let uValue = this.data.u[i][this.axisMinX + index];
+        uValue = isNaN(uValue)
+        ? 0
+        : uValue;
+        const labelComponents = this.getLabelComponentsU(uValue);
+        const formattedData = Helper.applyAffix(labelComponents.value, this.getLabelPrefixU(), labelComponents.suffix);
+        const sentence = this.dataNames[this.data.y.length + i] + ": " + formattedData;
+        // Space + Circle + Space + Sentence + Space (space and circle are as wide as a sentence is tall)
+        const sentenceWidth = this.foregroundContext.measureText(sentence).width + (4 * sentenceHeightApproximation);
         if (sentenceWidth > maxSentenceWidth) {
           maxSentenceWidth = sentenceWidth;
         }
@@ -953,7 +1019,7 @@ export default class Linegraph {
     }
 
     var requiredWidth = maxSentenceWidth;
-    // space + sentence + space + sentence + space + ... + sentence + space
+    // Space + Sentence + Space + Sentence + Space + ... + Sentence + Space
     var requiredHeight = (((verticalData.length + 1) * 2) + 1) * sentenceHeightApproximation;
     var panelX = this.graphStartX + (index * this.graphScaleX) + (2 * sentenceHeightApproximation);
     var panelY = this.graphStartY + (this.graphHeight / 2) - (requiredHeight / 2);
@@ -972,8 +1038,8 @@ export default class Linegraph {
     this.foregroundContext.fillStyle = Helper.hex2rgba(this.coloursInformationPanel, this.alphasInformationPanel);
     Helper.fillRoundedRect(this.foregroundContext, panelX, panelY, requiredWidth, requiredHeight, parseFloat(this.radiiInformationPanelBorder));
 
-    var circleOffsetY = panelY + (3 * sentenceHeightApproximation);
-    var sentenceOffsetY = panelY + (2 * sentenceHeightApproximation);
+    let circleOffsetY = panelY + (3 * sentenceHeightApproximation);
+    let sentenceOffsetY = panelY + (2 * sentenceHeightApproximation);
 
     this.foregroundContext.font = this.fontsInformationHeadingWeight + " " + this.fontsInformationHeadingSize + "px " + this.fontsInformationHeadingFamily;
     this.foregroundContext.fillStyle = this.coloursInformationHeading;
@@ -981,11 +1047,11 @@ export default class Linegraph {
     sentenceOffsetY += 2 * sentenceHeightApproximation;
 
     this.foregroundContext.font = this.fontsInformationSentencesWeight + " " + this.fontsInformationSentencesSize + "px " + this.fontsInformationSentencesFamily;
-    for (var i = 0; i < sentences.length; i++) {
+    for (let i = 0; i < sentences.length; i += 1) {
       this.foregroundContext.fillStyle = this.getDataColour(i);
       this.foregroundContext.fillRect(panelX + sentenceHeightApproximation, circleOffsetY, sentenceHeightApproximation, sentenceHeightApproximation);
       this.foregroundContext.fillStyle = this.coloursInformationSentences;
-      this.foregroundContext.fillText(sentences[i], panelX + (3 * sentenceHeightApproximation), sentenceOffsetY);
+      this.foregroundContext.fillText(sentences[i], panelX + 3 * sentenceHeightApproximation, sentenceOffsetY);
       circleOffsetY += 2 * sentenceHeightApproximation;
       sentenceOffsetY += 2 * sentenceHeightApproximation;
     }
@@ -993,26 +1059,37 @@ export default class Linegraph {
 
   highlight(index) {
     this.clearForeground();
-    if (index == -1) { return false; }
+    if (index == -1) {
+      return false;
+    }
 
-    var axisHighlight = { x: this.graphStartX + (index * this.graphScaleX), y: this.graphEndY };
-    var dataHighlights = new Array();
+    const axisHighlight = {
+      "x": this.graphStartX + index * this.graphScaleX,
+      "y": this.graphEndY
+    };
+    const dataHighlights = [];
 
-    var verticalValueMax = Infinity;
-    for (var i = 0; i < this.data.y.length; i++) {
-      var y = this.data.y[i][this.axisMinX + index];
-      var yValue = this.graphStartY + (-(y - this.axisMaxY) * this.graphScaleY);
-      dataHighlights.push({ x: this.graphStartX + (index * this.graphScaleX), y: yValue });
+    let verticalValueMax = Infinity;
+    for (let i = 0; i < this.data.y.length; i += 1) {
+      const y = this.data.y[i][this.axisMinX + index];
+      const yValue = this.graphStartY + (-(y - this.axisMaxY) * this.graphScaleY);
+      dataHighlights.push({
+        "x": this.graphStartX + index * this.graphScaleX,
+        "y": yValue
+      });
       if (yValue < verticalValueMax) {
         verticalValueMax = yValue;
       }
     }
 
     if (this.data.u) {
-      for (var i = 0; i < this.data.u.length; i++) {
-        var u = this.data.u[i][this.axisMinX + index];
-        var uValue = this.graphStartY + (-((u * this.graphScaleU) - this.axisMaxY) * this.graphScaleY);
-        dataHighlights.push({ x: this.graphStartX + (index * this.graphScaleX), y: uValue });
+      for (let i = 0; i < this.data.u.length; i += 1) {
+        const u = this.data.u[i][this.axisMinX + index];
+        const uValue = this.graphStartY + (-((u * this.graphScaleU) - this.axisMaxY) * this.graphScaleY);
+        dataHighlights.push({
+          "x": this.graphStartX + index * this.graphScaleX,
+          "y": uValue
+        });
         if (uValue < verticalValueMax) {
           verticalValueMax = uValue;
         }
@@ -1029,27 +1106,29 @@ export default class Linegraph {
   }
 
   calculateIndex(offsetX) {
-    var graphX = (offsetX - this.graphStartX) / this.graphScaleX;
+    const graphX = (offsetX - this.graphStartX) / this.graphScaleX;
     return Math.min(Math.max(Math.round(graphX), 0), this.calculateAxisRangeX());
   }
 
   drawSelectionBox() {
     this.clearForeground();
 
-    var boxX = this.graphStartX + (this.shiftMouseDownStartIndex * this.graphScaleX);
-    var boxWidth = (this.shiftMouseDownEndIndex - this.shiftMouseDownStartIndex) * this.graphScaleX;
+    const boxX = this.graphStartX + this.shiftMouseDownStartIndex * this.graphScaleX;
+    const boxWidth = (this.shiftMouseDownEndIndex - this.shiftMouseDownStartIndex) * this.graphScaleX;
 
     this.foregroundContext.fillStyle = Helper.hex2rgba(this.coloursSelectionBox, this.alphasSelectionBox);
     this.foregroundContext.fillRect(boxX, this.graphStartY, boxWidth, this.graphHeight);
   }
 
   handleMouseMove(event) {
-    if (!this.drawn) { return; }
+    if (!this.drawn) {
+      return;
+    }
 
-    var index = this.calculateIndex(event.offsetX);
+    const index = this.calculateIndex(event.offsetX);
     if (this.isMouseDown) {
       if (this.scrollEnabled) {
-        var differenceIndex = index - this.mouseDownIndex;
+        const differenceIndex = index - this.mouseDownIndex;
         if (differenceIndex != this.mouseDownDifferenceIndex) {
           this.scroll(differenceIndex);
         }
@@ -1059,11 +1138,9 @@ export default class Linegraph {
         this.shiftMouseDownEndIndex = index;
         this.drawSelectionBox();
       }
-    } else {
-      if (this.highLightEnabled) {
-        if (index != this.mouseMoveIndex) {
-          this.highlight(index);
-        }
+    } else if (this.highLightEnabled) {
+      if (index != this.mouseMoveIndex) {
+        this.highlight(index);
       }
     }
   }
@@ -1087,7 +1164,9 @@ export default class Linegraph {
   }
 
   handleMouseLeave(event) {
-    if (!this.drawn) { return; }
+    if (!this.drawn) {
+      return;
+    }
 
     this.clearForeground();
     this.cancelMouseMove();
@@ -1096,31 +1175,33 @@ export default class Linegraph {
   }
 
   handleMouseDown(event) {
-    if (!this.drawn) { return; }
+    if (!this.drawn) {
+      return;
+    }
 
     if (event.shiftKey) {
       if (this.zoomEnabled) {
         this.isShiftMouseDown = true;
         this.shiftMouseDownStartIndex = this.calculateIndex(event.offsetX);
       }
-    } else {
-      if (this.scrollEnabled) {
-        this.isMouseDown = true;
-        this.mouseDownAxisMinX = this.axisMinX;
-        this.mouseDownAxisMaxX = this.axisMaxX;
-        this.mouseDownIndex = this.calculateIndex(event.offsetX);
-      }
+    } else if (this.scrollEnabled) {
+      this.isMouseDown = true;
+      this.mouseDownAxisMinX = this.axisMinX;
+      this.mouseDownAxisMaxX = this.axisMaxX;
+      this.mouseDownIndex = this.calculateIndex(event.offsetX);
     }
   }
 
   handleMouseUp(event) {
-    if (!this.drawn) { return; }
+    if (!this.drawn) {
+      return;
+    }
 
     if (this.isShiftMouseDown) {
       if (this.zoomEnabled) {
         if (this.shiftMouseDownStartIndex != this.shiftMouseDownEndIndex) {
           this.userDefinedViewPort = true;
-          var offsetAxisX = this.axisMinX;
+          const offsetAxisX = this.axisMinX;
           if (this.shiftMouseDownStartIndex > this.shiftMouseDownEndIndex) {
             this.axisMinX = offsetAxisX + this.shiftMouseDownEndIndex;
             this.axisMaxX = offsetAxisX + this.shiftMouseDownStartIndex;
@@ -1134,17 +1215,17 @@ export default class Linegraph {
         }
         this.cancelShiftMouseDown();
       }
-    } else {
-      if (this.scrollEnabled) {
-        this.cancelMouseDown();
-      }
+    } else if (this.scrollEnabled) {
+      this.cancelMouseDown();
     }
   }
 
   handleDoubleClick(event) {
-    if (!this.drawn) { return; }
+    if (!this.drawn) {
+      return;
+    }
 
-    // reset
+    // Reset
     this.userDefinedViewPort = false;
     this.calculateParameters();
     this.clearForeground();
